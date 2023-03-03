@@ -47,6 +47,8 @@ public class GameScreen implements Screen {
   private final CustomerManager customerManager;
   private boolean isFirstFrame = true;
 
+  private float deltaTimer = 0;
+
   public GameScreen(final PiazzaPanicGame game) {
     TiledMap map = new TmxMapLoader().load("main-game-map.tmx");
     int sizeX = map.getProperties().get("width", Integer.class);
@@ -185,6 +187,8 @@ public class GameScreen implements Screen {
       }
     }
     isFirstFrame = true;
+
+    deltaTimer = 0;
   }
 
   @Override
@@ -201,6 +205,14 @@ public class GameScreen implements Screen {
     // Render stage
     stage.act(delta);
     uiStage.act(delta);
+
+    // testing multiple recipes
+    deltaTimer+=delta;
+    if (deltaTimer > 5) {
+      deltaTimer = 0;
+      customerManager.nextRecipe();
+      System.out.println("New Recipe");
+    }
 
     stage.draw();
     uiStage.draw();

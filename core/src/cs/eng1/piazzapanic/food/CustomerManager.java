@@ -6,13 +6,16 @@ import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.food.recipes.Salad;
 import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomerManager {
 
   private final Queue<Recipe> customerOrders;
-  private Recipe currentOrder;
+  private final List<Recipe> currentOrders = new ArrayList<>();
   private final List<RecipeStation> recipeStations;
   private final UIOverlay overlay;
 
@@ -46,27 +49,35 @@ public class CustomerManager {
    * @return a boolean signifying if the recipe is correct.
    */
   public boolean checkRecipe(Recipe recipe) {
-    if (currentOrder == null) {
-      return false;
+    // iterate through list, check each
+    for (Recipe r : currentOrders) {
+      if (recipe.getType().equals(r.getType())) {
+        return true;
+      }
     }
-    return recipe.getType().equals(currentOrder.getType());
+    return false;
+//    if (currentOrders == null) {
+//      return false;
+//    }
+//    return recipe.getType().equals(currentOrders.getType());
   }
 
   /**
    * Complete the current order nad move on to the next one. Then update the UI. If all the recipes
    * are completed, then show the winning UI.
    */
-  public void nextRecipe() {
+  public void nextRecipe() { //TODO: Working for multiple orders, but should not complete an order upon this method's call
     if (customerOrders.isEmpty()) {
-      currentOrder = null;
+      currentOrders.clear();
       overlay.updateRecipeCounter(0);
-    } else {
+    } else { // next recipe
       overlay.updateRecipeCounter(customerOrders.size);
-      currentOrder = customerOrders.removeFirst();
+      currentOrders.add(customerOrders.removeFirst());
     }
     notifyRecipeStations();
-    overlay.updateRecipeUI(currentOrder);
-    if (currentOrder == null) {
+    currentOrders.forEach(overlay::updateRecipeUI);
+    if (currentOrders.isEmpty()) {
+      System.out.println("WIN");
       overlay.finishGameUI();
     }
   }
