@@ -25,6 +25,7 @@ public class ChefManager implements Disposable {
 
     private final ArrayList<Chef> chefs;
     private Chef currentChef = null;
+    private Chef lastChef = null;
     private final TiledMapTileLayer collisionLayer;
     private final UIOverlay overlay;
     final String[] chefSprites = new String[]{
@@ -116,6 +117,10 @@ public class ChefManager implements Disposable {
                 if (keycode != Input.Keys.E) {
                     return false;
                 }
+                if (currentChef == null && lastChef != null) { // convenience to go back to last chef if unselected
+                    manager.setCurrentChef(lastChef);
+                    return true;
+                }
                 int newIndex = chefs.indexOf(currentChef) + 1;
                 if (newIndex == chefs.size()) {
                     newIndex = 0;
@@ -134,6 +139,7 @@ public class ChefManager implements Disposable {
     public void setCurrentChef(Chef chef) {
         if (chef == null && currentChef != null) {
             currentChef.setInputEnabled(false);
+            lastChef = currentChef;
             currentChef = null;
         }
         if (currentChef != chef) {
@@ -141,6 +147,7 @@ public class ChefManager implements Disposable {
                 currentChef.setInputEnabled(false);
             }
             currentChef = chef;
+            lastChef = null;
             currentChef.setInputEnabled(true);
         }
         overlay.updateChefUI(currentChef);
@@ -148,6 +155,10 @@ public class ChefManager implements Disposable {
 
     public Chef getCurrentChef() {
         return currentChef;
+    }
+
+    private Chef getLastChef() {
+        return lastChef;
     }
 
     /**
