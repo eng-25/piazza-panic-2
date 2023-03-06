@@ -90,6 +90,7 @@ public class RecipeStation extends Station {
       } else if (customerManager.checkRecipe(completedRecipe)) {
         actionTypes.add(ActionType.SUBMIT_ORDER);
       }
+      addClearAction(actionTypes);
     }
     return actionTypes;
   }

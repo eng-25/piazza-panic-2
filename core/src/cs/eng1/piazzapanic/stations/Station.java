@@ -163,6 +163,10 @@ public class Station extends Actor implements Observer<Chef> {
     return new LinkedList<>();
   }
 
+  protected void addClearAction(List<StationAction.ActionType> actionList) {
+    actionList.add(StationAction.ActionType.CLEAR_STATION);
+  }
+
   /**
    * Given an action, the station should attempt to do that action based on the chef that is nearby
    * or what ingredient(s) are currently on the station.

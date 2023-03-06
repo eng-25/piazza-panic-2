@@ -107,6 +107,7 @@ public class ChoppingStation extends Station {
         actionTypes.add(StationAction.ActionType.CHOP_ACTION);
       }
     }
+    addClearAction(actionTypes);
     return actionTypes;
   }
 

@@ -120,6 +120,7 @@ public class CookingStation extends Station {
         actionTypes.add(StationAction.ActionType.COOK_ACTION);
       }
     }
+    addClearAction(actionTypes);
     return actionTypes;
   }
 
