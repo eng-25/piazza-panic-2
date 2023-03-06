@@ -34,10 +34,10 @@ public class ChefManager implements Disposable {
             "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Hitman 2/hitman2_hold.png"
     };
     final float[] chefX = new float[]{
-            5f, 10f, 5f
+            4.5f, 10.5f, 4.5f
     };
     final float[] chefY = new float[]{
-            3f, 3f, 6f
+            3f, 3f, 6.5f
     };
 
     /**
