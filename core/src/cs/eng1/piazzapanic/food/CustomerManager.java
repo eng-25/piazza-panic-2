@@ -67,7 +67,7 @@ public class CustomerManager {
    * are completed, then show the winning UI.
    */
   public void nextRecipe() { //TODO: Working for multiple orders, but should not complete an order upon this method's call
-    if (customerOrders.isEmpty()) {
+    if (customerOrders.isEmpty()) { //TODO: change this condition as the check for completion?
       currentOrders.clear();
       overlay.updateRecipeCounter(0);
     } else { // next recipe

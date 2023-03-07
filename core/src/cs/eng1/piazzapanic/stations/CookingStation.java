@@ -132,6 +132,7 @@ public class CookingStation extends Station {
    */
   @Override
   public void doStationAction(StationAction.ActionType action) {
+    super.doStationAction(action);
     switch (action) {
       case COOK_ACTION:
         //timeCooked is used to track how long the
@@ -168,6 +169,11 @@ public class CookingStation extends Station {
         uiController.showActions(this, getActionTypes());
         break;
     }
+  }
+
+  @Override
+  protected void clearStation() {
+    currentIngredient = null;
   }
 
   /**

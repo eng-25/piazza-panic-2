@@ -174,6 +174,12 @@ public class Station extends Actor implements Observer<Chef> {
    * @param action the action that needs to be done by this station if it can.
    */
   public void doStationAction(StationAction.ActionType action) {
+    if (action == StationAction.ActionType.CLEAR_STATION) {
+      clearStation();
+    }
+  }
+
+  protected void clearStation() {
   }
 
   /**

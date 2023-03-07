@@ -28,7 +28,6 @@ public class IngredientStation extends Station {
     if (nearbyChef.canGrabIngredient()) {
       actionTypes.add(StationAction.ActionType.GRAB_INGREDIENT);
     }
-    addClearAction(actionTypes);
     return actionTypes;
   }
 

@@ -208,7 +208,7 @@ public class GameScreen implements Screen {
 
     // testing multiple recipes
     deltaTimer+=delta;
-    if (deltaTimer > 5) {
+    if (deltaTimer > 10) {
       deltaTimer = 0;
       customerManager.nextRecipe();
       System.out.println("New Recipe");

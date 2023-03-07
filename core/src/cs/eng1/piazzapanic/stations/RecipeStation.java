@@ -103,6 +103,7 @@ public class RecipeStation extends Station {
    */
   @Override
   public void doStationAction(ActionType action) {
+    super.doStationAction(action);
     switch (action) {
       case PLACE_INGREDIENT:
         Ingredient topItem = nearbyChef.getStack().peek();
@@ -148,6 +149,15 @@ public class RecipeStation extends Station {
         break;
     }
     uiController.showActions(this, getActionTypes());
+  }
+
+  @Override
+  protected void clearStation() {
+    bunCount = 0;
+    pattyCount = 0;
+    lettuceCount = 0;
+    tomatoCount = 0;
+    completedRecipe = null;
   }
 
   /**

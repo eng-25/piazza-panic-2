@@ -117,6 +117,7 @@ public class ChefManager implements Disposable {
                 if (keycode != Input.Keys.E) {
                     return false;
                 }
+
                 if (currentChef == null && lastChef != null) { // convenience to go back to last chef if unselected
                     manager.setCurrentChef(lastChef);
                     return true;
