@@ -1,0 +1,48 @@
+{
+  "timer": 1,
+  "difficulty": "easy",
+  "activePowerUps": [
+    -1,
+    25,
+    -1,
+    -1,
+    -1
+  ],
+  "cooks": [
+    {
+      "count": 2,
+      "position": [
+        {
+          "x": 2.0,
+          "y": 3.0
+        },
+        {
+          "x": 7.0,
+          "y": 6.0
+        }
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": 1,
+      "isLocked": false,
+      "currentIngredients": [
+        "tomato"
+      ],
+      "progress": 0
+    }
+  ],
+  "money": 200,
+  "reputation": 2,
+  "customersServed": 4,
+  "orderQueue": [
+    {
+      "dish": "salad",
+      "timeLeft": 12
+    },
+    {
+
+    }
+  ]
+}

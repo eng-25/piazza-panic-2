@@ -3,6 +3,7 @@ package cs.eng1.piazzapanic.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
@@ -28,6 +29,7 @@ import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
+import java.io.FileWriter;
 import java.util.HashMap;
 
 /**
@@ -173,13 +175,23 @@ public class GameScreen implements Screen {
 
   @Override
   public void show() {
+
+//    FileHandle f = Gdx.files.internal("save.json");
+//    try {
+//      FileWriter writer = new FileWriter(f.path());
+//      writer.write("asd");
+//      writer.close();
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+
     InputMultiplexer multiplexer = new InputMultiplexer();
     multiplexer.addProcessor(uiStage);
     multiplexer.addProcessor(stage);
     Gdx.input.setInputProcessor(multiplexer);
     uiOverlay.init();
     chefManager.init();
-    customerManager.init(foodTextureManager);
+    customerManager.init(foodTextureManager, 5);
 
     for (Actor actor : stage.getActors().items) {
       if (actor instanceof Station) {
@@ -211,7 +223,6 @@ public class GameScreen implements Screen {
     if (deltaTimer > 10) {
       deltaTimer = 0;
       customerManager.nextRecipe();
-      System.out.println("New Recipe");
     }
 
     stage.draw();
@@ -227,6 +238,7 @@ public class GameScreen implements Screen {
   public void resize(int width, int height) {
     this.stage.getViewport().update(width, height, true);
     this.uiStage.getViewport().update(width, height, true);
+    uiOverlay.resizeUI(width, customerManager.getCurrentOrders());
   }
 
   @Override

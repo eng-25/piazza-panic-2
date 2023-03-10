@@ -87,7 +87,7 @@ public class RecipeStation extends Station {
         if (tomatoCount >= 1 && lettuceCount >= 1 && nearbyChef.getStack().hasSpace()) {
           actionTypes.add(ActionType.MAKE_SALAD);
         }
-      } else if (customerManager.checkRecipe(completedRecipe)) {
+      } else if (customerManager.checkRecipe(completedRecipe) != null) {
         actionTypes.add(ActionType.SUBMIT_ORDER);
       }
       addClearAction(actionTypes);
@@ -141,8 +141,9 @@ public class RecipeStation extends Station {
 
       case SUBMIT_ORDER:
         if (completedRecipe != null) {
-          if (customerManager.checkRecipe(completedRecipe)) {
-            customerManager.nextRecipe();
+          Recipe orderToComplete = customerManager.checkRecipe(completedRecipe);
+          if (orderToComplete != null) {
+            customerManager.completeRecipe(orderToComplete);
             completedRecipe = null;
           }
         }
