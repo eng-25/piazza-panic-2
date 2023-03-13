@@ -13,12 +13,16 @@ import java.util.Random;
 public class Customer {
 
     private final List<Recipe> order;
-    private final Timer timer;
+    private float timeElapsed;
+    private final float maxTime;
 
     public Customer(Recipe[] possibleRecipes, int maxOrderSize) {
         order = new ArrayList<>();
-        timer = new Timer(new Label.LabelStyle(new FontManager().getLabelFont(), Color.BLACK));
+        timeElapsed = 0f;
 
+        final int RANDOM_TIME_RANGE = 5;
+        final float BASE_ORDER_TIME = 5f;
+        maxTime = maxOrderSize * (new Random().nextInt(RANDOM_TIME_RANGE)+BASE_ORDER_TIME);
         generateOrder(possibleRecipes, maxOrderSize);
     }
 
@@ -42,6 +46,14 @@ public class Customer {
 
     public List<Recipe> getOrder() {
         return order;
+    }
+
+    public float getTimeElapsedPercentage() {
+        return Math.min(timeElapsed/maxTime, 1);
+    }
+
+    public void tickTimer(float delta) {
+        timeElapsed += delta;
     }
 
 }

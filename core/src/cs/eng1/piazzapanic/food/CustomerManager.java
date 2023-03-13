@@ -113,4 +113,8 @@ public class CustomerManager {
   public List<Customer> getCustomers() {
     return currentOrders;
   }
+
+  public void tick(float delta) {
+    currentOrders.forEach(customer -> customer.tickTimer(delta));
+  }
 }

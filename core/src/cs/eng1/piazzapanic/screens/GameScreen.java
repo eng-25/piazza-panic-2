@@ -220,10 +220,13 @@ public class GameScreen implements Screen {
 
     // testing multiple recipes
     deltaTimer+=delta;
-    if (deltaTimer > 10) {
+    if (deltaTimer > 5) {
       deltaTimer = 0;
       customerManager.nextRecipe();
     }
+
+    customerManager.tick(delta);
+    uiOverlay.updateRecipeUI(customerManager.getCustomers());
 
     stage.draw();
     uiStage.draw();

@@ -244,25 +244,39 @@ public class UIOverlay {
         recipeGroupsDisplay.clear();
         for (Customer customer : orders) {
             if (customer != null && !(customer.getOrder().isEmpty())) {
-                addRecipeGroup(customer.getOrder());
+                addRecipeGroup(customer);
             }
         }
     }
 
-    private void addRecipeGroup(List<Recipe> order) {
+    private void addRecipeGroup(Customer customer) {
         HorizontalGroup orderGroup = new HorizontalGroup();
         orderGroup.clearChildren();
 
-        for (Recipe dish : order) {
+        for (Recipe dish : customer.getOrder()) {
             if (dish != null) {
                 addDishToGroup(dish, orderGroup);
             }
         }
-        //TODO: add timer? use Customer timer to draw 2 static images since it will be redrawn every time this is called
 
+        Image timerImage = new Image(emptyLife);
+        float timerWidth = chefDisplay.getWidth()*3;
+        float timerHeight = chefDisplay.getHeight()/4f;
+        timerImage.setSize(timerWidth, timerHeight);
+        float orderTimePercentage = customer.getTimeElapsedPercentage();
+
+        if (orderTimePercentage != 1) { // not out of time
+            timerImage.setDrawable(coin);
+            timerWidth *= (1-customer.getTimeElapsedPercentage());
+        }
+
+        recipeGroupsDisplay.add(timerImage)
+                .width(timerWidth)
+                .height(timerHeight)
+                .left().row();
         recipeGroupsDisplay.add(orderGroup).left();
         recipeGroupsDisplay.row().padTop(chefDisplay.getWidth() / 20f);
-        midTable.debug();
+        //midTable.debug();
     }
 
     private void addDishToGroup(Recipe dish, HorizontalGroup group) {
