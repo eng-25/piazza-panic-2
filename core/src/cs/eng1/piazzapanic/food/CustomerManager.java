@@ -1,6 +1,5 @@
 package cs.eng1.piazzapanic.food;
 
-import com.badlogic.gdx.utils.Queue;
 import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.food.recipes.Salad;
@@ -8,11 +7,12 @@ import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CustomerManager {
 
   //private final Queue<Recipe> customerOrders;
-  private final List<Recipe> currentOrders = new ArrayList<>();
+  private final List<Customer> currentOrders = new ArrayList<>();
   private final List<RecipeStation> recipeStations;
   private final UIOverlay overlay;
   private int completeOrders = 0;
@@ -22,7 +22,6 @@ public class CustomerManager {
   public CustomerManager(UIOverlay overlay) {
     this.overlay = overlay;
     this.recipeStations = new LinkedList<>();
-    //customerOrders = new Queue<>();
   }
 
   /**
@@ -48,8 +47,9 @@ public class CustomerManager {
    */
   public Recipe checkRecipe(Recipe recipe) {
     // iterate through list, check each
-    for (Recipe r : currentOrders) {
-      if (recipe.getType().equals(r.getType())) {
+    for (Customer order : currentOrders) {
+      Recipe r = order.hasRecipe(recipe);
+      if (r != null) {
         return r;
       }
     }
@@ -71,7 +71,7 @@ public class CustomerManager {
       overlay.finishGameUI();
     } else { // next recipe
       overlay.updateRecipeCounter(customerCount - completeOrders);
-      currentOrders.add(getRandomRecipe());
+      currentOrders.add(getNewCustomer());
     }
     notifyRecipeStations();
     overlay.updateRecipeUI(currentOrders);
@@ -82,8 +82,12 @@ public class CustomerManager {
     overlay.updateRecipeUI(currentOrders);
   }
 
-  private Recipe getRandomRecipe() {
-    return possibleRecipes[new Random().nextInt(possibleRecipes.length)];
+  private Customer getNewCustomer(int maxGroupSize) {
+    return new Customer(possibleRecipes.clone(), maxGroupSize);
+  }
+
+  private Customer getNewCustomer() {
+    return getNewCustomer(3); //TODO: base on mode (1 or 3)
   }
 
   /**
@@ -100,7 +104,13 @@ public class CustomerManager {
     recipeStations.add(station);
   }
 
-  public List<Recipe> getCurrentOrders() {
+  public List<List<Recipe>> getCurrentOrders() {
+    List<List<Recipe>> orders = new ArrayList<>();
+    currentOrders.forEach(c -> orders.add(c.getOrder()));
+    return orders;
+  }
+
+  public List<Customer> getCustomers() {
     return currentOrders;
   }
 }

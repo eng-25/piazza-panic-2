@@ -238,7 +238,7 @@ public class GameScreen implements Screen {
   public void resize(int width, int height) {
     this.stage.getViewport().update(width, height, true);
     this.uiStage.getViewport().update(width, height, true);
-    uiOverlay.resizeUI(width, customerManager.getCurrentOrders());
+    uiOverlay.resizeUI(width, customerManager.getCustomers());
   }
 
   @Override
