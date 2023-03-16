@@ -16,7 +16,7 @@ public class StationTests {
     public void testIsCorrectIngredient() {
         FoodTextureManager FoodTextureManager = new FoodTextureManager();
         Lettuce lettuce = new Lettuce(FoodTextureManager);
-        ChoppingStation choppingStation = new ChoppingStation();
+        // ChoppingStation choppingStation = new ChoppingStation();
 
     }
 
