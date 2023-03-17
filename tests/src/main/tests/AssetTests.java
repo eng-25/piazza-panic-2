@@ -9,7 +9,6 @@ import org.junit.runners.MethodSorters;
 import static org.junit.Assert.*;
 
 @RunWith(main.tests.GdxTestRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AssetTests {
 
     @Test

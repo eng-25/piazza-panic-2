@@ -16,8 +16,12 @@
 
 package main.tests;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,9 +29,8 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
@@ -38,13 +41,21 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
 	public GdxTestRunner(Class<?> klass) throws InitializationError {
 		super(klass);
 		HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
-
 		new HeadlessApplication(this, conf);
-		Gdx.gl = mock(GL20.class);
+		Gdx.gl20 = mock(GL20.class);
+		Gdx.gl = Gdx.gl20;
+		Gdx.graphics = Mockito.mock(Graphics.class);
+		//Gdx.gl20 = mock(GL20.class);
+		//Gdx.gl30 = mock(GL30.class);
+		//Gdx.graphics = mock(Graphics.class);
+
+
+
 	}
 
 	@Override
 	public void create() {
+
 	}
 
 	@Override
