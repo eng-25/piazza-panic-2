@@ -1,12 +1,15 @@
 package main.tests;
 
 import com.badlogic.gdx.Gdx;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@RunWith(GdxTestRunner.class)
+@RunWith(main.tests.GdxTestRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AssetTests {
 
     @Test
