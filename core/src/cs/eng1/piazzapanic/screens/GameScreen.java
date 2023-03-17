@@ -54,6 +54,7 @@ public class GameScreen implements Screen {
     float tileUnitSize = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
 
     // Initialize stage and camera
+    // TODO: remove this CI test comment
     OrthographicCamera camera = new OrthographicCamera();
     ExtendViewport viewport = new ExtendViewport(sizeX, sizeY, camera); // Number of tiles
     this.stage = new Stage(viewport);
