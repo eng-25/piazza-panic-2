@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(GdxTestRunner.class)
 public class ExperimentTests {
-    private BitmapFont bmfMock;
+    //private BitmapFont bmfMock;
     private TiledMapTileLayer tmtlMock;
     private FontManager fmMock;
     private ButtonManager bmMock;
@@ -46,12 +46,8 @@ public class ExperimentTests {
 
     @Before
     public void setup(){
-        bmfMock = Mockito.mock(BitmapFont.class);
+        //bmfMock = Mockito.mock(BitmapFont.class);
         tmtlMock = Mockito.mock(TiledMapTileLayer.class);
-
-//        Stage uistageMock = Mockito.mock(Stage.class);
-//        when(uistageMock.getWidth()).thenReturn(640f);
-//        when(uistageMock.getHeight()).thenReturn(480f);
 
         fmMock = Mockito.mock(FontManager.class);
         bmMock = Mockito.mock(ButtonManager.class);
@@ -66,7 +62,7 @@ public class ExperimentTests {
         when(pMock.getButtonManager()).thenReturn(bmMock);
         when(pMock.getSettingsOverlay()).thenReturn(soMock);
 
-        when(pMock.getFontManager().getTitleFont()).thenReturn(bmfMock);
+        //when(pMock.getFontManager().getTitleFont()).thenReturn(bmfMock);
 
 
     }
