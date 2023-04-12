@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.ui;
+package cs.eng1.piazzapanic.ui.overlay;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -12,22 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import cs.eng1.piazzapanic.ui.ButtonManager;
 
-public class TutorialOverlay {
+public class TutorialOverlay extends BaseOverlay {
 
-  private final Table table;
+  private Stage currentStage;
+  private Stage otherStage;
 
   public TutorialOverlay(final PiazzaPanicGame game) {
-    // Initialize table
-    this.table = new Table();
-    table.setFillParent(true);
-    table.setVisible(false);
-    Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGB565);
-    bgPixmap.setColor(Color.LIGHT_GRAY);
-    bgPixmap.fill();
-    TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(
-        new Texture(bgPixmap));
-    table.setBackground(textureRegionDrawableBg);
+    super(game);
+
+    currentStage = null;
+    otherStage = null;
 
     // Initialize movement instructions label
     LabelStyle labelStyle = new LabelStyle(game.getFontManager().getHeaderFont(), Color.BLACK);
@@ -48,15 +44,6 @@ public class TutorialOverlay {
         labelStyle);
     recipeLabel.setWrap(true);
 
-    TextButton backButton = game.getButtonManager()
-        .createTextButton("Done", ButtonManager.ButtonColour.GREY);
-    backButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        hide();
-      }
-    });
-
     // Add items to table
     table.pad(100f);
     table.add(chefMovement).fillX().expandX().pad(20f).padTop(0f);
@@ -65,18 +52,25 @@ public class TutorialOverlay {
     table.row();
     table.add(recipeLabel).fillX().expandX().pad(20f).padTop(0f);
     table.row();
-    table.add(backButton).padTop(20f);
+    addBackButton();
+
   }
 
+  @Override
   public void addToStage(Stage uiStage) {
-    uiStage.addActor(table);
+    if (currentStage != null) {
+      otherStage = currentStage;
+    }
+    currentStage = uiStage;
+    super.addToStage(uiStage);
   }
 
-  public void show() {
-    table.setVisible(true);
-  }
-
-  public void hide() {
-    table.setVisible(false);
+  public void toggleStage() {
+    if (otherStage != null) {
+      otherStage.addActor(table);
+      Stage temp = currentStage;
+      currentStage = otherStage;
+      otherStage = temp;
+    }
   }
 }

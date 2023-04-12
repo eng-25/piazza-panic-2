@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
+import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.Customer;
 import cs.eng1.piazzapanic.food.ingredients.Ingredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
@@ -39,15 +40,20 @@ public class UIOverlay {
     private final Label resultLabel;
     private final Timer resultTimer;
     private final PiazzaPanicGame game;
+    private int maxLivesIndex;
 
     private final Table topTable;
     private final Table midTable;
     private final Table bottomTable;
     private final HorizontalGroup livesGroup;
     private final HorizontalGroup coinGroup;
+    private final ImageButton chefBuyButton;
 
-    public UIOverlay(Stage uiStage, final PiazzaPanicGame game) {
+    private final boolean IS_SCENARIO;
+
+    public UIOverlay(Stage uiStage, final PiazzaPanicGame game, boolean isScenarioMode) {
         this.game = game;
+        this.IS_SCENARIO = isScenarioMode;
 
         // Initialize tables
         topTable = new Table();
@@ -99,14 +105,14 @@ public class UIOverlay {
         timer.setAlignment(Align.center);
 
         // Initialize the pause button
-        ImageButton homeButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
+        ImageButton pauseButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
                         new Texture(
                                 Gdx.files.internal("Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png"))),
                 ButtonManager.ButtonColour.BLUE, -1.5f);
-        homeButton.addListener(new ClickListener() {
+        pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) { //TODO: pause window
-                game.loadHomeScreen();
+                game.getPauseOverlay().show();
             }
         });
         removeBtnDrawable = new TextureRegionDrawable(
@@ -147,7 +153,7 @@ public class UIOverlay {
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
         Value timerWidth = Value.percentWidth(0.2f, topTable);
-        topTable.add(homeButton).left().width(scale).height(scale);
+        topTable.add(pauseButton).left().width(scale).height(scale);
         topTable.add(timer).expandX().width(timerWidth).height(scale);
         topTable.add(chefDisplay).right().width(scale).height(scale);
 
@@ -169,9 +175,20 @@ public class UIOverlay {
         coinGroup.space(Math.max(scale.get() / 8f, 5f));
         coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getHeaderFont(), Color.WHITE)));
 
-        bottomTable.add(livesGroup).top().pad(15f);
-        bottomTable.row();
-        bottomTable.add(coinGroup).top().left().pad(15f);
+        chefBuyButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
+                        new Texture(
+                                Gdx.files.internal("Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png"))),
+                ButtonManager.ButtonColour.BLUE, -1.5f);
+
+
+        if (!IS_SCENARIO) {
+            bottomTable.add(coinGroup).top().left().pad(15f);
+            bottomTable.add(chefBuyButton).top().left().pad(5f);
+            bottomTable.row();
+        }
+        bottomTable.add(livesGroup).bottom().right().pad(15f);
+
+        maxLivesIndex = livesGroup.getChildren().size;
 
     }
 
@@ -183,7 +200,7 @@ public class UIOverlay {
         timer.start();
         resultLabel.setVisible(false);
         resultTimer.setVisible(false);
-        updateChefUI(null);
+        updateChefUI(null, false);
     }
 
     /**
@@ -192,7 +209,8 @@ public class UIOverlay {
      *
      * @param chef The chef that is currently selected for which to show the UI.
      */
-    public void updateChefUI(final Chef chef) {
+    public void updateChefUI(final Chef chef, boolean atMaxChefs) {
+        chefBuyButton.setVisible(!atMaxChefs);
         if (chef == null) {
             chefImage.setDrawable(null);
             ingredientImages.clearChildren();
@@ -221,17 +239,18 @@ public class UIOverlay {
             ingredientImages.addActor(btn);
         }
         ingredientImagesBG.setVisible(!chef.getStack().isEmpty());
-
     }
 
     /**
      * Show the label displaying that the game has finished along with the time it took to complete.
      */
-    public void finishGameUI() {
-        resultLabel.setVisible(true);
-        resultTimer.setTime(timer.getTime());
-        resultTimer.setVisible(true);
+    public void finishGameUI(boolean won) {
+//        resultLabel.setVisible(true);
+//        resultTimer.setTime(timer.getTime());
+//        resultTimer.setVisible(true);
         timer.stop();
+        game.getEndOverlay().show(won, timer);
+        game.getTutorialOverlay().toggleStage();
     }
 
     /**
@@ -312,5 +331,19 @@ public class UIOverlay {
         topTable.padTop(width / 64f);
         midTable.padTop(topTablePadding + width / 64f);
         updateRecipeUI(orders);
+    }
+
+    public void updateLives(int livesCount) {
+        for (int i=maxLivesIndex-1; i>=livesCount; i--) {
+            if (livesGroup.getChild(i) instanceof Stack) {
+                Stack lifeStack = (Stack) livesGroup.getChild(i);
+                lifeStack.getChild(1).remove();
+                maxLivesIndex--;
+            }
+        }
+    }
+
+    public void addBuyChefButton(ClickListener callback) {
+        chefBuyButton.addListener(callback);
     }
 }

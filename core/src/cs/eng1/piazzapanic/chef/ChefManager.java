@@ -9,12 +9,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
+import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,6 +43,10 @@ public class ChefManager implements Disposable {
     final float[] chefY = new float[]{
             3f, 3f, 6.5f
     };
+    private int chefCount;
+    private final int maxChefCount;
+    private final float chefScale;
+    private final Stage chefStage; // TODO: dont like this
 
     /**
      * @param chefScale      the amount to scale the texture by so that each chef is an accurate
@@ -47,23 +55,27 @@ public class ChefManager implements Disposable {
      * @param overlay        the user interface overlay to display information about the current chef
      *                       and time, and to provide more controls.
      */
-    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay) {
+    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode,
+                       Stage chefStage) {
         this.collisionLayer = collisionLayer;
         this.overlay = overlay;
+        this.chefScale = chefScale;
+        this.chefStage = chefStage;
+
+        if (isScenarioMode) {
+            chefCount = 2;
+            maxChefCount = 2;
+        } else {
+            chefCount = 1;
+            maxChefCount = 3; //TODO: should be different to 3?
+        }
 
         // Load chef sprites
-        chefs = new ArrayList<>(chefSprites.length);
+        chefs = new ArrayList<>(chefCount);
 
         // Initialize chefs
-        for (int i = 0; i < chefSprites.length; i++) {
-            String sprite = chefSprites[i];
-            Texture chefTexture = new Texture(Gdx.files.internal(sprite));
-            Chef chef = new Chef(chefTexture, new Vector2(chefTexture.getWidth() * chefScale,
-                    chefTexture.getHeight() * chefScale), this);
-            chef.setBounds(chefX[i], chefY[i], chefTexture.getHeight() * chefScale,
-                    chefTexture.getHeight() * chefScale);
-            chef.setInputEnabled(false);
-            chefs.add(chef);
+        for (int i = 0; i < chefCount; i++) {
+            createChef(i);
         }
     }
 
@@ -74,6 +86,14 @@ public class ChefManager implements Disposable {
         for (int i = 0; i < chefs.size(); i++) {
             chefs.get(i).init(chefX[i], chefY[i]);
         }
+
+        ClickListener callbackToBuy = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                addNewChef();
+            }
+        };
+        overlay.addBuyChefButton(callbackToBuy);
     }
 
     /**
@@ -93,18 +113,18 @@ public class ChefManager implements Disposable {
 
     /**
      * Add the created Chefs to the game world
-     *
-     * @param stage The game world to which the chefs should be added.
+//     *
+//     * @param chefStage The game world to which the chefs should be added.
      */
-    public void addChefsToStage(final Stage stage) {
+    public void addChefsToStage() {
         for (Chef chef : chefs) {
-            stage.addActor(chef);
+            chefStage.addActor(chef);
         }
         final ChefManager manager = this;
-        stage.addListener(new ClickListener() {
+        chefStage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) { // click to change
-                Actor actorHit = stage.hit(x, y, false);
+                Actor actorHit = chefStage.hit(x, y, false);
                 if (actorHit instanceof Chef) {
                     manager.setCurrentChef((Chef) actorHit);
                 } else {
@@ -132,6 +152,29 @@ public class ChefManager implements Disposable {
         });
     }
 
+    public boolean addNewChef() {
+        if (!atMaxChefs()) {
+            chefCount++;
+            Chef newChef = createChef(chefCount-1);
+            chefStage.addActor(newChef);
+            overlay.updateChefUI(currentChef, atMaxChefs());
+            return true;
+        }
+        return false;
+    }
+
+    private Chef createChef(int chefI) {
+        String sprite = Arrays.stream(chefSprites).findAny().get(); //TODO: change to random?
+        Texture chefTexture = new Texture(Gdx.files.internal(sprite));
+        Chef chef = new Chef(chefTexture, new Vector2(chefTexture.getWidth() * chefScale,
+                chefTexture.getHeight() * chefScale), this);
+        chef.setBounds(chefX[chefI], chefY[chefI], chefTexture.getHeight() * chefScale,
+                chefTexture.getHeight() * chefScale);
+        chef.setInputEnabled(false);
+        chefs.add(chef);
+        return chef;
+    }
+
     /**
      * Given a chef, update the state of the chefs to make sure that only one has input enabled.
      *
@@ -151,7 +194,7 @@ public class ChefManager implements Disposable {
             lastChef = null;
             currentChef.setInputEnabled(true);
         }
-        overlay.updateChefUI(currentChef);
+        overlay.updateChefUI(currentChef, atMaxChefs());
     }
 
     public Chef getCurrentChef() {
@@ -162,11 +205,15 @@ public class ChefManager implements Disposable {
         return lastChef;
     }
 
+    public boolean atMaxChefs() {
+        return chefCount >= maxChefCount;
+    }
+
     /**
      * Update the UI when the current chef's stack has been updated
      */
     public void currentChefStackUpdated() {
-        overlay.updateChefUI(currentChef);
+        overlay.updateChefUI(currentChef, atMaxChefs());
     }
 
     @Override

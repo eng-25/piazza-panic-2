@@ -3,7 +3,6 @@ package cs.eng1.piazzapanic.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
@@ -29,7 +28,6 @@ import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
-import java.io.FileWriter;
 import java.util.HashMap;
 
 /**
@@ -48,11 +46,25 @@ public class GameScreen implements Screen {
   private final FoodTextureManager foodTextureManager;
   private final CustomerManager customerManager;
   private boolean isFirstFrame = true;
-
+  private int reputation;
   private float deltaTimer = 0;
 
-  public GameScreen(final PiazzaPanicGame game) {
-    TiledMap map = new TmxMapLoader().load("main-game-map.tmx");
+  private final boolean isScenario;
+  private final int difficulty;
+
+  public GameScreen(final PiazzaPanicGame game, boolean isScenarioMode, int difficulty) {
+    this.isScenario = isScenarioMode;
+    this.difficulty = difficulty;
+
+    TiledMap map;
+
+    if (isScenario) {
+      map = new TmxMapLoader().load("main-game-map.tmx");
+    } else {
+      //TODO: endless
+      map = new TmxMapLoader().load("main-game-map.tmx");
+    }
+
     int sizeX = map.getProperties().get("width", Integer.class);
     int sizeY = map.getProperties().get("height", Integer.class);
     float tileUnitSize = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
@@ -64,8 +76,8 @@ public class GameScreen implements Screen {
 
     ScreenViewport uiViewport = new ScreenViewport();
     this.uiStage = new Stage(uiViewport);
-    this.stationUIController = new StationUIController(uiStage, game);
-    uiOverlay = new UIOverlay(uiStage, game);
+    this.stationUIController = new StationUIController(uiStage, game); //TODO: isScenario
+    uiOverlay = new UIOverlay(uiStage, game, isScenario); //TODO: isScenario, add button to buy chefs here
 
     // Initialize tilemap
     this.tileMapRenderer = new OrthogonalTiledMapRenderer(map, tileUnitSize);
@@ -73,12 +85,17 @@ public class GameScreen implements Screen {
     TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
     foodTextureManager = new FoodTextureManager();
-    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay);
-    customerManager = new CustomerManager(uiOverlay);
+    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage);
+    customerManager = new CustomerManager(uiOverlay, isScenario);
 
     // Add tile objects
     initialiseStations(tileUnitSize, objectLayer);
-    chefManager.addChefsToStage(stage);
+    chefManager.addChefsToStage();
+
+    game.getPauseOverlay().addToStage(uiStage);
+    game.getTutorialOverlay().addToStage(uiStage);
+    game.getEndOverlay().addToStage(uiStage);
+
   }
 
   /**
@@ -191,7 +208,7 @@ public class GameScreen implements Screen {
     Gdx.input.setInputProcessor(multiplexer);
     uiOverlay.init();
     chefManager.init();
-    customerManager.init(foodTextureManager, 5);
+    customerManager.init(foodTextureManager);
 
     for (Actor actor : stage.getActors().items) {
       if (actor instanceof Station) {
@@ -201,6 +218,7 @@ public class GameScreen implements Screen {
     isFirstFrame = true;
 
     deltaTimer = 0;
+    reputation = 3;
   }
 
   @Override
@@ -225,8 +243,12 @@ public class GameScreen implements Screen {
       customerManager.nextRecipe();
     }
 
-    customerManager.tick(delta);
-    uiOverlay.updateRecipeUI(customerManager.getCustomers());
+    reputation = Math.max(reputation - customerManager.tick(delta), 0);
+    uiOverlay.updateLives(reputation);
+    if (reputation <= 0) { //TODO: game pause/end, then show overlay
+      //END_OVERLAY.show();
+      uiOverlay.finishGameUI(false);
+    }
 
     stage.draw();
     uiStage.draw();

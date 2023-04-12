@@ -21,7 +21,7 @@ public class Customer {
         timeElapsed = 0f;
 
         final int RANDOM_TIME_RANGE = 5;
-        final float BASE_ORDER_TIME = 5f;
+        final float BASE_ORDER_TIME = 60f;
         maxTime = maxOrderSize * (new Random().nextInt(RANDOM_TIME_RANGE)+BASE_ORDER_TIME);
         generateOrder(possibleRecipes, maxOrderSize);
     }
@@ -52,8 +52,12 @@ public class Customer {
         return Math.min(timeElapsed/maxTime, 1);
     }
 
-    public void tickTimer(float delta) {
+    public boolean tickTimer(float delta) {
+        if (timeElapsed >= maxTime) {
+            return false;
+        }
         timeElapsed += delta;
+        return timeElapsed >= maxTime;
     }
 
 }

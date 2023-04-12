@@ -7,7 +7,6 @@ import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CustomerManager {
 
@@ -16,10 +15,12 @@ public class CustomerManager {
   private final List<RecipeStation> recipeStations;
   private final UIOverlay overlay;
   private int completeOrders = 0;
-  private int customerCount;
+  private int customerMaxCount;
   private Recipe[] possibleRecipes;
+  private final boolean IS_SCENARIO;
 
-  public CustomerManager(UIOverlay overlay) {
+  public CustomerManager(UIOverlay overlay, boolean isScenarioMode) {
+    this.IS_SCENARIO = isScenarioMode;
     this.overlay = overlay;
     this.recipeStations = new LinkedList<>();
   }
@@ -29,12 +30,14 @@ public class CustomerManager {
    *
    * @param textureManager The manager of food textures that can be passed to the recipes
    */
-  public void init(FoodTextureManager textureManager, int customerCount) {
-    this.customerCount = customerCount;
-    if (customerCount == -1) {
+  public void init(FoodTextureManager textureManager/*, int customerCount*/) {
+    //this.customerCount = customerCount;
+    if (!IS_SCENARIO) {
       possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)}; // TODO: add more dishes
+      customerMaxCount = -1;
     } else {
       possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)};
+      customerMaxCount = 5;
     }
     currentOrders.clear();
   }
@@ -65,21 +68,36 @@ public class CustomerManager {
    * are completed, then show the winning UI.
    */
   public void nextRecipe() {
-    if (completeOrders >= customerCount && customerCount != -1) {
-      currentOrders.clear();
-      overlay.updateRecipeCounter(0);
-      overlay.finishGameUI();
-    } else { // next recipe
-      overlay.updateRecipeCounter(customerCount - completeOrders);
+//    if (completeOrders >= customerMaxCount && customerMaxCount != -1) {
+//      currentOrders.clear();
+//      overlay.updateRecipeCounter(0);
+//      overlay.finishGameUI();
+//    } else
+    if ((completeOrders + currentOrders.size()) < customerMaxCount || customerMaxCount == -1) { // next recipe
+      overlay.updateRecipeCounter(customerMaxCount - completeOrders);
       currentOrders.add(getNewCustomer());
     }
     notifyRecipeStations();
     overlay.updateRecipeUI(currentOrders);
   }
 
-  public void completeRecipe(Recipe order) {
-    currentOrders.remove(order);
+  public void completeOrder(Recipe order) {
+    for (Customer customer: currentOrders) {
+      List<Recipe> customerOrder = customer.getOrder();
+      if (customerOrder.contains(order)) {
+        customerOrder.remove(order);
+        if (customerOrder.isEmpty()) {
+          currentOrders.remove(customer);
+        }
+        break;
+      }
+    }
     overlay.updateRecipeUI(currentOrders);
+    completeOrders++;
+    if (completeOrders >= customerMaxCount && customerMaxCount != -1) {
+      currentOrders.clear();
+      overlay.finishGameUI(true);
+    }
   }
 
   private Customer getNewCustomer(int maxGroupSize) {
@@ -87,7 +105,10 @@ public class CustomerManager {
   }
 
   private Customer getNewCustomer() {
-    return getNewCustomer(3); //TODO: base on mode (1 or 3)
+    if (IS_SCENARIO) {
+      return getNewCustomer(1);
+    }
+    return getNewCustomer(3);
   }
 
   /**
@@ -114,7 +135,19 @@ public class CustomerManager {
     return currentOrders;
   }
 
-  public void tick(float delta) {
-    currentOrders.forEach(customer -> customer.tickTimer(delta));
+  public int tick(float delta) {
+    int reputationLost = 0;
+    Iterator<Customer> iter = currentOrders.iterator();
+    while (iter.hasNext()) {
+      Customer customer = iter.next();
+      if (customer.tickTimer(delta)) {
+        reputationLost++;
+        //TODO: add game mode check here
+        //iter.remove();
+      }
+    }
+    overlay.updateRecipeUI(currentOrders);
+    return reputationLost;
   }
+
 }

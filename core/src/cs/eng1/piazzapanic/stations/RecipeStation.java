@@ -143,7 +143,7 @@ public class RecipeStation extends Station {
         if (completedRecipe != null) {
           Recipe orderToComplete = customerManager.checkRecipe(completedRecipe);
           if (orderToComplete != null) {
-            customerManager.completeRecipe(orderToComplete);
+            customerManager.completeOrder(orderToComplete);
             completedRecipe = null;
           }
         }
