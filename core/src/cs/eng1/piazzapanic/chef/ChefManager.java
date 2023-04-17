@@ -53,8 +53,8 @@ public class ChefManager implements Disposable {
      * @param overlay        the user interface overlay to display information about the current chef
      *                       and time, and to provide more controls.
      */
-    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode,
-            /*Stage chefStage*/) {
+    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode
+            /*, Stage chefStage*/) {
         this.collisionLayer = collisionLayer;
         this.overlay = overlay;
         this.chefScale = chefScale;
@@ -184,7 +184,7 @@ public class ChefManager implements Disposable {
             currentChef = chef;
             currentChef.setInputEnabled(true);
         }
-        overlay.updateChefUI(currentChef);
+        overlay.updateChefUI(currentChef, atMaxChefs());
     }
 
     public Chef getCurrentChef() {
@@ -199,7 +199,7 @@ public class ChefManager implements Disposable {
      * Update the UI when the current chef's stack has been updated
      */
     public void currentChefStackUpdated() {
-        overlay.updateChefUI(currentChef);
+        overlay.updateChefUI(currentChef, atMaxChefs());
     }
 
     @Override
