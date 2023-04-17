@@ -8,6 +8,8 @@ import cs.eng1.piazzapanic.ui.TutorialOverlay;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.FontManager;
 
+import java.util.Random;
+
 public class PiazzaPanicGame extends Game {
 
   private FontManager fontManager;
@@ -16,6 +18,8 @@ public class PiazzaPanicGame extends Game {
   private HomeScreen homeScreen;
   private TutorialOverlay tutorialOverlay;
   private SettingsOverlay settingsOverlay;
+
+  public static final Random RANDOM = new Random();
 
   @Override
   public void create() {
