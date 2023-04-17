@@ -46,15 +46,20 @@ public class GameScreen implements Screen {
   private final FoodTextureManager foodTextureManager;
   private final CustomerManager customerManager;
   private boolean isFirstFrame = true;
+  private final boolean isScenario;
+  private final int difficulty;
 
-  public GameScreen(final PiazzaPanicGame game) {
+  public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty) {
+
+    this.isScenario = isScenario;
+    this.difficulty = difficulty;
+
     TiledMap map = new TmxMapLoader().load("main-game-map.tmx");
     int sizeX = map.getProperties().get("width", Integer.class);
     int sizeY = map.getProperties().get("height", Integer.class);
     float tileUnitSize = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
 
     // Initialize stage and camera
-    // TODO: remove this CI test comment
     OrthographicCamera camera = new OrthographicCamera();
     ExtendViewport viewport = new ExtendViewport(sizeX, sizeY, camera); // Number of tiles
     this.stage = new Stage(viewport);
@@ -70,7 +75,7 @@ public class GameScreen implements Screen {
     TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
     foodTextureManager = new FoodTextureManager();
-    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay);
+    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario);
     customerManager = new CustomerManager(uiOverlay);
 
     // Add tile objects
