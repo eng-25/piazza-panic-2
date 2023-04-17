@@ -188,7 +188,7 @@ public class UIOverlay {
         }
         bottomTable.add(livesGroup).bottom().right().pad(15f);
 
-        maxLivesIndex = livesGroup.getChildren().size;
+        maxLivesIndex = lives;
 
     }
 
@@ -201,6 +201,7 @@ public class UIOverlay {
         resultLabel.setVisible(false);
         resultTimer.setVisible(false);
         updateChefUI(null, false);
+        updateLives(3);
     }
 
     /**
@@ -333,7 +334,7 @@ public class UIOverlay {
         updateRecipeUI(orders);
     }
 
-    public void updateLives(int livesCount) {
+    public void updateLives(int livesCount) { //TODO: rework this, currently removes child so cannot re-add lives
         for (int i=maxLivesIndex-1; i>=livesCount; i--) {
             if (livesGroup.getChild(i) instanceof Stack) {
                 Stack lifeStack = (Stack) livesGroup.getChild(i);

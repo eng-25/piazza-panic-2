@@ -219,6 +219,7 @@ public class GameScreen implements Screen {
 
     deltaTimer = 0;
     reputation = 3;
+    uiOverlay.updateLives(reputation);
   }
 
   @Override

@@ -21,7 +21,7 @@ public class Customer {
         timeElapsed = 0f;
 
         final int RANDOM_TIME_RANGE = 5;
-        final float BASE_ORDER_TIME = 60f;
+        final float BASE_ORDER_TIME = 5f;
         maxTime = maxOrderSize * (new Random().nextInt(RANDOM_TIME_RANGE)+BASE_ORDER_TIME);
         generateOrder(possibleRecipes, maxOrderSize);
     }
