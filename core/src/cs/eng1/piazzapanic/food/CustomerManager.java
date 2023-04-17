@@ -22,6 +22,10 @@ public class CustomerManager {
     private int completeOrders = 0;
     private int maxCustomerCount;
     private Recipe[] possibleRecipes;
+    private float timeSinceCustomer;
+    private float customerInterval;
+
+    public static final float SCENARIO_CUSTOMER_INTERVAL = 30f;
 
     public CustomerManager(UIOverlay overlay, boolean isScenario, int difficulty) {
         this.isScenario = isScenario;
@@ -43,6 +47,7 @@ public class CustomerManager {
             possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)};
             maxCustomerCount = -1;
         }
+        customerInterval = SCENARIO_CUSTOMER_INTERVAL;
         currentOrders.clear();
     }
 
@@ -95,7 +100,7 @@ public class CustomerManager {
     }
 
     private Customer getNewCustomer(int maxGroupSize) {
-        return new Customer(possibleRecipes.clone(), maxGroupSize, isScenario, difficulty);
+        return new Customer(possibleRecipes.clone(), maxGroupSize, getCurrentCustomerTimeMultiplier(), difficulty);
     }
 
     private Customer getNewCustomer() {
@@ -127,6 +132,12 @@ public class CustomerManager {
     }
 
     public int tick(float delta) {
+        if (timeSinceCustomer > customerInterval) {
+            timeSinceCustomer = 0;
+            nextRecipe();
+            updateCustomerInterval();
+        }
+
         int reputationLost = 0;
         Iterator<Customer> iter = currentOrders.iterator();
         while (iter.hasNext()) {
@@ -137,5 +148,18 @@ public class CustomerManager {
         }
         overlay.updateRecipeUI(currentOrders);
         return reputationLost;
+    }
+
+    private void updateCustomerInterval() {
+        //TODO: in endless, decrease this slowly? (base on customer count = currentOrders.size + completeOrders)
+    }
+
+    private float getCurrentCustomerTimeMultiplier() { //TODO: check this calculation
+        return isScenario ? 1 :
+                Math.max(1-(getTotalCustomerCount()/100f), 0.00001f);
+    }
+
+    private int getTotalCustomerCount() {
+        return currentOrders.size() + completeOrders;
     }
 }

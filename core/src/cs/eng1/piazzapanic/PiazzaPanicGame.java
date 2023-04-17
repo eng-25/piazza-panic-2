@@ -3,8 +3,7 @@ package cs.eng1.piazzapanic;
 import com.badlogic.gdx.Game;
 import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.screens.HomeScreen;
-import cs.eng1.piazzapanic.ui.SettingsOverlay;
-import cs.eng1.piazzapanic.ui.TutorialOverlay;
+import cs.eng1.piazzapanic.ui.overlay.*;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.FontManager;
 
@@ -18,6 +17,12 @@ public class PiazzaPanicGame extends Game {
   private HomeScreen homeScreen;
   private TutorialOverlay tutorialOverlay;
   private SettingsOverlay settingsOverlay;
+  private ModeOverlay modeOverlay;
+  private DifficultyOverlay difficultyOverlay;
+  private LoadOrNewOverlay loadOrNewOverlay;
+  private EndOverlay endOverlay;
+  private PauseOverlay pauseOverlay;
+  private int difficulty;
 
   public static final Random RANDOM = new Random();
 
@@ -27,6 +32,12 @@ public class PiazzaPanicGame extends Game {
     buttonManager = new ButtonManager(fontManager);
     tutorialOverlay = new TutorialOverlay(this);
     settingsOverlay = new SettingsOverlay(this);
+    modeOverlay = new ModeOverlay(this);
+    difficultyOverlay = new DifficultyOverlay(this);
+    loadOrNewOverlay = new LoadOrNewOverlay(this);
+    endOverlay = new EndOverlay(this);
+    pauseOverlay = new PauseOverlay(this);
+    difficulty = 0;
     loadHomeScreen();
   }
 
@@ -49,11 +60,38 @@ public class PiazzaPanicGame extends Game {
     setScreen(homeScreen);
   }
 
-  public void loadGameScreen() {
+  public void loadGameScreen(boolean isScenarioMode) {
     if (gameScreen == null) {
-      gameScreen = new GameScreen(this);
+      gameScreen = new GameScreen(this, isScenarioMode, difficulty);
     }
     setScreen(gameScreen);
+    setupGameOverlays();
+  }
+
+  private void setupGameOverlays() {
+    // should not need to hide ALL overlays here, but just in case
+    tutorialOverlay.hide();
+    settingsOverlay.hide();
+    modeOverlay.hide();
+    difficultyOverlay.hide();
+    loadOrNewOverlay.hide();
+    endOverlay.hide();
+    //pauseOverlay.show();
+  }
+
+  public void setDifficulty(int newDifficulty) {
+    // should never be <0 or >2
+    if (newDifficulty <= 0) {
+      difficulty = 0;
+    } else if (newDifficulty >= 2) {
+      difficulty = 2;
+    } else {
+      difficulty = 1;
+    }
+  }
+
+  public int getDifficulty() {
+    return difficulty;
   }
 
   public TutorialOverlay getTutorialOverlay() {
@@ -62,6 +100,26 @@ public class PiazzaPanicGame extends Game {
 
   public SettingsOverlay getSettingsOverlay() {
     return settingsOverlay;
+  }
+
+  public LoadOrNewOverlay getLoadOrNewOverlay() {
+    return loadOrNewOverlay;
+  }
+
+  public PauseOverlay getPauseOverlay() {
+    return pauseOverlay;
+  }
+
+  public EndOverlay getEndOverlay() {
+    return endOverlay;
+  }
+
+  public ModeOverlay getModeOverlay() {
+    return modeOverlay;
+  }
+
+  public DifficultyOverlay getDifficultyOverlay() {
+    return difficultyOverlay;
   }
 
   public FontManager getFontManager() {

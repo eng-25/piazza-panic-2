@@ -45,16 +45,23 @@ public class GameScreen implements Screen {
   private final UIOverlay uiOverlay;
   private final FoodTextureManager foodTextureManager;
   private final CustomerManager customerManager;
-  private boolean isFirstFrame = true;
   private final boolean isScenario;
   private final int difficulty;
 
-  public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty) {
+  private boolean isFirstFrame = true;
+  private int reputation;
+  private float gameTimer;
 
+  public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty) {
     this.isScenario = isScenario;
     this.difficulty = difficulty;
 
-    TiledMap map = new TmxMapLoader().load("main-game-map.tmx");
+    TiledMap map;
+    if (isScenario) {
+      map = new TmxMapLoader().load("main-game-map.tmx");
+    } else { // TODO: endless map
+      map = new TmxMapLoader().load("main-game-map.tmx");
+    }
     int sizeX = map.getProperties().get("width", Integer.class);
     int sizeY = map.getProperties().get("height", Integer.class);
     float tileUnitSize = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
@@ -81,6 +88,10 @@ public class GameScreen implements Screen {
     // Add tile objects
     initialiseStations(tileUnitSize, objectLayer);
     chefManager.addChefsToStage(stage);
+
+    game.getPauseOverlay().addToStage(uiStage);
+    game.getTutorialOverlay().addToStage(uiStage);
+    game.getEndOverlay().addToStage(uiStage);
   }
 
   /**
@@ -191,6 +202,10 @@ public class GameScreen implements Screen {
       }
     }
     isFirstFrame = true;
+
+    gameTimer = 0;
+    reputation = 3;
+    uiOverlay.updateLives(reputation);
   }
 
   @Override
@@ -204,10 +219,18 @@ public class GameScreen implements Screen {
     tileMapRenderer.setView((OrthographicCamera) stage.getCamera());
     tileMapRenderer.render();
 
-    // Render stage
+    // Stage actions
     stage.act(delta);
     uiStage.act(delta);
 
+    gameTimer += delta;
+    reputation = Math.max(reputation - customerManager.tick(delta), 0);
+    if (reputation <= 0) {
+      uiOverlay.finishGameUI(false);
+    }
+    uiOverlay.updateLives(reputation);
+
+    // Render stage
     stage.draw();
     uiStage.draw();
 
@@ -221,6 +244,7 @@ public class GameScreen implements Screen {
   public void resize(int width, int height) {
     this.stage.getViewport().update(width, height, true);
     this.uiStage.getViewport().update(width, height, true);
+    uiOverlay.resizeUI(width, customerManager.getCustomers());
   }
 
   @Override

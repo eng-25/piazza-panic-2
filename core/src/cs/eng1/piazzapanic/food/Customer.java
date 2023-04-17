@@ -16,7 +16,7 @@ public class Customer {
     public static final int GLOBAL_MAX_ORDER_SIZE = 3;
     public static final int GLOBAL_MIN_ORDER_SIZE = 1;
 
-    public Customer(Recipe[] possibleRecipes, int maxOrderSize, boolean isScenario, int difficulty) {
+    public Customer(Recipe[] possibleRecipes, int maxOrderSize, float timeMultiplier, int difficulty) {
         order = new ArrayList<>();
         generateOrder(possibleRecipes, maxOrderSize);
 
