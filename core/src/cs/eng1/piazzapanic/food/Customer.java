@@ -10,19 +10,18 @@ import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 public class Customer {
 
     private final List<Recipe> order;
-    private float timeElapsed;
+    private float timeElapsed = 0f;
     private final float maxTime;
 
     public static final int GLOBAL_MAX_ORDER_SIZE = 3;
     public static final int GLOBAL_MIN_ORDER_SIZE = 1;
 
-    public Customer(Recipe[] possibleRecipes, int maxOrderSize) {
+    public Customer(Recipe[] possibleRecipes, int maxOrderSize, boolean isScenario, int difficulty) {
         order = new ArrayList<>();
         generateOrder(possibleRecipes, maxOrderSize);
 
-        timeElapsed = 0f;
-        //TODO: base these values on difficulty and gamemode
-        final int orderTimeVariationRange = 5;
+        //TODO: base these values on difficulty and game mode (incorporate total game time in endless?)
+        final int orderTimeVariationRange = (int) Math.pow(3, 2-difficulty);
         final float baseOrderTime = 5f;
         maxTime = maxOrderSize * (RANDOM.nextInt(orderTimeVariationRange) + baseOrderTime);
     }
