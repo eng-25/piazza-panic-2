@@ -106,6 +106,7 @@ public class ChoppingStation extends Station {
       if (!inUse) {
         actionTypes.add(StationAction.ActionType.CHOP_ACTION);
       }
+      addClearAction(actionTypes);
     }
     return actionTypes;
   }
@@ -118,6 +119,7 @@ public class ChoppingStation extends Station {
    */
   @Override
   public void doStationAction(StationAction.ActionType action) {
+    super.doStationAction(action);
     switch (action) {
       case CHOP_ACTION:
         timeChopped = 0;
@@ -147,6 +149,11 @@ public class ChoppingStation extends Station {
         uiController.showActions(this, getActionTypes());
         break;
     }
+  }
+
+  @Override
+  protected void clearStation() {
+    currentIngredient = null;
   }
 
   @Override
