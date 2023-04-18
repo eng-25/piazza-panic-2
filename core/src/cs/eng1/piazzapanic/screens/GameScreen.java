@@ -59,8 +59,8 @@ public class GameScreen implements Screen {
     TiledMap map;
     if (isScenario) {
       map = new TmxMapLoader().load("main-game-map.tmx");
-    } else { // TODO: endless map
-      map = new TmxMapLoader().load("main-game-map.tmx");
+    } else {
+      map = new TmxMapLoader().load("endless-map.tmx");
     }
     int sizeX = map.getProperties().get("width", Integer.class);
     int sizeY = map.getProperties().get("height", Integer.class);

@@ -29,7 +29,11 @@
                 "lettuce",
                 "patty",
                 "bun",
-                "tomato"
+                "tomato",
+                "cheese",
+                "beans",
+                "dough",
+                "potato"
             ],
             "valuesAsFlags": true
         },
@@ -55,6 +59,11 @@
                     "value": ""
                 },
                 {
+                    "name": "locked",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "stationType",
                     "propertyType": "StationType",
                     "type": "string",
@@ -77,7 +86,8 @@
                 "choppingStation",
                 "cookingStation",
                 "ingredientStation",
-                "recipeStation"
+                "recipeStation",
+                "ovenStation"
             ],
             "valuesAsFlags": false
         }
