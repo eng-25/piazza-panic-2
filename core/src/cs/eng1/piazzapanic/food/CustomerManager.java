@@ -58,6 +58,7 @@ public class CustomerManager {
      * @return a boolean signifying if the recipe is correct.
      */
     public Recipe checkRecipe(Recipe recipe) {
+        if (recipe == null) { return null; }
         for (Customer order : currentOrders) {
             Recipe r = order.hasRecipe(recipe);
             if (r != null) {
@@ -73,7 +74,7 @@ public class CustomerManager {
      */
     public void nextRecipe() {
         if ((completeOrders + currentOrders.size()) < maxCustomerCount || maxCustomerCount == -1) { // next recipe
-            overlay.updateRecipeCounter(maxCustomerCount - completeOrders);
+            //overlay.updateRecipeCounter(maxCustomerCount - completeOrders);
             currentOrders.add(getNewCustomer());
         }
         notifyRecipeStations();
@@ -132,6 +133,7 @@ public class CustomerManager {
     }
 
     public int tick(float delta) {
+        timeSinceCustomer+=delta;
         if (timeSinceCustomer > customerInterval) {
             timeSinceCustomer = 0;
             nextRecipe();

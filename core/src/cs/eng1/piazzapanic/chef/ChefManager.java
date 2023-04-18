@@ -32,17 +32,17 @@ public class ChefManager implements Disposable {
     private final int maxChefCount;
     private int chefCount;
     private final float chefScale;
-    //private final Stage chefStage;
+    private final Stage chefStage;
 
     public static final String[] CHEF_SPRITES = new String[]{
             "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Man Brown/manBrown_hold.png",
             "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Woman Green/womanGreen_hold.png"
     };
     public static final float[] CHEF_X = new float[]{
-            5f, 10f
+            3.5f, 11.5f, 3.5f
     };
     public static final float[] CHEF_Y = new float[]{
-            3f, 3f
+            2.5f, 2.5f, 6f
     };
 
 
@@ -53,12 +53,12 @@ public class ChefManager implements Disposable {
      * @param overlay        the user interface overlay to display information about the current chef
      *                       and time, and to provide more controls.
      */
-    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode
-            /*, Stage chefStage*/) {
+    public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode,
+                       Stage chefStage) {
         this.collisionLayer = collisionLayer;
         this.overlay = overlay;
         this.chefScale = chefScale;
-        //this.chefStage = chefStage;
+        this.chefStage = chefStage;
 
         if (isScenarioMode) {
             chefCount = maxChefCount = 2;
@@ -84,13 +84,13 @@ public class ChefManager implements Disposable {
             chefs.get(i).init(CHEF_X[i], CHEF_Y[i]);
         }
 
-//        ClickListener callbackToBuy = new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                addNewChef();
-//            }
-//        };
-//        overlay.addBuyButton(callbackToBuy);
+        ClickListener callbackToBuy = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                addNewChef();
+            }
+        };
+        overlay.addBuyChefButton(callbackToBuy);
     }
 
     /**
@@ -116,9 +116,16 @@ public class ChefManager implements Disposable {
         return chef;
     }
 
-//    private boolean addNewChef() {
-//
-//    }
+    private boolean addNewChef() {
+        if (!atMaxChefs()) {
+            chefCount++;
+            Chef newChef = createChef(chefCount-1);
+            chefStage.addActor(newChef);
+            overlay.updateChefUI(currentChef, atMaxChefs());
+            return true;
+        }
+        return false;
+    }
 
     public List<Chef> getChefs() {
         return chefs;

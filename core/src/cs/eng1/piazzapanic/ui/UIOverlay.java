@@ -3,6 +3,7 @@ package cs.eng1.piazzapanic.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -46,11 +47,27 @@ public class UIOverlay {
 
     public static final int MAX_LIVES = 3;
 
+    public static final String SQUARE_BG =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png";
+    public static final String TIMER_BG =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_gradient_down.png";
+    public static final String PAUSE_BUTTON =
+            "Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png";
+    public static final String REMOVE_BUTTON =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_crossWhite.png";
+    public static final String LIFE_EMPTY =
+            "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dot_shadow.png";
+    public static final String LIFE_FULL =
+            "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotBlue.png";
+    public static final String COIN =
+            "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotYellow.png";
+
+
     public UIOverlay(Stage uiStage, final PiazzaPanicGame game, boolean isScenario) {
         this.game = game;
         this.isScenario = isScenario;
 
-        // Initialize table
+        // Initialize tables
         topTable = new Table();
         topTable.setFillParent(true);
         topTable.center().top().pad(15f);
@@ -75,33 +92,29 @@ public class UIOverlay {
 
         // Initialize UI for showing current chef
         chefDisplay = new Stack();
-        chefDisplay.add(new Image(new Texture(
-                "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png")));
+        chefDisplay.add(new Image(new Texture(SQUARE_BG)));
         chefImage = new Image();
         chefImage.setScaling(Scaling.fit);
         chefDisplay.add(chefImage);
 
         // Initialize UI for showing current chef's ingredient stack
         Stack ingredientStackDisplay = new Stack();
-        ingredientImagesBG = new Image(new Texture(
-                "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png"));
-        ingredientImagesBG.setVisible(false);
-        ingredientStackDisplay.add(ingredientImagesBG);
+        ingredientImagesBG = new Image(new Texture(SQUARE_BG));
+        //ingredientImagesBG.setVisible(false);
+        //ingredientStackDisplay.add(ingredientImagesBG);
         ingredientImages = new VerticalGroup();
         ingredientImages.padBottom(10f);
         ingredientStackDisplay.add(ingredientImages);
 
         // Initialize the timer
         LabelStyle timerStyle = new Label.LabelStyle(game.getFontManager().getTitleFont(), null);
-        timerStyle.background = new TextureRegionDrawable(new Texture(
-                "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/green_button_gradient_down.png"));
+        timerStyle.background = new TextureRegionDrawable(new Texture(TIMER_BG));
         timer = new Timer(timerStyle);
         timer.setAlignment(Align.center);
 
         // Initialize the home button
         ImageButton pauseButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
-                        new Texture(
-                                Gdx.files.internal("Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png"))),
+                        new Texture(PAUSE_BUTTON)),
                 ButtonManager.ButtonColour.BLUE, -1.5f);
         pauseButton.addListener(new ClickListener() {
             @Override
@@ -109,18 +122,11 @@ public class UIOverlay {
                 game.loadHomeScreen();
             }
         });
-        removeBtnDrawable = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_crossWhite.png"));
+        removeBtnDrawable = new TextureRegionDrawable(new Texture(REMOVE_BUTTON));
 
-        emptyLife = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dot_shadow.png")
-        );
-        fullLife = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotBlue.png")
-        );
-        coin = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotYellow.png")
-        );
+        emptyLife = new TextureRegionDrawable(new Texture(LIFE_EMPTY));
+        fullLife = new TextureRegionDrawable(new Texture(LIFE_FULL));
+        coin = new TextureRegionDrawable(new Texture(COIN));
 
 //        // Initialize the UI to display the currently requested recipe
 //        Stack recipeDisplay = new Stack();
@@ -151,7 +157,7 @@ public class UIOverlay {
         //topTable.row().padTop(10f);
 
         midTable.add(recipeGroupsDisplay).left().top().expandX();
-        midTable.add(ingredientStackDisplay).right().top();//.width(scale);
+        midTable.add(ingredientStackDisplay).right().top().width(scale);
 //        topTable.add().expandX().width(timerWidth);
 //        topTable.row();
 //        topTable.add(resultLabel).colspan(3);
@@ -159,18 +165,13 @@ public class UIOverlay {
 //        topTable.add(resultTimer).colspan(3);
 
         livesGroup = new HorizontalGroup();
-        for (int i = 0; i < MAX_LIVES; i++) {
-            Stack lifeStack = new Stack();
-            lifeStack.add(new Image(emptyLife));
-            lifeStack.add(new Image(fullLife));
-            livesGroup.addActor(lifeStack);
-            livesGroup.space(Math.max(scale.get() / 4f, 15f));
-        }
+        livesGroup.left();
+        //updateLives(MAX_LIVES);
 
         coinGroup = new HorizontalGroup();
+        coinGroup.left();
         coinGroup.addActor(new Image(coin));
-        coinGroup.space(Math.max(scale.get() / 8f, 5f));
-        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getHeaderFont(), Color.WHITE)));
+        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.WHITE)));
 
 
         chefBuyButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
@@ -180,11 +181,13 @@ public class UIOverlay {
 
 
         if (!isScenario) {
-            bottomTable.add(coinGroup).top().left().pad(15f);
-            bottomTable.add(chefBuyButton).top().left().pad(5f);
+            bottomTable.add(coinGroup).top().left().pad(15f).height(scale)
+                    .width(Value.percentWidth(0.12f, topTable));
+            bottomTable.add(chefBuyButton).top().left().pad(15f).width(scale).height(scale);
             bottomTable.row();
         }
-        bottomTable.add(livesGroup).bottom().right().pad(15f);
+        bottomTable.add(livesGroup).bottom().left().pad(15f).height(scale)
+                .width(Value.percentWidth(0.12f, topTable));
 
         maxLivesIndex = MAX_LIVES;
     }
@@ -198,7 +201,7 @@ public class UIOverlay {
 //        resultLabel.setVisible(false);
 //        resultTimer.setVisible(false);
         updateChefUI(null, false);
-        //updateLives(MAX_LIVES);
+        updateLives(MAX_LIVES);
     }
 
     /**
@@ -220,11 +223,16 @@ public class UIOverlay {
 
         ingredientImages.clearChildren();
         for (Ingredient ingredient : chef.getStack()) {
+            Stack textureStack = new Stack();
+            textureStack.add(new Image(new Texture(SQUARE_BG)));
             Image image = new Image(ingredient.getTexture());
-            image.getDrawable().setMinHeight(chefDisplay.getHeight());
-            image.getDrawable().setMinWidth(chefDisplay.getWidth());
-            ingredientImages.addActor(image);
+//            image.getDrawable().setMinHeight(chefDisplay.getHeight());
+//            image.getDrawable().setMinWidth(chefDisplay.getWidth());
+            textureStack.add(image);
+            ingredientImages.addActor(textureStack);
         }
+        resizeStack();
+
         if (!chef.getStack().isEmpty()) {
             ImageButton btn = game.getButtonManager().createImageButton(removeBtnDrawable,
                     ButtonColour.RED, -1.5f);
@@ -294,7 +302,6 @@ public class UIOverlay {
                 .left().row();
         recipeGroupsDisplay.add(orderGroup).left();
         recipeGroupsDisplay.row().padTop(chefDisplay.getWidth() / 20f);
-        //midTable.debug();
     }
 
     private void addDishToGroup(Recipe dish, HorizontalGroup group) {
@@ -329,16 +336,67 @@ public class UIOverlay {
         topTable.padTop(width / 64f);
         midTable.padTop(topTablePadding + width / 64f);
         updateRecipeUI(orders);
+
+        resizeStack();
+        resizeLives();
+        resizeCoins();
     }
 
-    public void updateLives(int livesCount) { //TODO: rework this, currently removes child so cannot re-add lives
-        for (int i = maxLivesIndex - 1; i >= livesCount; i--) {
-            if (livesGroup.getChild(i) instanceof Stack) {
-                Stack lifeStack = (Stack) livesGroup.getChild(i);
-                lifeStack.getChild(1).remove();
-                maxLivesIndex--;
+    private void resizeStack() {
+        ingredientImages.getChildren().forEach(child -> {
+            if (child instanceof Stack) {
+                Stack imageStack = (Stack) child;
+                ((Stack) child).getChildren().forEach(c -> {
+                    if (c instanceof Image) {
+                        Image image = (Image) c;
+                        image.getDrawable().setMinHeight(chefDisplay.getHeight());
+                        image.getDrawable().setMinWidth(chefDisplay.getWidth());
+                    }
+                });
+                imageStack.setWidth(chefDisplay.getWidth());
+                imageStack.setHeight(chefDisplay.getHeight());
             }
+//            else {
+//                child.setWidth(chefDisplay.getWidth());
+//                child.setHeight(chefDisplay.getHeight());
+//            }
+        });
+    }
+
+    public void updateLives(int livesCount) {
+
+        livesGroup.clearChildren();
+        for (int i = 0; i < MAX_LIVES; i++) {
+            Image life = new Image(emptyLife);
+            if (livesCount > 0) {
+                life.setDrawable(fullLife);
+            }
+            livesGroup.addActor(life);
+            livesGroup.space(Math.max(chefDisplay.getWidth() / 4f, 15f));
+            livesCount--;
         }
+        resizeLives();
+    }
+
+    private void resizeLives() {
+        livesGroup.getChildren().forEach(c -> {
+            if (c instanceof Image) {
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+            }
+        });
+    }
+
+    private void resizeCoins() {
+        coinGroup.getChildren().forEach(c -> {
+            if (c instanceof Image) {
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+            } else if (c instanceof Label) {
+                ((Label) c).setFontScale(chefDisplay.getWidth()/35f);
+            }
+        });
+        coinGroup.space(8f*(chefDisplay.getWidth()/35f));
     }
 
     public void addBuyChefButton(ClickListener callback) {

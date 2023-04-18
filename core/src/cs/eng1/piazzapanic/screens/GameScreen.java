@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
     TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
     foodTextureManager = new FoodTextureManager();
-    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario);
+    chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage);
     customerManager = new CustomerManager(uiOverlay, isScenario, difficulty);
 
     // Add tile objects
