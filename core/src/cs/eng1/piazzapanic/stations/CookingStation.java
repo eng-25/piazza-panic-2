@@ -2,8 +2,8 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
-import cs.eng1.piazzapanic.food.ingredients.Patty;
+import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -18,8 +18,8 @@ import java.util.Objects;
  */
 public class CookingStation extends Station implements IFailable {
 
-    protected final Ingredient[] validIngredients;
-    protected Ingredient currentIngredient;
+    protected final SimpleIngredient[] validIngredients;
+    protected SimpleIngredient currentIngredient;
     protected float timeCooked;
     protected final float totalTimeToCook = 10f;
     private boolean progressVisible = false;
@@ -39,7 +39,7 @@ public class CookingStation extends Station implements IFailable {
      * @param ingredients  An array of ingredients used to define what ingredients can be cooked
      */
     public CookingStation(int id, TextureRegion image, StationUIController uiController,
-                          StationActionUI.ActionAlignment alignment, Ingredient[] ingredients, float failTime,
+                          StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, float failTime,
                           boolean isScenario) {
         super(id, image, uiController, alignment, isScenario);
         validIngredients = ingredients; //A list of the ingredients that can be used by this station.
@@ -78,10 +78,10 @@ public class CookingStation extends Station implements IFailable {
                     }
                     uiController.showFailBar(this);
                 }
-                if (currentIngredient instanceof Patty && !((Patty) currentIngredient).getIsHalfCooked()) {
-                    ((Patty) currentIngredient).setHalfCooked();
-                } else if (currentIngredient instanceof Patty
-                        && ((Patty) currentIngredient).getIsHalfCooked() && !currentIngredient.getIsCooked()) {
+                if (currentIngredient instanceof CookedIngredient && !((CookedIngredient) currentIngredient).isHalfCooked()) {
+                    ((CookedIngredient) currentIngredient).setHalfCooked();
+                } else if (currentIngredient instanceof CookedIngredient
+                        && ((CookedIngredient) currentIngredient).isHalfCooked() && !currentIngredient.getIsCooked()) {
                     currentIngredient.setIsCooked(true);
                 }
                 uiController.hideProgressBar(this);
@@ -99,9 +99,9 @@ public class CookingStation extends Station implements IFailable {
      *                          by the station
      * @return true if the ingredient is in the validIngredients array; false otherwise
      */
-    private boolean isCorrectIngredient(Ingredient ingredientToCheck) {
+    private boolean isCorrectIngredient(SimpleIngredient ingredientToCheck) {
         if (!ingredientToCheck.getIsCooked()) {
-            for (Ingredient item : this.validIngredients) {
+            for (SimpleIngredient item : this.validIngredients) {
                 if (Objects.equals(ingredientToCheck.getType(), item.getType())) {
                     return true;
                 }
@@ -132,7 +132,7 @@ public class CookingStation extends Station implements IFailable {
                 return actionTypes;
             }
             //check to see if total number of seconds has passed to progress the state of the patty.
-            if (currentIngredient instanceof Patty && ((Patty) currentIngredient).getIsHalfCooked()
+            if (currentIngredient instanceof CookedIngredient && ((CookedIngredient) currentIngredient).isHalfCooked()
                     && !currentIngredient.getIsCooked() && !progressVisible) {
                 actionTypes.add(StationAction.ActionType.FLIP_ACTION);
             } else if (currentIngredient.getIsCooked()) {
@@ -168,6 +168,7 @@ public class CookingStation extends Station implements IFailable {
                 timeCooked = 0;
                 uiController.hideActions(this);
                 uiController.showProgressBar(this);
+                uiController.hideFailBar(this);
                 progressVisible = true;
                 break;
 
@@ -183,6 +184,7 @@ public class CookingStation extends Station implements IFailable {
             case GRAB_INGREDIENT:
                 if (nearbyChef.canGrabIngredient()) {
                     nearbyChef.grabIngredient(currentIngredient);
+                    uiController.hideFailBar(this);
                     currentIngredient = null;
                     inUse = false;
                 }
@@ -195,6 +197,8 @@ public class CookingStation extends Station implements IFailable {
     protected void clearStation() {
         currentIngredient = null;
         uiController.showActions(this, getActionTypes());
+        failTimer = 0;
+        inUse = false;
     }
 
     /**
@@ -223,8 +227,8 @@ public class CookingStation extends Station implements IFailable {
         shouldTickFailTimer = false;
         uiController.showActions(this, getActionTypes());
         uiController.hideFailBar(this);
-        if (currentIngredient instanceof Patty) {
-            ((Patty) currentIngredient).setBurnt();
+        if (currentIngredient instanceof CookedIngredient) {
+            ((CookedIngredient) currentIngredient).setBurnt();
         }
     }
 

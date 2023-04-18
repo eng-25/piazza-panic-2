@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.stations.Station;
 
 /**
@@ -27,7 +27,7 @@ public class Chef extends Actor implements Disposable {
   private float imageRotation = 0f;
 
   private final ChefManager chefManager;
-  private final FixedStack<Ingredient> ingredientStack = new FixedStack<>(5);
+  private final FixedStack<SimpleIngredient> ingredientStack = new FixedStack<>(5);
 
   private final Vector2 inputVector;
   private final float speed = 3f;
@@ -67,7 +67,7 @@ public class Chef extends Actor implements Disposable {
         imageBounds.x / 2f, imageBounds.y / 2f, imageBounds.x,
         imageBounds.y, 1f, 1f, imageRotation, 0, 0, image.getWidth(), image.getHeight(), false,
         false);
-    for (Ingredient ingredient : ingredientStack) {
+    for (SimpleIngredient ingredient : ingredientStack) {
       Texture texture = ingredient.getTexture();
       batch.draw(texture, getX() + 0.5f, getY() + 0.2f, 0f, 0.3f, 0.6f, 0.6f, 1f, 1f,
           imageRotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
@@ -257,7 +257,7 @@ public class Chef extends Actor implements Disposable {
     return ingredientStack.hasSpace();
   }
 
-  public void grabIngredient(Ingredient ingredient) {
+  public void grabIngredient(SimpleIngredient ingredient) {
     ingredientStack.push(ingredient);
     notifyAboutUpdatedStack();
   }
@@ -267,13 +267,13 @@ public class Chef extends Actor implements Disposable {
    *
    * @return the ingredient that was popped from the stack.
    */
-  public Ingredient placeIngredient() {
-    Ingredient ingredient = ingredientStack.pop();
+  public SimpleIngredient placeIngredient() {
+    SimpleIngredient ingredient = ingredientStack.pop();
     notifyAboutUpdatedStack();
     return ingredient;
   }
 
-  public FixedStack<Ingredient> getStack() {
+  public FixedStack<SimpleIngredient> getStack() {
     return ingredientStack;
   }
 

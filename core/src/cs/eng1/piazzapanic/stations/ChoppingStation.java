@@ -2,7 +2,7 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -17,8 +17,8 @@ import java.util.Objects;
  */
 public class ChoppingStation extends Station {
 
-  protected final Ingredient[] validIngredients;
-  protected Ingredient currentIngredient = null;
+  protected final SimpleIngredient[] validIngredients;
+  protected SimpleIngredient currentIngredient = null;
   protected float timeChopped;
   protected final float totalTimeToChop = 5f;
   private boolean progressVisible = false;
@@ -35,7 +35,7 @@ public class ChoppingStation extends Station {
    *                      chopped
    */
   public ChoppingStation(int id, TextureRegion image, StationUIController uiController,
-      StationActionUI.ActionAlignment alignment, Ingredient[] ingredients, boolean isScenario) {
+                         StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, boolean isScenario) {
     super(id, image, uiController, alignment, isScenario);
     validIngredients = ingredients; //A list of the ingredients that can be used by this station.
   }
@@ -73,9 +73,9 @@ public class ChoppingStation extends Station {
    *                          by the station
    * @return true if the ingredient is in the validIngredients array; false otherwise
    */
-  private boolean isCorrectIngredient(Ingredient ingredientToCheck) {
+  private boolean isCorrectIngredient(SimpleIngredient ingredientToCheck) {
     if (!ingredientToCheck.getIsChopped()) {
-      for (Ingredient item : this.validIngredients) {
+      for (SimpleIngredient item : this.validIngredients) {
         if (Objects.equals(ingredientToCheck.getType(), item.getType())) {
           return true;
         }

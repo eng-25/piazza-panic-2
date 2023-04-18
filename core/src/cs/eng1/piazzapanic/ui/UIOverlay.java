@@ -3,7 +3,6 @@ package cs.eng1.piazzapanic.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.utils.Scaling;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.food.Customer;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
@@ -225,7 +224,7 @@ public class UIOverlay {
         chefImage.setDrawable(new TextureRegionDrawable(texture));
 
         ingredientImages.clearChildren();
-        for (Ingredient ingredient : chef.getStack()) {
+        for (SimpleIngredient ingredient : chef.getStack()) {
             Stack textureStack = new Stack();
             textureStack.add(new Image(new Texture(SQUARE_BG)));
             Image image = new Image(ingredient.getTexture());

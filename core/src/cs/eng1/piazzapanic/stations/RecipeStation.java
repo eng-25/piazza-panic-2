@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.CustomerManager;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.food.recipes.Salad;
@@ -90,7 +90,7 @@ public class RecipeStation extends Station {
     LinkedList<ActionType> actionTypes = new LinkedList<>();
     if (nearbyChef != null) {
       if (!nearbyChef.getStack().isEmpty()) {
-        Ingredient checkItem = nearbyChef.getStack().peek();
+        SimpleIngredient checkItem = nearbyChef.getStack().peek();
         if (checkItem.getIsChopped() || checkItem.getIsCooked() || Objects.equals(
             checkItem.getType(), "bun")) {
           //If a chef is nearby and is carrying at least one ingredient
@@ -128,7 +128,7 @@ public class RecipeStation extends Station {
     super.doStationAction(action);
     switch (action) {
       case PLACE_INGREDIENT:
-        Ingredient topItem = nearbyChef.getStack().peek();
+        SimpleIngredient topItem = nearbyChef.getStack().peek();
         switch (topItem.getType()) {
           case "patty":
             nearbyChef.placeIngredient();

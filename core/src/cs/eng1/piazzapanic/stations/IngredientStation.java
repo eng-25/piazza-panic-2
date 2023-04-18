@@ -2,7 +2,7 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 public class IngredientStation extends Station {
 
-  protected final Ingredient ingredientDispensed;
+  protected final SimpleIngredient ingredientDispensed;
 
   public IngredientStation(int id, TextureRegion image, StationUIController uiController,
-      StationActionUI.ActionAlignment alignment, Ingredient ingredient, boolean isScenario) {
+                           StationActionUI.ActionAlignment alignment, SimpleIngredient ingredient, boolean isScenario) {
     super(id, image, uiController, alignment, isScenario);
     ingredientDispensed = ingredient; //What ingredient the station will give to the player.
   }
@@ -35,7 +35,7 @@ public class IngredientStation extends Station {
   public void doStationAction(StationAction.ActionType action) {
     if (action == StationAction.ActionType.GRAB_INGREDIENT) {
       if (this.nearbyChef != null && nearbyChef.canGrabIngredient()) {
-        nearbyChef.grabIngredient(Ingredient.fromString(ingredientDispensed.getType(),
+        nearbyChef.grabIngredient(SimpleIngredient.fromString(ingredientDispensed.getType(),
             ingredientDispensed.getTextureManager()));
       }
     }

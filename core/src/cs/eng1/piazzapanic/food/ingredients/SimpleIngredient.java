@@ -4,14 +4,14 @@ import com.badlogic.gdx.graphics.Texture;
 
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 
-public class Ingredient {
+public class SimpleIngredient {
 
   private final String type;
   protected final FoodTextureManager textureManager;
   protected boolean isCooked = false;
   protected  boolean isChopped = false;
 
-  public Ingredient(String type, FoodTextureManager textureManager) {
+  public SimpleIngredient(String type, FoodTextureManager textureManager) {
     this.type = type;
     this.textureManager = textureManager;
   }
@@ -31,17 +31,25 @@ public class Ingredient {
    * @param ingredientName the name of the ingredient which can be defined from Tiled
    * @return the Ingredient of the type defined by the input
    */
-  public static Ingredient fromString(String ingredientName,
-      FoodTextureManager textureManager) {
+  public static SimpleIngredient fromString(String ingredientName,
+                                            FoodTextureManager textureManager) {
     switch (ingredientName) {
       case "patty":
-        return new Patty(textureManager);
+        return new CookedIngredient("patty", textureManager);
       case "tomato":
-        return new Tomato(textureManager);
+        return new ChoppedIngredient("tomato", textureManager);
       case "lettuce":
-        return new Lettuce(textureManager);
+        return new ChoppedIngredient("lettuce", textureManager);
       case "bun":
-        return new Bun(textureManager);
+        return new SimpleIngredient("bun", textureManager);
+      case "cheese":
+        return new ChoppedIngredient("cheese", textureManager);
+      case "beans":
+        return new CookedIngredient("beans", textureManager);
+      case "potato":
+        return new SimpleIngredient("potato", textureManager);
+      case "dough":
+        return new SimpleIngredient("dough", textureManager);
       default:
         return null;
     }
@@ -54,10 +62,10 @@ public class Ingredient {
    *                           with no whitespace as defined in Tiled
    * @return An array of Ingredient based on the input string
    */
-  public static Ingredient[] arrayFromString(String csvIngredientNames,
-      FoodTextureManager textureManager) {
+  public static SimpleIngredient[] arrayFromString(String csvIngredientNames,
+                                                   FoodTextureManager textureManager) {
     String[] ingredientNames = csvIngredientNames.split(",");
-    Ingredient[] ingredients = new Ingredient[ingredientNames.length];
+    SimpleIngredient[] ingredients = new SimpleIngredient[ingredientNames.length];
     for (int i = 0; i < ingredientNames.length; i++) {
       ingredients[i] = fromString(ingredientNames[i], textureManager);
     }

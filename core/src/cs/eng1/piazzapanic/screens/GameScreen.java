@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.CustomerManager;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.stations.*;
 import cs.eng1.piazzapanic.ui.StationActionUI;
@@ -134,15 +134,15 @@ public class GameScreen implements Screen {
       switch (tileObject.getProperties().get("stationType", String.class)) {
         case "cookingStation":
           station = new CookingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer, isScenario);
+              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer, isScenario);
           break;
         case "ingredientStation":
           station = new IngredientStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.fromString(ingredients, foodTextureManager), isScenario);
+              alignment, SimpleIngredient.fromString(ingredients, foodTextureManager), isScenario);
           break;
         case "choppingStation":
           station = new ChoppingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager), isScenario);
+              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), isScenario);
           break;
         case "recipeStation":
           station = new RecipeStation(id, tileObject.getTextureRegion(), stationUIController,

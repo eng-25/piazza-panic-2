@@ -21,8 +21,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 952.6666666666665,
-                "y": 993.3333333333334
+                "x": 960,
+                "y": 638.6666666666665
             }
         },
         "endless-map.tmx": {
@@ -32,8 +32,8 @@
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1381,
-                "y": 704
+                "x": 1023,
+                "y": 576
             }
         },
         "main-game-map.tmx": {
@@ -41,7 +41,7 @@
                 3
             ],
             "scale": 0.75,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 981.9999999999999,
                 "y": 669.3333333333334
