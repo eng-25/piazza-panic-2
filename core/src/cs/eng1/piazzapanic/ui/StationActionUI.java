@@ -79,8 +79,14 @@ public class StationActionUI extends Table {
     hideActions();
     for (final StationAction.ActionType action : actions) {
       String actionDescription = StationAction.getActionDescription(action);
-      TextButton actionButton = game.getButtonManager()
-          .createTextButton(actionDescription, ButtonManager.ButtonColour.BLUE);
+      TextButton actionButton;
+      if (action == StationAction.ActionType.CLEAR_STATION) {
+        actionButton = game.getButtonManager()
+                .createTextButton(actionDescription, ButtonManager.ButtonColour.RED);
+      } else {
+        actionButton = game.getButtonManager()
+                .createTextButton(actionDescription, ButtonManager.ButtonColour.BLUE);
+      }
       actionButton.addListener(new ClickListener() {
         @Override
         public void clicked(InputEvent event, float x, float y) {
