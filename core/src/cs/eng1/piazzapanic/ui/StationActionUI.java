@@ -32,6 +32,7 @@ public class StationActionUI extends Table {
   private final Station station;
   private final PiazzaPanicGame game;
   private final ProgressBar progress;
+  private final ProgressBar failBar;
 
 
   public StationActionUI(final Station station, final PiazzaPanicGame game) {
@@ -47,6 +48,13 @@ public class StationActionUI extends Table {
     progressBarStyle.knobBefore = new TextureRegionDrawable(new Texture(Gdx.files.internal(
         "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_gradient_up.png")));
     progress = new ProgressBar(0, 100, 0.1f, false, progressBarStyle);
+
+    ProgressBarStyle failBarStyle = new ProgressBarStyle(new TextureRegionDrawable(new Texture(
+            Gdx.files.internal(
+                    "new/failBarBg.png"))), null);
+    failBarStyle.knobBefore = new TextureRegionDrawable(new Texture(Gdx.files.internal(
+            "new/failBarTop.png")));
+    failBar = new ProgressBar(0, 100, 0.1f, false, failBarStyle);
   }
 
   /**
@@ -58,11 +66,24 @@ public class StationActionUI extends Table {
     setVisible(true);
   }
 
+  public void showFailBar() {
+    add(failBar).pad(10f).row();
+    setVisible(true);
+  }
+
+  public void hideFailBar() {
+    removeActor(failBar);
+  }
+
   /**
    * @param percentage A value between 0 and 100 representing the percentage completed
    */
   public void updateProgress(float percentage) {
     progress.setValue(percentage);
+  }
+
+  public void updateFailValue(float percentage) {
+    failBar.setValue(100-percentage);
   }
 
   public void hideProgressBar() {
@@ -107,11 +128,16 @@ public class StationActionUI extends Table {
     setVisible(false);
 
     boolean hasProgress = getChildren().contains(progress, true);
+    boolean hasFail = getChildren().contains(failBar, true);
 
     clearChildren();
     if (hasProgress) {
       add(progress).pad(10f);
       setVisible(true);
+    }
+
+    if (hasFail) {
+      showFailBar();
     }
   }
 

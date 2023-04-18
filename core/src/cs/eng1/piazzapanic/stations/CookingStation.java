@@ -16,13 +16,17 @@ import java.util.Objects;
  * The CookingStation class is a station representing the place in the kitchen where you cook
  * patties to be used in making burgers.
  */
-public class CookingStation extends Station {
+public class CookingStation extends Station implements IFailable {
 
     protected final Ingredient[] validIngredients;
     protected Ingredient currentIngredient;
     protected float timeCooked;
     protected final float totalTimeToCook = 10f;
     private boolean progressVisible = false;
+
+    private boolean shouldTickFailTimer;
+    private float failTimer;
+    private final float failTime;
 
     /**
      * The constructor method for the class
@@ -35,15 +39,21 @@ public class CookingStation extends Station {
      * @param ingredients  An array of ingredients used to define what ingredients can be cooked
      */
     public CookingStation(int id, TextureRegion image, StationUIController uiController,
-                          StationActionUI.ActionAlignment alignment, Ingredient[] ingredients) {
-        super(id, image, uiController, alignment);
+                          StationActionUI.ActionAlignment alignment, Ingredient[] ingredients, float failTime,
+                          boolean isScenario) {
+        super(id, image, uiController, alignment, isScenario);
         validIngredients = ingredients; //A list of the ingredients that can be used by this station.
+        this.failTime = failTime;
+        failTimer = 0;
+        shouldTickFailTimer = false;
     }
 
     @Override
     public void reset() {
         currentIngredient = null;
         timeCooked = 0;
+        failTimer = 0;
+        shouldTickFailTimer = false;
         progressVisible = false;
         super.reset();
     }
@@ -56,10 +66,18 @@ public class CookingStation extends Station {
      */
     @Override
     public void act(float delta) {
+        tickFailTimer(delta);
         if (inUse) {
             timeCooked += delta;
             uiController.updateProgressValue(this, (timeCooked / totalTimeToCook) * 100f);
+            uiController.updateFailValue(this, getFailPct()*100f);
             if (timeCooked >= totalTimeToCook && progressVisible) {
+                if (!isScenario) { // only allow failing steps if in endless mode
+                    if (!shouldTickFailTimer) {
+                        startFailTimer();
+                    }
+                    uiController.showFailBar(this);
+                }
                 if (currentIngredient instanceof Patty && !((Patty) currentIngredient).getIsHalfCooked()) {
                     ((Patty) currentIngredient).setHalfCooked();
                 } else if (currentIngredient instanceof Patty
@@ -109,6 +127,10 @@ public class CookingStation extends Station {
                 actionTypes.add(StationAction.ActionType.PLACE_INGREDIENT);
             }
         } else {
+            if (hasFailed()) {
+                addClearAction(actionTypes);
+                return actionTypes;
+            }
             //check to see if total number of seconds has passed to progress the state of the patty.
             if (currentIngredient instanceof Patty && ((Patty) currentIngredient).getIsHalfCooked()
                     && !currentIngredient.getIsCooked() && !progressVisible) {
@@ -135,8 +157,6 @@ public class CookingStation extends Station {
         super.doStationAction(action);
         switch (action) {
             case COOK_ACTION:
-                //timeCooked is used to track how long the
-                //ingredient has been cooking for.
                 timeCooked = 0;
                 inUse = true;
                 uiController.hideActions(this);
@@ -189,5 +209,33 @@ public class CookingStation extends Station {
         if (currentIngredient != null) {
             drawFoodTexture(batch, currentIngredient.getTexture());
         }
+    }
+
+    @Override
+    public void startFailTimer() {
+        shouldTickFailTimer = true;
+        failTimer = 0;
+    }
+
+    @Override
+    public void stopFailTimer() {
+        shouldTickFailTimer = false;
+        uiController.showActions(this, getActionTypes());
+        uiController.hideFailBar(this);
+    }
+
+    @Override
+    public void tickFailTimer(float delta) {
+        if (shouldTickFailTimer) {
+            failTimer += delta;
+            if (hasFailed()) {
+                stopFailTimer();
+            }
+        }
+    }
+
+    @Override
+    public float getFailPct() {
+        return Math.min(failTimer/failTime, 1); // at most 1
     }
 }

@@ -82,6 +82,33 @@ public class StationUIController {
     buttons.showProgressBar();
   }
 
+  public void showFailBar(Station station) {
+    StationActionUI buttons = stationActionUI.get(station.getId());
+    if (buttons == null) {
+      addStation(station);
+      buttons = stationActionUI.get(station.getId());
+    }
+    buttons.showFailBar();
+  }
+
+  public void hideFailBar(Station station) {
+    StationActionUI buttons = stationActionUI.get(station.getId());
+    if (buttons == null) {
+      addStation(station);
+      buttons = stationActionUI.get(station.getId());
+    }
+    buttons.hideFailBar();
+  }
+
+  public void updateFailValue(Station station, float percentage) {
+    StationActionUI buttons = stationActionUI.get(station.getId());
+    if (buttons == null) {
+      addStation(station);
+      buttons = stationActionUI.get(station.getId());
+    }
+    buttons.updateFailValue(percentage);
+  }
+
   /**
    * Update progress bar for a station. If the station is not one that this class knows, then it
    * will initialize the UI for it and then show the actions.

@@ -61,7 +61,10 @@ public class UIOverlay {
             "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotBlue.png";
     public static final String COIN =
             "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotYellow.png";
-
+    public static final String CUSTOMER_TIMER =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/green_button_flat_down.png";
+    public static final String CUSTOMER_TIMER_EXPIRED =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/red_button_flat_down.png";
 
     public UIOverlay(Stage uiStage, final PiazzaPanicGame game, boolean isScenario) {
         this.game = game;
@@ -285,14 +288,14 @@ public class UIOverlay {
             }
         }
 
-        Image timerImage = new Image(emptyLife);
+        Image timerImage = new Image(new TextureRegionDrawable(new Texture(CUSTOMER_TIMER_EXPIRED)));
         float timerWidth = chefDisplay.getWidth() * 3;
         float timerHeight = chefDisplay.getHeight() / 4f;
         timerImage.setSize(timerWidth, timerHeight);
         float orderTimePercentage = customer.getTimeElapsedPercentage();
 
         if (orderTimePercentage != 1) { // not out of time
-            timerImage.setDrawable(coin);
+            timerImage.setDrawable(new TextureRegionDrawable(new Texture(CUSTOMER_TIMER)));
             timerWidth *= (1 - customer.getTimeElapsedPercentage());
         }
 

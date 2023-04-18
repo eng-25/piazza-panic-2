@@ -35,8 +35,8 @@ public class ChoppingStation extends Station {
    *                      chopped
    */
   public ChoppingStation(int id, TextureRegion image, StationUIController uiController,
-      StationActionUI.ActionAlignment alignment, Ingredient[] ingredients) {
-    super(id, image, uiController, alignment);
+      StationActionUI.ActionAlignment alignment, Ingredient[] ingredients, boolean isScenario) {
+    super(id, image, uiController, alignment, isScenario);
     validIngredients = ingredients; //A list of the ingredients that can be used by this station.
   }
 
@@ -52,6 +52,7 @@ public class ChoppingStation extends Station {
     if (inUse) {
       timeChopped += delta;
       uiController.updateProgressValue(this, (timeChopped / totalTimeToChop) * 100f);
+      //uiController.updateFailValue(this, getF)
       if (timeChopped >= totalTimeToChop && progressVisible) {
         currentIngredient.setIsChopped(true);
         uiController.hideProgressBar(this);

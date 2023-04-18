@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
     customerManager = new CustomerManager(uiOverlay, isScenario, difficulty);
 
     // Add tile objects
-    initialiseStations(tileUnitSize, objectLayer);
+    initialiseStations(tileUnitSize, objectLayer, 10f);
     chefManager.addChefsToStage(stage);
 
     game.getPauseOverlay().addToStage(uiStage);
@@ -100,7 +100,7 @@ public class GameScreen implements Screen {
    *                     stations and station colliders including position, bounds and station
    *                     capabilities.
    */
-  private void initialiseStations(float tileUnitSize, MapLayer objectLayer) {
+  private void initialiseStations(float tileUnitSize, MapLayer objectLayer, float stationFailTimer) {
     Array<TiledMapTileMapObject> tileObjects = objectLayer.getObjects()
         .getByType(TiledMapTileMapObject.class);
     Array<RectangleMapObject> colliderObjects = objectLayer.getObjects()
@@ -134,23 +134,23 @@ public class GameScreen implements Screen {
       switch (tileObject.getProperties().get("stationType", String.class)) {
         case "cookingStation":
           station = new CookingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager));
+              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer, isScenario);
           break;
         case "ingredientStation":
           station = new IngredientStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.fromString(ingredients, foodTextureManager));
+              alignment, Ingredient.fromString(ingredients, foodTextureManager), isScenario);
           break;
         case "choppingStation":
           station = new ChoppingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager));
+              alignment, Ingredient.arrayFromString(ingredients, foodTextureManager), isScenario);
           break;
         case "recipeStation":
           station = new RecipeStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, foodTextureManager, customerManager);
+              alignment, foodTextureManager, customerManager, isScenario);
           customerManager.addRecipeStation((RecipeStation) station);
           break;
         default:
-          station = new Station(id, tileObject.getTextureRegion(), stationUIController, alignment);
+          station = new Station(id, tileObject.getTextureRegion(), stationUIController, alignment, isScenario);
       }
       float tileX = tileObject.getX() * tileUnitSize;
       float tileY = tileObject.getY() * tileUnitSize;

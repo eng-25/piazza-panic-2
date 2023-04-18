@@ -29,12 +29,15 @@ public class Station extends Actor implements Observer<Chef> {
     protected Chef nearbyChef = null;
     private float imageRotation = 0.0f;
 
+    protected final boolean isScenario;
+
     public Station(int id, TextureRegion image, StationUIController uiController,
-                   StationActionUI.ActionAlignment alignment) {
+                   StationActionUI.ActionAlignment alignment, boolean isScenario) {
         this.id = id;
         stationImage = image; // Texture of the object
         actionAlignment = alignment;
         this.uiController = uiController;
+        this.isScenario = isScenario;
     }
 
     /**
