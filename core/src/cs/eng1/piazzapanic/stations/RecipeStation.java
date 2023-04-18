@@ -205,8 +205,6 @@ public class RecipeStation extends Station {
     if (completedRecipe != null) {
       drawFoodTexture(batch, completedRecipe.getTexture());
     }
-
-    System.out.println(ingredientCountMap.values());
   }
 
   /**
