@@ -155,6 +155,7 @@ public class ChoppingStation extends Station {
   @Override
   protected void clearStation() {
     currentIngredient = null;
+    uiController.showActions(this, getActionTypes());
   }
 
   @Override

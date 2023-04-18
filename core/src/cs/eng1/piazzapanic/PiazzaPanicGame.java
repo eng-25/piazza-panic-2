@@ -61,9 +61,7 @@ public class PiazzaPanicGame extends Game {
   }
 
   public void loadGameScreen(boolean isScenarioMode) {
-    if (gameScreen == null) {
-      gameScreen = new GameScreen(this, isScenarioMode, difficulty);
-    }
+    gameScreen = new GameScreen(this, isScenarioMode, difficulty);
     setScreen(gameScreen);
     setupGameOverlays();
   }

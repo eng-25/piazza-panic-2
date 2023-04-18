@@ -194,6 +194,7 @@ public class CookingStation extends Station implements IFailable {
     @Override
     protected void clearStation() {
         currentIngredient = null;
+        uiController.showActions(this, getActionTypes());
     }
 
     /**
