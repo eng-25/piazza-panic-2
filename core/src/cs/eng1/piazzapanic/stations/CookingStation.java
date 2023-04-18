@@ -222,6 +222,9 @@ public class CookingStation extends Station implements IFailable {
         shouldTickFailTimer = false;
         uiController.showActions(this, getActionTypes());
         uiController.hideFailBar(this);
+        if (currentIngredient instanceof Patty) {
+            ((Patty) currentIngredient).setBurnt();
+        }
     }
 
     @Override

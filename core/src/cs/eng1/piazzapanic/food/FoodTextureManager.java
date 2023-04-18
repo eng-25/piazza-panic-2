@@ -16,6 +16,8 @@ public class FoodTextureManager implements Disposable {
         new Texture(Gdx.files.internal("food/original/cooked_patty.png")));
     this.foodTextures.put("patty_raw",
         new Texture(Gdx.files.internal("food/original/uncooked_patty.png")));
+    this.foodTextures.put("patty_burnt",
+            new Texture(Gdx.files.internal("food/original/burnt_patty.png")));
     this.foodTextures.put("lettuce_raw",
         new Texture(Gdx.files.internal("food/glitch/vegetable/lettuce.png")));
     this.foodTextures.put("lettuce_chopped",

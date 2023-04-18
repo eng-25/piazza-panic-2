@@ -96,7 +96,7 @@ public class CustomerManager {
         completeOrders++;
         if (completeOrders >= maxCustomerCount && maxCustomerCount != -1) {
             currentOrders.clear();
-            overlay.finishGameUI(true);
+            overlay.finishGameUI(true, getCustomersServed());
         }
     }
 
@@ -163,5 +163,9 @@ public class CustomerManager {
 
     private int getTotalCustomerCount() {
         return currentOrders.size() + completeOrders;
+    }
+
+    public int getCustomersServed() {
+        return completeOrders;
     }
 }

@@ -226,7 +226,7 @@ public class GameScreen implements Screen {
     gameTimer += delta;
     reputation = Math.max(reputation - customerManager.tick(delta), 0);
     if (reputation <= 0) {
-      uiOverlay.finishGameUI(false);
+      uiOverlay.finishGameUI(false, customerManager.getCustomersServed());
     }
     uiOverlay.updateLives(reputation);
 

@@ -35,8 +35,9 @@ public class EndOverlay extends BaseOverlay {
         table.add(homeButton).padTop(20f);
     }
 
-    public void show(boolean won, Timer timer) {
-        endMessage.setText((won ? winMessage : lossMessage) + timer.getText());
+    public void show(boolean won, Timer timer, int customerCount) {
+        endMessage.setText((won ? winMessage : lossMessage) + timer.getText() +
+                "\nCustomers served: " + customerCount);
         show();
     }
 }

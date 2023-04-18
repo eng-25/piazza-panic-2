@@ -254,12 +254,12 @@ public class UIOverlay {
     /**
      * Show the label displaying that the game has finished along with the time it took to complete.
      */
-    public void finishGameUI(boolean won) {
+    public void finishGameUI(boolean won, int customerCount) {
 //        resultLabel.setVisible(true);
 //        resultTimer.setTime(timer.getTime());
 //        resultTimer.setVisible(true);
         timer.stop();
-        game.getEndOverlay().show(won, timer);
+        game.getEndOverlay().show(won, timer, customerCount);
         game.getTutorialOverlay().toggleStage();
     }
 
