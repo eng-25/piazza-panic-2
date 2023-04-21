@@ -96,10 +96,15 @@ public class StationActionUI extends Table {
    *
    * @param actions The list of possible station actions to display.
    */
-  public void showActions(List<StationAction.ActionType> actions) {
+  public void showActions(List<StationAction.ActionType> actions, Station station) {
     hideActions();
     for (final StationAction.ActionType action : actions) {
-      String actionDescription = StationAction.getActionDescription(action);
+      String actionDescription;
+      if (action == StationAction.ActionType.FLIP_ACTION) {
+        actionDescription = StationAction.getFlipDescription(station);
+      } else {
+        actionDescription = StationAction.getActionDescription(action);
+      }
       TextButton actionButton;
       if (action == StationAction.ActionType.CLEAR_STATION) {
         actionButton = game.getButtonManager()

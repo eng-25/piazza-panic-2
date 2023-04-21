@@ -245,6 +245,10 @@ public class CookingStation extends Station implements IFailable {
         }
     }
 
+    public SimpleIngredient getCurrentIngredient() {
+        return currentIngredient;
+    }
+
     @Override
     public float getFailPct() {
         return Math.min(failTimer/failTime, 1); // at most 1

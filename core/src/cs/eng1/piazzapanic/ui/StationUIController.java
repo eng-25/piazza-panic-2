@@ -50,7 +50,7 @@ public class StationUIController {
       buttons = stationActionUI.get(station.getId());
     }
 
-    buttons.showActions(actions);
+    buttons.showActions(actions, station);
   }
 
   /**

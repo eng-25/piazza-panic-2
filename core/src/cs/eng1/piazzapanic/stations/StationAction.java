@@ -38,4 +38,20 @@ public class StationAction {
         return "Unknown Action";
     }
   }
+
+  public static String getFlipDescription(Station station) {
+    if (station instanceof CookingStation) {
+      switch (((CookingStation)station).getCurrentIngredient().getType()) {
+        case "patty":
+          return "Flip Patty";
+        case "beans":
+          return "Stir Beans";
+        case "pizza":
+          return "Turn Pizza";
+        case "jacket_potato":
+          return "Turn Jacket Potato";
+      }
+    }
+    return "Flip Item";
+  }
 }
