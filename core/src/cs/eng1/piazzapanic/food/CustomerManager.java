@@ -1,6 +1,5 @@
 package cs.eng1.piazzapanic.food;
 
-import com.badlogic.gdx.utils.Queue;
 import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.food.recipes.Salad;
@@ -44,7 +43,8 @@ public class CustomerManager {
             possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)};
             maxCustomerCount = 5;
         } else {
-            possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)};
+            possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager),
+            new Recipe("pizza_cooked", textureManager), new Recipe("jacket_potato_cooked", textureManager)};
             maxCustomerCount = -1;
         }
         customerInterval = SCENARIO_CUSTOMER_INTERVAL;
