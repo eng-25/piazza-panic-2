@@ -44,7 +44,7 @@ public class RecipeStation extends Station {
   public RecipeStation(int id, TextureRegion textureRegion, StationUIController stationUIController,
       ActionAlignment alignment, FoodTextureManager textureManager,
       CustomerManager customerManager, boolean isScenario) {
-    super(id, textureRegion, stationUIController, alignment, isScenario);
+    super(id, textureRegion, stationUIController, alignment, isScenario, false);
     this.textureManager = textureManager;
     this.customerManager = customerManager;
     ingredientCountMap = new HashMap<>(Map.of(

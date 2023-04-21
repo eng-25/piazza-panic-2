@@ -40,8 +40,8 @@ public class CookingStation extends Station implements IFailable {
      */
     public CookingStation(int id, TextureRegion image, StationUIController uiController,
                           StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, float failTime,
-                          boolean isScenario) {
-        super(id, image, uiController, alignment, isScenario);
+                          boolean isScenario, boolean locked) {
+        super(id, image, uiController, alignment, isScenario, locked);
         validIngredients = ingredients; //A list of the ingredients that can be used by this station.
         this.failTime = failTime;
         failTimer = 0;

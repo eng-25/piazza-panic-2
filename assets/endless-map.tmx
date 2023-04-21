@@ -32,6 +32,7 @@
    <properties>
     <property name="actionAlignment" propertytype="ActionAlignment" value="LEFT"/>
     <property name="collisionObjectIDs" value="59"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="recipeStation"/>
    </properties>
   </object>
@@ -39,6 +40,7 @@
    <properties>
     <property name="actionAlignment" propertytype="ActionAlignment" value="RIGHT"/>
     <property name="collisionObjectIDs" value="58"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="recipeStation"/>
    </properties>
   </object>
@@ -92,6 +94,7 @@
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="55"/>
     <property name="ingredients" propertytype="Ingredient" value="patty,beans"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="cookingStation"/>
    </properties>
   </object>
@@ -107,6 +110,7 @@
    <properties>
     <property name="collisionObjectIDs" value="77,78"/>
     <property name="ingredients" propertytype="Ingredient" value="lettuce"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -117,6 +121,7 @@
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="80,82"/>
     <property name="ingredients" propertytype="Ingredient" value="patty"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -126,6 +131,7 @@
    <properties>
     <property name="collisionObjectIDs" value="122,87"/>
     <property name="ingredients" propertytype="Ingredient" value="bun"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -135,6 +141,7 @@
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="95,97"/>
     <property name="ingredients" propertytype="Ingredient" value="tomato"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -144,6 +151,7 @@
    <properties>
     <property name="collisionObjectIDs" value="101,103"/>
     <property name="ingredients" propertytype="Ingredient" value="potato"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -154,6 +162,7 @@
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="105,106"/>
     <property name="ingredients" propertytype="Ingredient" value="dough"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -163,6 +172,7 @@
    <properties>
     <property name="collisionObjectIDs" value="111,113"/>
     <property name="ingredients" propertytype="Ingredient" value="cheese"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>
@@ -173,6 +183,7 @@
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="115,116"/>
     <property name="ingredients" propertytype="Ingredient" value="beans"/>
+    <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
   </object>

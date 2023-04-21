@@ -35,8 +35,9 @@ public class ChoppingStation extends Station {
    *                      chopped
    */
   public ChoppingStation(int id, TextureRegion image, StationUIController uiController,
-                         StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, boolean isScenario) {
-    super(id, image, uiController, alignment, isScenario);
+                         StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients,
+                         boolean isScenario, boolean locked) {
+    super(id, image, uiController, alignment, isScenario, locked);
     validIngredients = ingredients; //A list of the ingredients that can be used by this station.
   }
 

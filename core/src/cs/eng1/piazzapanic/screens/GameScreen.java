@@ -129,20 +129,22 @@ public class GameScreen implements Screen {
       String ingredients = tileObject.getProperties().get("ingredients", String.class);
       StationActionUI.ActionAlignment alignment = StationActionUI.ActionAlignment.valueOf(
           tileObject.getProperties().get("actionAlignment", "TOP", String.class));
+      boolean locked = tileObject.getProperties().get("locked", false, Boolean.class);
 
       // Initialize specific station types
       switch (tileObject.getProperties().get("stationType", String.class)) {
         case "cookingStation":
           station = new CookingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer, isScenario);
+              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer,
+                  isScenario, locked);
           break;
         case "ingredientStation":
           station = new IngredientStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, SimpleIngredient.fromString(ingredients, foodTextureManager), isScenario);
+              alignment, SimpleIngredient.fromString(ingredients, foodTextureManager), isScenario, locked);
           break;
         case "choppingStation":
           station = new ChoppingStation(id, tileObject.getTextureRegion(), stationUIController,
-              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), isScenario);
+              alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), isScenario, locked);
           break;
         case "recipeStation":
           station = new RecipeStation(id, tileObject.getTextureRegion(), stationUIController,
@@ -151,10 +153,11 @@ public class GameScreen implements Screen {
           break;
         case "ovenStation":
           station = new OvenStation(id, tileObject.getTextureRegion(), stationUIController,
-                  alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer, isScenario);
+                  alignment, SimpleIngredient.arrayFromString(ingredients, foodTextureManager), stationFailTimer,
+                  isScenario, locked);
           break;
         default:
-          station = new Station(id, tileObject.getTextureRegion(), stationUIController, alignment, isScenario);
+          station = new Station(id, tileObject.getTextureRegion(), stationUIController, alignment, isScenario, locked);
       }
       float tileX = tileObject.getX() * tileUnitSize;
       float tileY = tileObject.getY() * tileUnitSize;

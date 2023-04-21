@@ -31,8 +31,8 @@ public class OvenStation extends CookingStation {
      */
     public OvenStation(int id, TextureRegion image, StationUIController uiController,
                        StationActionUI.ActionAlignment alignment, SimpleIngredient[] dishes, float failTime,
-                       boolean isScenario) {
-        super(id, image, uiController, alignment, dishes, failTime, isScenario);
+                       boolean isScenario, boolean locked) {
+        super(id, image, uiController, alignment, dishes, failTime, isScenario, locked);
         heldIngredientMap = new HashMap<>(Map.of(
                 "tomato", 0,
                 "cheese", 0,

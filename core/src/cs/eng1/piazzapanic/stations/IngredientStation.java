@@ -14,8 +14,9 @@ public class IngredientStation extends Station {
   protected final SimpleIngredient ingredientDispensed;
 
   public IngredientStation(int id, TextureRegion image, StationUIController uiController,
-                           StationActionUI.ActionAlignment alignment, SimpleIngredient ingredient, boolean isScenario) {
-    super(id, image, uiController, alignment, isScenario);
+                           StationActionUI.ActionAlignment alignment, SimpleIngredient ingredient,
+                           boolean isScenario, boolean locked) {
+    super(id, image, uiController, alignment, isScenario, locked);
     ingredientDispensed = ingredient; //What ingredient the station will give to the player.
   }
 

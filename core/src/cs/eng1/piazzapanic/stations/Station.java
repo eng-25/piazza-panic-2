@@ -24,6 +24,7 @@ public class Station extends Actor implements Observer<Chef> {
     protected final TextureRegion stationImage;
 
     protected boolean inUse = false;
+    protected boolean locked;
 
     protected final List<Subject<Chef>> chefSubjects = new LinkedList<>();
     protected Chef nearbyChef = null;
@@ -31,13 +32,16 @@ public class Station extends Actor implements Observer<Chef> {
 
     protected final boolean isScenario;
 
+    public static final TextureRegion LOCKED_IMAGE = new TextureRegion(new Texture("new/locked_station.png"));
+
     public Station(int id, TextureRegion image, StationUIController uiController,
-                   StationActionUI.ActionAlignment alignment, boolean isScenario) {
+                   StationActionUI.ActionAlignment alignment, boolean isScenario, boolean locked) {
         this.id = id;
         stationImage = image; // Texture of the object
         actionAlignment = alignment;
         this.uiController = uiController;
         this.isScenario = isScenario;
+        this.locked = locked;
     }
 
     /**
@@ -54,8 +58,12 @@ public class Station extends Actor implements Observer<Chef> {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(stationImage, getX(), getY(), 0.5f, 0.5f, getWidth(), getHeight(), 1f, 1f,
+        batch.draw(getStationImage(), getX(), getY(), 0.5f, 0.5f, getWidth(), getHeight(), 1f, 1f,
                 imageRotation);
+    }
+
+    protected TextureRegion getStationImage() {
+        return locked ? LOCKED_IMAGE : stationImage;
     }
 
     /**
