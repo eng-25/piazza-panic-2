@@ -2,6 +2,7 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
 import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
@@ -145,6 +146,14 @@ public class RecipeStation extends Station {
           case "bun":
             nearbyChef.placeIngredient();
             incrementMapValue("bun");
+            break;
+          case "pizza":
+            nearbyChef.placeIngredient();
+            completedRecipe = new Recipe("pizza_cooked", textureManager);
+            break;
+          case "jacket_potato":
+            nearbyChef.placeIngredient();
+            completedRecipe = new Recipe("jacket_potato_cooked", textureManager);
             break;
         }
 

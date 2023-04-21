@@ -22,11 +22,11 @@ public class CookingStation extends Station implements IFailable {
     protected SimpleIngredient currentIngredient;
     protected float timeCooked;
     protected final float totalTimeToCook = 10f;
-    private boolean progressVisible = false;
+    protected boolean progressVisible = false;
 
-    private boolean shouldTickFailTimer;
-    private float failTimer;
-    private final float failTime;
+    protected boolean shouldTickFailTimer;
+    protected float failTimer;
+    protected final float failTime;
 
     /**
      * The constructor method for the class
@@ -46,6 +46,7 @@ public class CookingStation extends Station implements IFailable {
         this.failTime = failTime;
         failTimer = 0;
         shouldTickFailTimer = false;
+        reset();
     }
 
     @Override
@@ -55,7 +56,6 @@ public class CookingStation extends Station implements IFailable {
         failTimer = 0;
         shouldTickFailTimer = false;
         progressVisible = false;
-        super.reset();
     }
 
     /**
@@ -99,7 +99,7 @@ public class CookingStation extends Station implements IFailable {
      *                          by the station
      * @return true if the ingredient is in the validIngredients array; false otherwise
      */
-    private boolean isCorrectIngredient(SimpleIngredient ingredientToCheck) {
+    protected boolean isCorrectIngredient(SimpleIngredient ingredientToCheck) {
         if (!ingredientToCheck.getIsCooked()) {
             for (SimpleIngredient item : this.validIngredients) {
                 if (Objects.equals(ingredientToCheck.getType(), item.getType())) {
@@ -141,7 +141,9 @@ public class CookingStation extends Station implements IFailable {
             if (!inUse) {
                 actionTypes.add(StationAction.ActionType.COOK_ACTION);
             }
-            addClearAction(actionTypes);
+            if (!progressVisible) {
+                addClearAction(actionTypes);
+            }
         }
         return actionTypes;
     }
@@ -166,6 +168,7 @@ public class CookingStation extends Station implements IFailable {
 
             case FLIP_ACTION:
                 timeCooked = 0;
+                shouldTickFailTimer = false;
                 uiController.hideActions(this);
                 uiController.showProgressBar(this);
                 uiController.hideFailBar(this);

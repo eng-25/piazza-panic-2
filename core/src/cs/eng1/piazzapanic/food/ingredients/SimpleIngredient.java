@@ -50,6 +50,10 @@ public class SimpleIngredient {
         return new SimpleIngredient("potato", textureManager);
       case "dough":
         return new SimpleIngredient("dough", textureManager);
+      case "jacket_potato":
+        return new CookedIngredient("jacket_potato", textureManager);
+      case "pizza":
+        return new CookedIngredient("pizza", textureManager);
       default:
         return null;
     }

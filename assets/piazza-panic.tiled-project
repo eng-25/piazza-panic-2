@@ -33,7 +33,9 @@
                 "cheese",
                 "beans",
                 "dough",
-                "potato"
+                "potato",
+                "jacket_potato",
+                "pizza"
             ],
             "valuesAsFlags": true
         },
