@@ -1,8 +1,6 @@
 package cs.eng1.piazzapanic.food;
 
-import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
-import cs.eng1.piazzapanic.food.recipes.Salad;
 import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
@@ -40,15 +38,23 @@ public class CustomerManager {
      */
     public void init(FoodTextureManager textureManager) {
         if (isScenario) {
-            possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager)};
+            possibleRecipes = getRecipeList(new String[]{"burger", "salad"}, textureManager);
             maxCustomerCount = 5;
         } else {
-            possibleRecipes = new Recipe[]{new Burger(textureManager), new Salad(textureManager),
-            new Recipe("pizza_cooked", textureManager), new Recipe("jacket_potato_cooked", textureManager)};
+            possibleRecipes = getRecipeList(new String[]{"burger", "salad", "pizza_cooked", "jacket_potato_cooked"},
+                    textureManager);
             maxCustomerCount = -1;
         }
         customerInterval = SCENARIO_CUSTOMER_INTERVAL;
         currentOrders.clear();
+    }
+
+    private Recipe[] getRecipeList(String[] recipeTypes, FoodTextureManager manager) {
+        Recipe[] recipeList = new Recipe[recipeTypes.length];
+        for (int i=0; i<recipeTypes.length; i++) {
+            recipeList[i] = new Recipe(recipeTypes[i], manager);
+        }
+        return recipeList;
     }
 
     /**

@@ -2,13 +2,10 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
-import cs.eng1.piazzapanic.food.recipes.Burger;
 import cs.eng1.piazzapanic.food.CustomerManager;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
+import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
-import cs.eng1.piazzapanic.food.recipes.Salad;
 import cs.eng1.piazzapanic.stations.StationAction.ActionType;
 import cs.eng1.piazzapanic.ui.StationActionUI.ActionAlignment;
 import cs.eng1.piazzapanic.ui.StationUIController;
@@ -159,13 +156,13 @@ public class RecipeStation extends Station {
 
         break;
       case MAKE_BURGER:
-        completedRecipe = new Burger(textureManager);
+        completedRecipe = new Recipe("burger", textureManager);
         decrementMapValue("patty");
         decrementMapValue("bun");
         break;
 
       case MAKE_SALAD:
-        completedRecipe = new Salad(textureManager);
+        completedRecipe = new Recipe("salad", textureManager);
         decrementMapValue("tomato");
         decrementMapValue("lettuce");
         break;
