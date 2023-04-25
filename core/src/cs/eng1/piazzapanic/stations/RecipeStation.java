@@ -72,7 +72,7 @@ public class RecipeStation extends Station {
     ingredientCountMap.replaceAll((k, v) -> 0);
   }
 
-  private int getTotalIngredientCount() { //TODO: replace atomic with for loop/iterator?
+  private int getTotalIngredientCount() {
     AtomicInteger total = new AtomicInteger();
     ingredientCountMap.values().forEach(total::addAndGet);
     return total.get();

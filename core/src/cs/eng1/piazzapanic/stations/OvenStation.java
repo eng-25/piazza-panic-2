@@ -1,7 +1,6 @@
 package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import cs.eng1.piazzapanic.food.ingredients.ChoppedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.screens.GameScreen;

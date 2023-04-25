@@ -34,7 +34,7 @@ public class Station extends Actor implements Observer<Chef> {
 
     protected final boolean isScenario;
 
-    public static final int LOCKED_PRICE = 500;
+    public static final int LOCKED_PRICE = 250;
     public static final TextureRegion LOCKED_IMAGE = new TextureRegion(new Texture("new/locked_station.png"));
 
     public Station(int id, TextureRegion image, StationUIController uiController,

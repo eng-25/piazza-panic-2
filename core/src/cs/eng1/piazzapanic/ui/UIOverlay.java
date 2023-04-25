@@ -75,7 +75,7 @@ public class UIOverlay {
         topTable.setFillParent(true);
         topTable.center().top().pad(15f);
         uiStage.addActor(topTable);
-        topTable.pack(); //TODO: needed?
+        topTable.pack();
 
         midTable = new Table();
         midTable.setFillParent(true);

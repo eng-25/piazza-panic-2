@@ -66,7 +66,7 @@ public class ChefManager implements Disposable {
             chefCount = maxChefCount = 2;
         } else {
             chefCount = 1;
-            maxChefCount = 3; //TODO: check number
+            maxChefCount = 3;
         }
 
         // Load chef sprites

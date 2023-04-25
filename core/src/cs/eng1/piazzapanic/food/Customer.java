@@ -21,10 +21,10 @@ public class Customer {
         order = new ArrayList<>();
         generateOrder(possibleRecipes, maxOrderSize);
 
-        //TODO: base these values on difficulty and game mode (incorporate total game time in endless?)
-        final int orderTimeVariationRange = (int) Math.pow(3, 2-difficulty);
-        final float baseOrderTime = 20f;
-        maxTime = maxOrderSize * (RANDOM.nextInt(orderTimeVariationRange) + baseOrderTime) * timeMultiplier;
+        // the max amount that an order can increase by: 1s in hard, 4s in med, 16s in easy
+        final int orderTimeVariationRange = (int) Math.pow(4, 2-difficulty);
+        final float baseOrderTime = 25f;
+        maxTime = maxOrderSize * (RANDOM.nextInt(0, orderTimeVariationRange)+1 + baseOrderTime) * timeMultiplier;
     }
 
     private void generateOrder(Recipe[] possibleRecipes, int maxOrderSize) {
@@ -38,12 +38,8 @@ public class Customer {
     }
 
     private int generateOrderMoney() {
-        int baseMoney = 10;
-        int money = 0;
-
-        money += baseMoney;
-
-        return money;
+        int baseMoney = 75;
+        return baseMoney + RANDOM.nextInt(50);
     }
 
     public Recipe hasRecipe(Recipe toFind) {

@@ -114,12 +114,10 @@ public class CustomerManager {
     }
 
     private void tryRandomPowerup() {
-        //TODO: change
-//        if (RANDOM.nextFloat() < 0.1 && !isScenario) {
-//            System.out.println("Powerup");
-//            gameScreen.getPowerupManager().addPowerup();
-//        }
-        gameScreen.getPowerupManager().addPowerup();
+        if (RANDOM.nextFloat() < 0.1 && !isScenario) {
+            System.out.println("Powerup");
+            gameScreen.getPowerupManager().addPowerup();
+        }
     }
 
     private Customer getNewCustomer(int maxGroupSize) {
@@ -175,7 +173,9 @@ public class CustomerManager {
     }
 
     private void updateCustomerInterval() {
-        //TODO: in endless, decrease this slowly? (base on customer count = currentOrders.size + completeOrders)
+        if (!isScenario) {
+            customerInterval = (float) Math.max(10, customerInterval*Math.pow(0.97 + ((2-difficulty)*0.01), getTotalCustomerCount()));
+        }
     }
 
     private float getCurrentCustomerTimeMultiplier() { //TODO: check this calculation

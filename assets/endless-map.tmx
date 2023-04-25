@@ -120,7 +120,7 @@
    <properties>
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="80,82"/>
-    <property name="ingredients" propertytype="Ingredient" value="patty"/>
+    <property name="ingredients" propertytype="Ingredient" value="tomato"/>
     <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
@@ -130,7 +130,7 @@
   <object id="84" class="Station" gid="129" x="1152" y="516.364" width="128" height="128">
    <properties>
     <property name="collisionObjectIDs" value="122,87"/>
-    <property name="ingredients" propertytype="Ingredient" value="bun"/>
+    <property name="ingredients" propertytype="Ingredient" value="dough"/>
     <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
@@ -140,7 +140,7 @@
    <properties>
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="95,97"/>
-    <property name="ingredients" propertytype="Ingredient" value="tomato"/>
+    <property name="ingredients" propertytype="Ingredient" value="bun"/>
     <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
@@ -161,7 +161,7 @@
    <properties>
     <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
     <property name="collisionObjectIDs" value="105,106"/>
-    <property name="ingredients" propertytype="Ingredient" value="dough"/>
+    <property name="ingredients" propertytype="Ingredient" value="cheese"/>
     <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
@@ -171,7 +171,7 @@
   <object id="109" class="Station" gid="129" x="1280" y="512" width="128" height="128">
    <properties>
     <property name="collisionObjectIDs" value="111,113"/>
-    <property name="ingredients" propertytype="Ingredient" value="cheese"/>
+    <property name="ingredients" propertytype="Ingredient" value="patty"/>
     <property name="locked" type="bool" value="false"/>
     <property name="stationType" propertytype="StationType" value="ingredientStation"/>
    </properties>
