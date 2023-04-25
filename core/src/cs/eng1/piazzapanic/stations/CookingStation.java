@@ -190,6 +190,7 @@ public class CookingStation extends Station implements IFailable {
                     uiController.hideFailBar(this);
                     currentIngredient = null;
                     inUse = false;
+                    shouldTickFailTimer = false;
                 }
                 uiController.showActions(this, getActionTypes());
                 break;

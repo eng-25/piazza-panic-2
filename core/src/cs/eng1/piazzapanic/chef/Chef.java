@@ -31,6 +31,7 @@ public class Chef extends Actor implements Disposable {
 
   private final Vector2 inputVector;
   private final float speed = 3f;
+  private float speedMultiplier = 1f;
 
   /**
    * a parameter which adds a small amount of distance between the chef's boundaries and any other
@@ -59,6 +60,10 @@ public class Chef extends Actor implements Disposable {
     setY(y);
     getStack().clear();
     imageRotation = 0;
+  }
+
+  public void setSpeedMultiplier(float multiplier) {
+    speedMultiplier = multiplier;
   }
 
   @Override
@@ -120,7 +125,8 @@ public class Chef extends Actor implements Disposable {
    * @return the vector representing how far the chef should move
    */
   private Vector2 calculateMovement(float delta) {
-    Vector2 movement = new Vector2(inputVector.x * speed * delta, inputVector.y * speed * delta);
+    Vector2 movement = new Vector2(inputVector.x * speed * delta * speedMultiplier,
+            inputVector.y * speed * delta * speedMultiplier);
 
     // Adjust movement for collision
     movement.x = adjustHorizontalMovementForCollision(movement.x);

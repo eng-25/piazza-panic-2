@@ -18,6 +18,8 @@ import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
+import static cs.eng1.piazzapanic.screens.GameScreen.MAX_LIVES;
+
 public class UIOverlay {
 
     private final Stack chefDisplay;
@@ -43,8 +45,6 @@ public class UIOverlay {
     private final HorizontalGroup coinGroup;
     private final ImageButton chefBuyButton;
     private final boolean isScenario;
-
-    public static final int MAX_LIVES = 3;
 
     public static final String SQUARE_BG =
             "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png";
@@ -399,6 +399,10 @@ public class UIOverlay {
             }
         });
         coinGroup.space(8f*(chefDisplay.getWidth()/35f));
+    }
+
+    public void updateMoney(int amount) {
+        ((Label) coinGroup.getChild(1)).setText(amount);
     }
 
     public void addBuyChefButton(ClickListener callback) {

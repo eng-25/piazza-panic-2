@@ -23,6 +23,7 @@ import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
+import cs.eng1.piazzapanic.powerup.PowerupManager;
 import cs.eng1.piazzapanic.stations.*;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
@@ -45,12 +46,16 @@ public class GameScreen implements Screen {
   private final UIOverlay uiOverlay;
   private final FoodTextureManager foodTextureManager;
   private final CustomerManager customerManager;
+  private final PowerupManager powerupManager;
   private final boolean isScenario;
   private final int difficulty;
 
   private boolean isFirstFrame = true;
   private int reputation;
   private float gameTimer;
+  private int money;
+
+  public static final int MAX_LIVES = 3;
 
   public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty) {
     this.isScenario = isScenario;
@@ -83,7 +88,8 @@ public class GameScreen implements Screen {
 
     foodTextureManager = new FoodTextureManager();
     chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage);
-    customerManager = new CustomerManager(uiOverlay, isScenario, difficulty);
+    customerManager = new CustomerManager(uiOverlay, isScenario, difficulty, this);
+    powerupManager = new PowerupManager(stage, chefManager, this, customerManager);
 
     // Add tile objects
     initialiseStations(tileUnitSize, objectLayer, 10f);
@@ -202,6 +208,7 @@ public class GameScreen implements Screen {
     uiOverlay.init();
     chefManager.init();
     customerManager.init(foodTextureManager);
+    powerupManager.init();
 
     for (Actor actor : stage.getActors().items) {
       if (actor instanceof Station) {
@@ -231,8 +238,9 @@ public class GameScreen implements Screen {
     uiStage.act(delta);
 
     gameTimer += delta;
-    reputation = Math.max(reputation - customerManager.tick(delta), 0);
-    if (reputation <= 0) {
+    int reputationToLose = powerupManager.getInvulnerabilityPowerup().isActive() ? 0 : customerManager.tick(delta);
+    reputation = Math.max(reputation-reputationToLose, 0);
+    if (reputation == 0) {
       uiOverlay.finishGameUI(false, customerManager.getCustomersServed());
     }
     uiOverlay.updateLives(reputation);
@@ -276,5 +284,22 @@ public class GameScreen implements Screen {
     tileMapRenderer.dispose();
     foodTextureManager.dispose();
     chefManager.dispose();
+  }
+
+  public void addMoney(int amount) {
+    money += amount;
+    uiOverlay.updateMoney(money);
+  }
+
+  public int getLives() {
+    return reputation;
+  }
+
+  public void setLives(int lives) {
+    reputation = lives;
+  }
+
+  public PowerupManager getPowerupManager() {
+    return powerupManager;
   }
 }

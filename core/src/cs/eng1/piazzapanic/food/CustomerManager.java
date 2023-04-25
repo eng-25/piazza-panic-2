@@ -1,6 +1,7 @@
 package cs.eng1.piazzapanic.food;
 
 import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
 public class CustomerManager {
 
@@ -21,14 +24,16 @@ public class CustomerManager {
     private Recipe[] possibleRecipes;
     private float timeSinceCustomer;
     private float customerInterval;
+    private final GameScreen gameScreen;
 
     public static final float SCENARIO_CUSTOMER_INTERVAL = 30f;
 
-    public CustomerManager(UIOverlay overlay, boolean isScenario, int difficulty) {
+    public CustomerManager(UIOverlay overlay, boolean isScenario, int difficulty, GameScreen game) {
         this.isScenario = isScenario;
         this.difficulty = difficulty;
         this.overlay = overlay;
         this.recipeStations = new LinkedList<>();
+        gameScreen = game;
     }
 
     /**
@@ -92,7 +97,9 @@ public class CustomerManager {
             List<Recipe> customerOrder = customer.getOrder();
             if (customerOrder.contains(order)) {
                 customerOrder.remove(order);
+                tryRandomPowerup();
                 if (customerOrder.isEmpty()) {
+                    gameScreen.addMoney(customer.getMoney());
                     currentOrders.remove(customer);
                 }
                 break;
@@ -104,6 +111,15 @@ public class CustomerManager {
             currentOrders.clear();
             overlay.finishGameUI(true, getCustomersServed());
         }
+    }
+
+    private void tryRandomPowerup() {
+        //TODO: change
+//        if (RANDOM.nextFloat() < 0.1 && !isScenario) {
+//            System.out.println("Powerup");
+//            gameScreen.getPowerupManager().addPowerup();
+//        }
+        gameScreen.getPowerupManager().addPowerup();
     }
 
     private Customer getNewCustomer(int maxGroupSize) {
