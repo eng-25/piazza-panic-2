@@ -14,7 +14,9 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -87,7 +89,7 @@ public class GameScreen implements Screen {
         TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
         foodTextureManager = new FoodTextureManager();
-        chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage);
+        chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage, 150);
         customerManager = new CustomerManager(uiOverlay, isScenario, difficulty, this);
         powerupManager = new PowerupManager(stage, chefManager, this, customerManager);
 
@@ -208,8 +210,20 @@ public class GameScreen implements Screen {
         multiplexer.addProcessor(uiStage);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
-        uiOverlay.init();
+        uiOverlay.init(chefManager.getChefCost());
         chefManager.init();
+        ClickListener callbackToBuy = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int cost = chefManager.getChefCost();
+                if (money > cost) {
+                    chefManager.addNewChef();
+                    addMoney(-cost);
+                }
+            }
+        };
+        uiOverlay.addBuyChefButton(callbackToBuy);
+
         customerManager.init(foodTextureManager);
         powerupManager.init();
 
@@ -222,7 +236,7 @@ public class GameScreen implements Screen {
 
         gameTimer = 0;
         reputation = 3;
-        money = 700;
+        money = 0;
         uiOverlay.updateLives(reputation);
         uiOverlay.updateMoney(money);
     }

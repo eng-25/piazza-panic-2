@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
+import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.Customer;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
@@ -43,7 +44,7 @@ public class UIOverlay {
     private final Table bottomTable;
     private final HorizontalGroup livesGroup;
     private final HorizontalGroup coinGroup;
-    private final ImageButton chefBuyButton;
+    private final TextButton chefBuyButton;
     private final boolean isScenario;
 
     public static final String SQUARE_BG =
@@ -176,16 +177,15 @@ public class UIOverlay {
         coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.WHITE)));
 
 
-        chefBuyButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
-                        new Texture(
-                                Gdx.files.internal("Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png"))),
-                ButtonManager.ButtonColour.BLUE, -1.5f);
+        chefBuyButton = game.getButtonManager().createTextButton("0",
+                ButtonManager.ButtonColour.BLUE);
 
 
         if (!isScenario) {
             bottomTable.add(coinGroup).top().left().pad(15f).height(scale)
                     .width(Value.percentWidth(0.12f, topTable));
-            bottomTable.add(chefBuyButton).top().left().pad(15f).width(scale).height(scale);
+            Value chefButtonScale = Value.percentWidth(0.06f, topTable);
+            bottomTable.add(chefBuyButton).top().left().pad(15f).width(chefButtonScale).height(chefButtonScale);
             bottomTable.row();
         }
         bottomTable.add(livesGroup).bottom().left().pad(15f).height(scale)
@@ -197,12 +197,12 @@ public class UIOverlay {
     /**
      * Reset values and UI to be in their default state.
      */
-    public void init() {
+    public void init(int chefCostInitial) {
         timer.reset();
         timer.start();
 //        resultLabel.setVisible(false);
 //        resultTimer.setVisible(false);
-        updateChefUI(null, false);
+        updateChefUI(null, false, chefCostInitial);
         updateLives(MAX_LIVES);
     }
 
@@ -212,8 +212,9 @@ public class UIOverlay {
      *
      * @param chef The chef that is currently selected for which to show the UI.
      */
-    public void updateChefUI(final Chef chef, boolean atMaxChefs) {
+    public void updateChefUI(final Chef chef, boolean atMaxChefs, int newCost) {
         chefBuyButton.setVisible(!atMaxChefs);
+        chefBuyButton.setText("Buy\nChef:\n" + newCost);
         if (chef == null) {
             chefImage.setDrawable(null);
             ingredientImages.clearChildren();
@@ -342,6 +343,8 @@ public class UIOverlay {
         resizeStack();
         resizeLives();
         resizeCoins();
+
+        chefBuyButton.getLabel().setFontScale(width*0.001f);
     }
 
     private void resizeStack() {

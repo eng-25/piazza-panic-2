@@ -31,6 +31,7 @@ public class ChefManager implements Disposable {
     private final UIOverlay overlay;
     private final int maxChefCount;
     private int chefCount;
+    private int chefCost;
     private final float chefScale;
     private final Stage chefStage;
 
@@ -54,11 +55,12 @@ public class ChefManager implements Disposable {
      *                       and time, and to provide more controls.
      */
     public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode,
-                       Stage chefStage) {
+                       Stage chefStage, int initialChefCost) {
         this.collisionLayer = collisionLayer;
         this.overlay = overlay;
         this.chefScale = chefScale;
         this.chefStage = chefStage;
+        this.chefCost = initialChefCost;
 
         if (isScenarioMode) {
             chefCount = maxChefCount = 2;
@@ -83,14 +85,6 @@ public class ChefManager implements Disposable {
         for (int i = 0; i < chefs.size(); i++) {
             chefs.get(i).init(CHEF_X[i], CHEF_Y[i]);
         }
-
-        ClickListener callbackToBuy = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                addNewChef();
-            }
-        };
-        overlay.addBuyChefButton(callbackToBuy);
     }
 
     /**
@@ -116,15 +110,14 @@ public class ChefManager implements Disposable {
         return chef;
     }
 
-    private boolean addNewChef() {
+    public void addNewChef() {
         if (!atMaxChefs()) {
             chefCount++;
             Chef newChef = createChef(chefCount-1);
             chefStage.addActor(newChef);
-            overlay.updateChefUI(currentChef, atMaxChefs());
-            return true;
+            chefCost *= 2;
+            overlay.updateChefUI(currentChef, atMaxChefs(), chefCost);
         }
-        return false;
     }
 
     public List<Chef> getChefs() {
@@ -191,7 +184,7 @@ public class ChefManager implements Disposable {
             currentChef = chef;
             currentChef.setInputEnabled(true);
         }
-        overlay.updateChefUI(currentChef, atMaxChefs());
+        overlay.updateChefUI(currentChef, atMaxChefs(), chefCost);
     }
 
     public Chef getCurrentChef() {
@@ -206,7 +199,7 @@ public class ChefManager implements Disposable {
      * Update the UI when the current chef's stack has been updated
      */
     public void currentChefStackUpdated() {
-        overlay.updateChefUI(currentChef, atMaxChefs());
+        overlay.updateChefUI(currentChef, atMaxChefs(), chefCost);
     }
 
     @Override
@@ -214,5 +207,9 @@ public class ChefManager implements Disposable {
         for (Chef chef : chefs) {
             chef.dispose();
         }
+    }
+
+    public int getChefCost() {
+        return chefCost;
     }
 }
