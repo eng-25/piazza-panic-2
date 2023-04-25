@@ -106,9 +106,13 @@ public class StationActionUI extends Table {
         actionDescription = StationAction.getActionDescription(action);
       }
       TextButton actionButton;
-      if (action == StationAction.ActionType.CLEAR_STATION) {
+      if (action == StationAction.ActionType.CLEAR_STATION || (action == StationAction.ActionType.BUY_STATION
+      && !station.canBuy())) {
         actionButton = game.getButtonManager()
                 .createTextButton(actionDescription, ButtonManager.ButtonColour.RED);
+      } else if (action == StationAction.ActionType.BUY_STATION) {
+        actionButton = game.getButtonManager()
+                .createTextButton(actionDescription, ButtonManager.ButtonColour.GREEN);
       } else {
         actionButton = game.getButtonManager()
                 .createTextButton(actionDescription, ButtonManager.ButtonColour.BLUE);

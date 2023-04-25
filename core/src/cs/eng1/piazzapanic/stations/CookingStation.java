@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -40,8 +41,8 @@ public class CookingStation extends Station implements IFailable {
      */
     public CookingStation(int id, TextureRegion image, StationUIController uiController,
                           StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, float failTime,
-                          boolean isScenario, boolean locked) {
-        super(id, image, uiController, alignment, isScenario, locked);
+                          boolean isScenario, boolean locked, GameScreen game) {
+        super(id, image, uiController, alignment, isScenario, locked, game);
         validIngredients = ingredients; //A list of the ingredients that can be used by this station.
         this.failTime = failTime;
         failTimer = 0;
@@ -120,6 +121,10 @@ public class CookingStation extends Station implements IFailable {
     public List<StationAction.ActionType> getActionTypes() {
         LinkedList<StationAction.ActionType> actionTypes = new LinkedList<>();
         if (nearbyChef == null) {
+            return actionTypes;
+        }
+        if (locked) {
+            actionTypes.add(StationAction.ActionType.BUY_STATION);
             return actionTypes;
         }
         if (currentIngredient == null) {

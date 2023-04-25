@@ -6,6 +6,7 @@ import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.stations.StationAction.ActionType;
 import cs.eng1.piazzapanic.ui.StationActionUI.ActionAlignment;
 import cs.eng1.piazzapanic.ui.StationUIController;
@@ -42,9 +43,9 @@ public class RecipeStation extends Station {
    *                              needs to be served
    */
   public RecipeStation(int id, TextureRegion textureRegion, StationUIController stationUIController,
-      ActionAlignment alignment, FoodTextureManager textureManager,
-      CustomerManager customerManager, boolean isScenario) {
-    super(id, textureRegion, stationUIController, alignment, isScenario, false);
+                       ActionAlignment alignment, FoodTextureManager textureManager,
+                       CustomerManager customerManager, boolean isScenario, GameScreen game) {
+    super(id, textureRegion, stationUIController, alignment, isScenario, false, game);
     this.textureManager = textureManager;
     this.customerManager = customerManager;
     ingredientCountMap = new HashMap<>(Map.of(

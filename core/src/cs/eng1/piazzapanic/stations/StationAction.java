@@ -11,7 +11,8 @@ public class StationAction {
     MAKE_BURGER,
     MAKE_SALAD,
     SUBMIT_ORDER,
-    CLEAR_STATION
+    CLEAR_STATION,
+    BUY_STATION
   }
 
   public static String getActionDescription(ActionType actionType) {
@@ -34,6 +35,8 @@ public class StationAction {
         return "Submit Order";
       case CLEAR_STATION:
         return "Clear Station";
+      case BUY_STATION:
+        return "Unlock (" + Station.LOCKED_PRICE + ")";
       default:
         return "Unknown Action";
     }
@@ -49,7 +52,7 @@ public class StationAction {
         case "pizza":
           return "Turn Pizza";
         case "jacket_potato":
-          return "Turn Jacket Potato";
+          return "Turn Potato";
       }
     }
     return "Flip Item";

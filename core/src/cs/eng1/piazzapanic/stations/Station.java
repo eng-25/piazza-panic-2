@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.observable.Observer;
 import cs.eng1.piazzapanic.observable.Subject;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -22,6 +23,7 @@ public class Station extends Actor implements Observer<Chef> {
     protected final StationUIController uiController;
     protected final StationActionUI.ActionAlignment actionAlignment;
     protected final TextureRegion stationImage;
+    protected final GameScreen gameScreen;
 
     protected boolean inUse = false;
     protected boolean locked;
@@ -32,16 +34,18 @@ public class Station extends Actor implements Observer<Chef> {
 
     protected final boolean isScenario;
 
+    public static final int LOCKED_PRICE = 500;
     public static final TextureRegion LOCKED_IMAGE = new TextureRegion(new Texture("new/locked_station.png"));
 
     public Station(int id, TextureRegion image, StationUIController uiController,
-                   StationActionUI.ActionAlignment alignment, boolean isScenario, boolean locked) {
+                   StationActionUI.ActionAlignment alignment, boolean isScenario, boolean locked, GameScreen game) {
         this.id = id;
         stationImage = image; // Texture of the object
         actionAlignment = alignment;
         this.uiController = uiController;
         this.isScenario = isScenario;
         this.locked = locked;
+        this.gameScreen = game;
     }
 
     /**
@@ -188,6 +192,10 @@ public class Station extends Actor implements Observer<Chef> {
         if (action == StationAction.ActionType.CLEAR_STATION) {
             clearStation();
         }
+        if (action == StationAction.ActionType.BUY_STATION) {
+            buyStation();
+            uiController.showActions(this, getActionTypes());
+        }
     }
 
     protected void clearStation() {
@@ -202,5 +210,16 @@ public class Station extends Actor implements Observer<Chef> {
 
     public int getId() {
         return id;
+    }
+
+    public void buyStation() {
+        if (locked && canBuy()) {
+            locked = false;
+            gameScreen.addMoney(-LOCKED_PRICE);
+        }
+    }
+
+    public boolean canBuy() {
+        return gameScreen.getMoney() >= LOCKED_PRICE;
     }
 }

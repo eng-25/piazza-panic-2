@@ -3,6 +3,7 @@ package cs.eng1.piazzapanic.stations;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -15,8 +16,8 @@ public class IngredientStation extends Station {
 
   public IngredientStation(int id, TextureRegion image, StationUIController uiController,
                            StationActionUI.ActionAlignment alignment, SimpleIngredient ingredient,
-                           boolean isScenario, boolean locked) {
-    super(id, image, uiController, alignment, isScenario, locked);
+                           boolean isScenario, boolean locked, GameScreen game) {
+    super(id, image, uiController, alignment, isScenario, locked, game);
     ingredientDispensed = ingredient; //What ingredient the station will give to the player.
   }
 

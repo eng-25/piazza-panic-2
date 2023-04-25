@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.ingredients.ChoppedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -31,8 +32,8 @@ public class OvenStation extends CookingStation {
      */
     public OvenStation(int id, TextureRegion image, StationUIController uiController,
                        StationActionUI.ActionAlignment alignment, SimpleIngredient[] dishes, float failTime,
-                       boolean isScenario, boolean locked) {
-        super(id, image, uiController, alignment, dishes, failTime, isScenario, locked);
+                       boolean isScenario, boolean locked, GameScreen game) {
+        super(id, image, uiController, alignment, dishes, failTime, isScenario, locked, game);
         heldIngredientMap = new HashMap<>(Map.of(
                 "tomato", 0,
                 "cheese", 0,
@@ -64,6 +65,10 @@ public class OvenStation extends CookingStation {
         if (nearbyChef == null) {
             return actionTypes;
         }
+        if (locked) {
+            actionTypes.add(StationAction.ActionType.BUY_STATION);
+            return actionTypes;
+        }
         if (currentIngredient == null) {
             if (nearbyChef.hasIngredient() && isCorrectIngredient(nearbyChef.getStack().peek())) {
                 actionTypes.add(StationAction.ActionType.PLACE_INGREDIENT);
@@ -89,9 +94,6 @@ public class OvenStation extends CookingStation {
 
     @Override
     public void doStationAction(StationAction.ActionType action) {
-        if (action == StationAction.ActionType.CLEAR_STATION) {
-            clearStation();
-        }
         switch (action) {
             case COOK_ACTION:
                 timeCooked = 0;
@@ -128,6 +130,13 @@ public class OvenStation extends CookingStation {
                 }
                 uiController.showActions(this, getActionTypes());
                 break;
+            case CLEAR_STATION:
+                clearStation();
+                break;
+            case BUY_STATION:
+                buyStation();
+                uiController.showActions(this, getActionTypes());
+
         }
     }
 
