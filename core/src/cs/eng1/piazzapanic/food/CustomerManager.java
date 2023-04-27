@@ -115,7 +115,6 @@ public class CustomerManager {
 
     private void tryRandomPowerup() {
         if (RANDOM.nextFloat() < 0.1 && !isScenario) {
-            System.out.println("Powerup");
             gameScreen.getPowerupManager().addPowerup();
         }
     }
@@ -189,5 +188,9 @@ public class CustomerManager {
 
     public int getCustomersServed() {
         return completeOrders;
+    }
+
+    public float getCustomerInterval() {
+        return customerInterval;
     }
 }

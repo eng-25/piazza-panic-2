@@ -24,7 +24,7 @@ public class LoadOrNewOverlay extends BaseOverlay {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.loadGameFromSave();
             }
         });
 

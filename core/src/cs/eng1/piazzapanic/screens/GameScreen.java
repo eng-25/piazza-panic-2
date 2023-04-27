@@ -2,7 +2,9 @@ package cs.eng1.piazzapanic.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
@@ -18,20 +20,26 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
+import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.chef.ChefManager;
+import cs.eng1.piazzapanic.food.Customer;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
+import cs.eng1.piazzapanic.food.recipes.Recipe;
 import cs.eng1.piazzapanic.powerup.PowerupManager;
 import cs.eng1.piazzapanic.stations.*;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
-import java.util.HashMap;
+import java.util.*;
+import java.util.logging.FileHandler;
 
 /**
  * The screen which can be used to load the tilemap and keep track of everything happening in the
@@ -51,10 +59,10 @@ public class GameScreen implements Screen {
     private final PowerupManager powerupManager;
     private final boolean isScenario;
     private final int difficulty;
+    private final List<Station> stationList;
 
     private boolean isFirstFrame = true;
     private int reputation;
-    private float gameTimer;
     private int money;
 
     public static final int MAX_LIVES = 3;
@@ -94,7 +102,7 @@ public class GameScreen implements Screen {
         powerupManager = new PowerupManager(stage, chefManager, this, customerManager);
 
         // Add tile objects
-        initialiseStations(tileUnitSize, objectLayer, 10f);
+        stationList = initialiseStations(tileUnitSize, objectLayer, 10f);
         chefManager.addChefsToStage(stage);
 
         game.getPauseOverlay().addToStage(uiStage);
@@ -108,7 +116,9 @@ public class GameScreen implements Screen {
      *                     stations and station colliders including position, bounds and station
      *                     capabilities.
      */
-    private void initialiseStations(float tileUnitSize, MapLayer objectLayer, float stationFailTimer) {
+    private List<Station> initialiseStations(float tileUnitSize, MapLayer objectLayer, float stationFailTimer) {
+        List<Station> stationList = new ArrayList<>();
+
         Array<TiledMapTileMapObject> tileObjects = objectLayer.getObjects()
                 .getByType(TiledMapTileMapObject.class);
         Array<RectangleMapObject> colliderObjects = objectLayer.getObjects()
@@ -201,7 +211,9 @@ public class GameScreen implements Screen {
                 }
 
             }
+            stationList.add(station);
         }
+        return stationList;
     }
 
     @Override
@@ -234,7 +246,6 @@ public class GameScreen implements Screen {
         }
         isFirstFrame = true;
 
-        gameTimer = 0;
         reputation = 3;
         money = 0;
         uiOverlay.updateLives(reputation);
@@ -256,7 +267,6 @@ public class GameScreen implements Screen {
         stage.act(delta);
         uiStage.act(delta);
 
-        gameTimer += delta;
         int reputationToLose = powerupManager.getInvulnerabilityPowerup().isActive() ? 0 : customerManager.tick(delta);
         reputation = Math.max(reputation - reputationToLose, 0);
         if (reputation == 0) {
@@ -324,5 +334,120 @@ public class GameScreen implements Screen {
 
     public PowerupManager getPowerupManager() {
         return powerupManager;
+    }
+
+    public void save() {
+        Preferences save = Gdx.app.getPreferences("Save");
+        save.clear();
+
+        // Global vars
+        save.putBoolean("is_scenario", isScenario);
+        save.putInteger("difficulty", difficulty);
+        save.putFloat("timer", uiOverlay.getTimerTime());
+        save.putInteger("money", money);
+        save.putInteger("reputation", reputation);
+
+        // Stations
+        Map<String, Map<String, String>> stationMap = new HashMap<>();
+        for (Station station: stationList) {
+            Map<String, String> stationParams = new HashMap<>();
+            stationParams.put("locked", String.valueOf(station.isLocked()));
+            stationParams.put("in_use", String.valueOf(station.isInUse()));
+            if (station instanceof CookingStation) {
+                CookingStation cookingStation = (CookingStation) station;
+                if (cookingStation instanceof OvenStation) {
+                    stationParams.put("held_ingredients", ((OvenStation) cookingStation).getHeldIngredientMap().toString());
+                }
+                SimpleIngredient currentIngredient = cookingStation.getCurrentIngredient();
+                String currentIngredientString;
+                if (currentIngredient == null) {
+                    currentIngredientString = "null";
+                } else {
+                    currentIngredientString = currentIngredient.getType();
+                }
+                stationParams.put("current_ingredient", currentIngredientString);
+                stationParams.put("time_cooked", String.valueOf(cookingStation.getTimeCooked()));
+                stationParams.put("progress_visible", String.valueOf(cookingStation.isProgressVisible()));
+                stationParams.put("fail_should_tick", String.valueOf(cookingStation.shouldTickFailTimer()));
+                stationParams.put("fail_timer", String.valueOf(cookingStation.getFailTimer()));
+
+            } else if (station instanceof ChoppingStation) {
+                ChoppingStation choppingStation = (ChoppingStation) station;
+                SimpleIngredient currentIngredient = choppingStation.getCurrentIngredient();
+                String currentIngredientString;
+                if (currentIngredient == null) {
+                    currentIngredientString = "null";
+                } else {
+                    currentIngredientString = currentIngredient.getType();
+                }
+                stationParams.put("current_ingredient", currentIngredientString);
+                stationParams.put("time_chopped", String.valueOf(choppingStation.getTimeChopped()));
+                stationParams.put("progress_visible", String.valueOf(choppingStation.isProgressVisible()));
+
+            } else if (station instanceof RecipeStation) {
+                //completedRecipe, ingredientCountMap
+                RecipeStation recipeStation = (RecipeStation) station;
+                Recipe completedRecipe = recipeStation.getCompletedRecipe();
+                String completedRecipeString;
+                if (completedRecipe == null) {
+                    completedRecipeString = "null";
+                } else {
+                    completedRecipeString = completedRecipe.getType();
+                }
+                stationParams.put("completed_recipe", completedRecipeString);
+                stationParams.put("held_ingredients", recipeStation.getIngredientCountMap().toString());
+            }
+            stationMap.put(String.valueOf(station.getId()), stationParams);
+        }
+        save.putString("stations", stationMap.toString());
+
+        // Chefs
+        save.putInteger("chef_count", chefManager.getChefCount());
+        save.putInteger("current_chef_index", chefManager.getCurrentChefIndex());
+        Map<String, Map<String, Object>> chefsMap = new HashMap<>();
+        int chefIndex = 0;
+        for (Chef chef: chefManager.getChefs()) {
+            Map<String, Object> chefMap = new HashMap<>();
+            chefMap.put("paused", chef.isPaused());
+            chefMap.put("x", chef.getX());
+            chefMap.put("y", chef.getY());
+            List<String> chefStack = new ArrayList<>();
+            while (!chef.getStack().isEmpty()) {
+                chefStack.add(chef.getStack().pop().getType());
+            }
+            chefMap.put("stack", chefStack);
+            chefsMap.put(String.valueOf(chefIndex), chefMap);
+            chefIndex++;
+        }
+        save.putString("chefs", chefsMap.toString());
+
+        // Customers
+        save.putInteger("complete_order_count", customerManager.getCustomersServed());
+        save.putFloat("customer_interal_time", customerManager.getCustomerInterval());
+        Map<String, Map<String, String>> customersMap = new HashMap<>();
+        int customerIndex = 0;
+        for (Customer customer : customerManager.getCustomers()) {
+            Map<String, String> customerMap = new HashMap<>();
+            customerMap.put("money", String.valueOf(customer.getMoney()));
+            customerMap.put("time_elapsed", String.valueOf(customer.getTimeElapsed()));
+            customerMap.put("max_time", String.valueOf(customer.getMaxTime()));
+            List<String> order = new ArrayList<>();
+            customer.getOrder().forEach(r -> {
+                order.add(r.getType());
+            });
+            customerMap.put("order", Arrays.toString(order.toArray()));
+            customersMap.put(String.valueOf(customerIndex), customerMap);
+            customerIndex++;
+        }
+        save.putString("customers", customersMap.toString());
+
+        // Powerups
+        save.putBoolean("inv_active", powerupManager.getInvulnerabilityPowerup().isActive());
+        save.putFloat("inv_timer", powerupManager.getInvulnerabilityPowerup().getTimer());
+        save.putBoolean("speed_active", powerupManager.getSpeedPowerup().isActive());
+        save.putFloat("speed_timer", powerupManager.getSpeedPowerup().getTimer());
+
+        save.flush();
+        System.out.println("Game Saved.");
     }
 }

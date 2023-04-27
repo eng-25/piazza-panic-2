@@ -57,6 +57,10 @@ public class PowerupManager {
         return invulnerabilityPowerup;
     }
 
+    public SpeedPowerup getSpeedPowerup() {
+        return speedPowerup;
+    }
+
     private void activateInvulnerability() {
         invulnerabilityPowerup.activate(INVULNERABLE_TIME);
     }

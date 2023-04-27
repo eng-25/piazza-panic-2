@@ -1,10 +1,7 @@
 package cs.eng1.piazzapanic.powerup;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.chef.ChefManager;
-
-import java.util.List;
 
 public class SpeedPowerup extends Actor {
 
@@ -37,5 +34,13 @@ public class SpeedPowerup extends Actor {
     public void deactivate() {
         isActive = false;
         chefManager.getChefs().forEach(chef -> chef.setSpeedMultiplier(1f));
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public float getTimer() {
+        return timer;
     }
 }

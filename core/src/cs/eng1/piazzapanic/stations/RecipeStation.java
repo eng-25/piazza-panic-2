@@ -22,10 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RecipeStation extends Station {
   private final FoodTextureManager textureManager;
   private final CustomerManager customerManager;
-//  protected int bunCount = 0;
-//  protected int pattyCount = 0;
-//  protected int lettuceCount = 0;
-//  protected int tomatoCount = 0;
   private Recipe completedRecipe = null;
   private Map<String, Integer> ingredientCountMap;
 
@@ -59,10 +55,6 @@ public class RecipeStation extends Station {
 
   @Override
   public void reset() {
-//    bunCount = 0;
-//    pattyCount = 0;
-//    lettuceCount = 0;
-//    tomatoCount = 0;
     resetIngredients();
     completedRecipe = null;
     super.reset();
@@ -231,5 +223,13 @@ public class RecipeStation extends Station {
 
   private void decrementMapValue(String key) {
     changeMapValue(key, -1);
+  }
+
+  public Recipe getCompletedRecipe() {
+    return completedRecipe;
+  }
+
+  public Map<String, Integer> getIngredientCountMap() {
+    return ingredientCountMap;
   }
 }

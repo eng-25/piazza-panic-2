@@ -259,4 +259,20 @@ public class CookingStation extends Station implements IFailable {
     public float getFailPct() {
         return Math.min(failTimer/failTime, 1); // at most 1
     }
+
+    public float getTimeCooked() {
+        return timeCooked;
+    }
+
+    public boolean isProgressVisible() {
+        return progressVisible;
+    }
+
+    public boolean shouldTickFailTimer() {
+        return shouldTickFailTimer;
+    }
+
+    public float getFailTimer() {
+        return failTimer;
+    }
 }

@@ -27,4 +27,5 @@ public class FixedStack<T> extends Stack<T> {
   public boolean hasSpace() {
     return this.size() != maxSize;
   }
+
 }

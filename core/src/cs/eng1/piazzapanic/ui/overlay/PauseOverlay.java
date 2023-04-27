@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
 public class PauseOverlay extends BaseOverlay {
@@ -15,7 +16,11 @@ public class PauseOverlay extends BaseOverlay {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if (game.getScreen() instanceof GameScreen) {
+                    GameScreen gameScreen = (GameScreen) game.getScreen();
+                    gameScreen.save();
+                    game.loadHomeScreen();
+                }
             }
         });
         tutorialButton.addListener(new ClickListener() {

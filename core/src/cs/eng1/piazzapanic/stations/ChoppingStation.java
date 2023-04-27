@@ -188,4 +188,15 @@ public class ChoppingStation extends Station {
     }
   }
 
+  public SimpleIngredient getCurrentIngredient() {
+    return currentIngredient;
+  }
+
+  public float getTimeChopped() {
+    return timeChopped;
+  }
+
+  public boolean isProgressVisible() {
+    return progressVisible;
+  }
 }

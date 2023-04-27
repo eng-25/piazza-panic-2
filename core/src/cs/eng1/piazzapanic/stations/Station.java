@@ -222,4 +222,12 @@ public class Station extends Actor implements Observer<Chef> {
     public boolean canBuy() {
         return gameScreen.getMoney() >= LOCKED_PRICE;
     }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public boolean isInUse() {
+        return inUse;
+    }
 }

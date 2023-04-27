@@ -158,4 +158,8 @@ public class OvenStation extends CookingStation {
             currentIngredient = null;
         }
     }
+
+    public Map<String, Integer> getHeldIngredientMap() {
+        return heldIngredientMap;
+    }
 }

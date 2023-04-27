@@ -83,4 +83,12 @@ public class Customer {
     public int getMoney() {
         return money;
     }
+
+    public float getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public float getMaxTime() {
+        return maxTime;
+    }
 }

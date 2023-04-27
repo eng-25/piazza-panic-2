@@ -412,5 +412,7 @@ public class UIOverlay {
         chefBuyButton.addListener(callback);
     }
 
-
+    public float getTimerTime() {
+        return timer.getTime();
+    }
 }

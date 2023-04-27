@@ -1,6 +1,8 @@
 package cs.eng1.piazzapanic;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.screens.HomeScreen;
 import cs.eng1.piazzapanic.ui.overlay.*;
@@ -64,6 +66,11 @@ public class PiazzaPanicGame extends Game {
     gameScreen = new GameScreen(this, isScenarioMode, difficulty);
     setScreen(gameScreen);
     setupGameOverlays();
+  }
+
+  public void loadGameFromSave() {
+    Preferences save = Gdx.app.getPreferences("Save");
+    System.out.println(save.getString("asd"));
   }
 
   private void setupGameOverlays() {
