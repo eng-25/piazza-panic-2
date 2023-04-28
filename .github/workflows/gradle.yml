@@ -10,6 +10,7 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "main" , "TestBranch" ]
+    tags: [ "v[0-9]+.[0-9]+.[0-9]+" ]
   pull_request:
     branches: [ "main" ]
 
@@ -20,7 +21,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+  
+        
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -47,3 +49,12 @@ jobs:
       with: 
         name: lib.jar
         path: .github/workflows/lib.jar
+    - name: Release
+      uses: softprops/actions-gh-release@v1
+      
+  release: 
+    runs-on: ubuntu-22.04
+    needs: ["build"]
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions: 
+      contents: write
