@@ -43,11 +43,11 @@ jobs:
       uses: actions/upload-artifact@v3.1.1
       with:
         name: jacoco-report
-        path: .github/workflows/reports/jacoco/test/html
+        path: .github/workflows/build/reports/jacoco/test/html
     - name: Upload library JAR 
       uses: actions/upload-artifact@v3.1.1
       with: 
         name: lib.jar
-        path: .github/workflows/lib.jar
+        path: .github/workflows/build/lib.jar
     
   
