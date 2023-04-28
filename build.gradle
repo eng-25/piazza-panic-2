@@ -1,6 +1,7 @@
 buildscript {
 
 
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -16,6 +17,8 @@ buildscript {
 
 allprojects {
     apply plugin: "eclipse"
+    // use the JaCoCo plugin to calculate code coverage
+    apply plugin: "jacoco"
 
     version = '1.0'
     ext {
