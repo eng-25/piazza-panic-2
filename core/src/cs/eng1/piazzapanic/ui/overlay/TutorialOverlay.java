@@ -40,7 +40,7 @@ public class TutorialOverlay extends BaseOverlay {
 
     // Initialize recipe creation label
     Label recipeLabel = new Label(
-            "Take the ingredients and process them as required for the recipe shown on the right. Then take them to the counter (table with the orange tablecloth) to build the recipe and complete the order.",
+            "Take the ingredients and process them as required for the appropriate recipe. Then take them to the counter (table with the orange tablecloth) to build the recipe and complete the order.",
             labelStyle);
     recipeLabel.setWrap(true);
 

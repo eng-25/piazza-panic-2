@@ -54,6 +54,10 @@ public class Recipe {
     return ingredientTypes;
   }
 
+  public static Recipe fromString(String type, FoodTextureManager manager) {
+    return new Recipe(type, manager);
+  }
+
   public FoodTextureManager getTextureManager() {
     return textureManager;
   }

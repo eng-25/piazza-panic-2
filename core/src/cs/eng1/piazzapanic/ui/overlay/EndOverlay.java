@@ -37,7 +37,7 @@ public class EndOverlay extends BaseOverlay {
 
     public void show(boolean won, Timer timer, int customerCount) {
         endMessage.setText((won ? winMessage : lossMessage) + timer.getText() +
-                "\nCustomers served: " + customerCount);
+                "\nDishes served: " + customerCount);
         show();
     }
 }

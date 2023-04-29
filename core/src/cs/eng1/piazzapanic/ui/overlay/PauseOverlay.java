@@ -20,6 +20,7 @@ public class PauseOverlay extends BaseOverlay {
                     GameScreen gameScreen = (GameScreen) game.getScreen();
                     gameScreen.save();
                     game.loadHomeScreen();
+                    hide();
                 }
             }
         });
