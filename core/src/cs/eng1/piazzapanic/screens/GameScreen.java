@@ -64,10 +64,11 @@ public class GameScreen implements Screen {
     private boolean isFirstFrame = true;
     private int reputation;
     private int money;
+    private float gameTime;
 
     public static final int MAX_LIVES = 3;
 
-    public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty) {
+    public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty, boolean load) {
         this.isScenario = isScenario;
         this.difficulty = difficulty;
 
@@ -108,6 +109,8 @@ public class GameScreen implements Screen {
         game.getPauseOverlay().addToStage(uiStage);
         game.getTutorialOverlay().addToStage(uiStage);
         game.getEndOverlay().addToStage(uiStage);
+
+        isFirstFrame = !load;
     }
 
     /**
@@ -244,10 +247,10 @@ public class GameScreen implements Screen {
                 ((Station) actor).reset();
             }
         }
-        isFirstFrame = true;
 
         reputation = 3;
         money = 0;
+        gameTime = 0;
         uiOverlay.updateLives(reputation);
         uiOverlay.updateMoney(money);
     }
@@ -273,6 +276,11 @@ public class GameScreen implements Screen {
             uiOverlay.finishGameUI(false, customerManager.getCustomersServed());
         }
         uiOverlay.updateLives(reputation);
+        if (!isScenario && (Math.floor(gameTime+delta) - Math.floor(gameTime) > 0)) {
+            money++;
+            uiOverlay.updateMoney(money);
+        }
+        gameTime += delta;
 
         // Render stage
         stage.draw();
@@ -351,12 +359,17 @@ public class GameScreen implements Screen {
         Map<String, Map<String, String>> stationMap = new HashMap<>();
         for (Station station: stationList) {
             Map<String, String> stationParams = new HashMap<>();
+            String stationType = ""; // so we know which data to parse when loading back
+            boolean shouldAdd = true; // IngredientStations are not saved as they have no changing game parameters
             stationParams.put("locked", String.valueOf(station.isLocked()));
             stationParams.put("in_use", String.valueOf(station.isInUse()));
             if (station instanceof CookingStation) {
                 CookingStation cookingStation = (CookingStation) station;
-                if (cookingStation instanceof OvenStation) {
-                    stationParams.put("held_ingredients", ((OvenStation) cookingStation).getHeldIngredientMap().toString());
+                if (station instanceof OvenStation) {
+                    stationParams.put("held_ingredients", ((OvenStation) station).getIngredientSaveMap());
+                    stationType = "oven";
+                } else {
+                    stationType = "cooking";
                 }
                 SimpleIngredient currentIngredient = cookingStation.getCurrentIngredient();
                 String currentIngredientString;
@@ -372,6 +385,7 @@ public class GameScreen implements Screen {
                 stationParams.put("fail_timer", String.valueOf(cookingStation.getFailTimer()));
 
             } else if (station instanceof ChoppingStation) {
+                stationType = "chopping";
                 ChoppingStation choppingStation = (ChoppingStation) station;
                 SimpleIngredient currentIngredient = choppingStation.getCurrentIngredient();
                 String currentIngredientString;
@@ -385,7 +399,7 @@ public class GameScreen implements Screen {
                 stationParams.put("progress_visible", String.valueOf(choppingStation.isProgressVisible()));
 
             } else if (station instanceof RecipeStation) {
-                //completedRecipe, ingredientCountMap
+                stationType = "recipe";
                 RecipeStation recipeStation = (RecipeStation) station;
                 Recipe completedRecipe = recipeStation.getCompletedRecipe();
                 String completedRecipeString;
@@ -395,9 +409,13 @@ public class GameScreen implements Screen {
                     completedRecipeString = completedRecipe.getType();
                 }
                 stationParams.put("completed_recipe", completedRecipeString);
-                stationParams.put("held_ingredients", recipeStation.getIngredientCountMap().toString());
+                stationParams.put("held_ingredients", recipeStation.getIngredientSaveMap());
+            } else { // IngredientStation and any other exceptions
+                shouldAdd = false;
             }
-            stationMap.put(String.valueOf(station.getId()), stationParams);
+            stationParams.put("type", stationType);
+            if (shouldAdd)
+                stationMap.put(String.valueOf(station.getId()), stationParams);
         }
         save.putString("stations", stationMap.toString());
 
@@ -411,6 +429,7 @@ public class GameScreen implements Screen {
             chefMap.put("paused", chef.isPaused());
             chefMap.put("x", chef.getX());
             chefMap.put("y", chef.getY());
+            chefMap.put("rotation", chef.getImageRotation());
             List<String> chefStack = new ArrayList<>();
             while (!chef.getStack().isEmpty()) {
                 chefStack.add(chef.getStack().pop().getType());
@@ -423,7 +442,7 @@ public class GameScreen implements Screen {
 
         // Customers
         save.putInteger("complete_order_count", customerManager.getCustomersServed());
-        save.putFloat("customer_interal_time", customerManager.getCustomerInterval());
+        save.putFloat("customer_interval_time", customerManager.getCustomerInterval());
         Map<String, Map<String, String>> customersMap = new HashMap<>();
         int customerIndex = 0;
         for (Customer customer : customerManager.getCustomers()) {
@@ -449,5 +468,98 @@ public class GameScreen implements Screen {
 
         save.flush();
         System.out.println("Game Saved.");
+    }
+
+    public void loadGame(Map<String,?> gameData, Map<Integer, String[]> stationData, Map<String, Object> chefData,
+                         Map<String, Object> customerData, Map<String, Object> powerupData) {
+        // Game data
+        uiOverlay.setTimerTime((float) gameData.get("timer"));
+        this.money = (int) gameData.get("money");
+        this.reputation = (int) gameData.get("reputation");
+
+        // Stations
+        for (Station station : stationList) {
+            if (stationData.containsKey(station.getId())) {
+                handleStationData(station, stationData.get(station.getId()));
+            }
+        }
+
+        // Chefs
+        int count = (int) chefData.get("count");
+        while (chefManager.getChefCount() < count) {
+            chefManager.addNewChef();
+        }
+        int currentChefIndex = (int) chefData.get("currentIndex");
+        Map<Integer, String[]> chefMap = (Map<Integer, String[]>) chefData.get("chefs");
+        if (chefMap.keySet().size() == count) { // check number of chefs in game is same as number to be updated
+            for (int chefIndex : chefMap.keySet()) {
+                String[] chefParams = chefMap.get(chefIndex);
+                Chef chef = chefManager.getChefs().get(chefIndex);
+                List<String> stackStrings = new ArrayList<>();
+                for (String param : chefParams) {
+                    String[] splitParam = getParamSplit(param);
+                    String id = splitParam[0];
+                    switch (id) {
+                        case "paused":
+                            chef.setPaused(Boolean.parseBoolean(splitParam[1]));
+                            break;
+                        case "rotation":
+                            chef.setImageRotation(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "x":
+                            chef.setX(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "y":
+                            chef.setY(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "stack":
+                            String ingString = splitParam[1]
+                                    .replace("[", "").replace("]", "");
+                            stackStrings.add(ingString);
+                            break;
+                        default:
+                            id = id.replace("]", "");
+                            stackStrings.add(id);
+                    }
+                }
+                chef.loadStack(stackStrings);
+                if (chefIndex == currentChefIndex) { // current chef
+                    chefManager.setCurrentChef(chef);
+                }
+            }
+        }
+
+        // Customers
+        customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
+                (Map<Integer, String[]>) customerData.get("customers"));
+    }
+
+    private void handleStationData(Station station, String[] stationData) {
+        if (station instanceof OvenStation) {
+            ((OvenStation) station).loadHeldIngredients(getIngredientStrings(stationData, 5, 0));
+        } else if (station instanceof RecipeStation) {
+            ((RecipeStation) station).loadHeldIngredients(getIngredientStrings(stationData, 4, 0));
+        }
+        for (String param : stationData) {
+            station.loadData(getParamSplit(param));
+        }
+    }
+
+    private String[] getIngredientStrings(String[] stationData, final int numOfIngredients, final int startIndex) {
+        String[] ingredientStrings = new String[numOfIngredients];
+        // remove "held_ingredients=[" from first
+        ingredientStrings[0] = stationData[0+startIndex].split("=", 2)[1].substring(1);
+        // remove "]" from end of last
+        String last = stationData[numOfIngredients-1+startIndex];
+        ingredientStrings[numOfIngredients-1] = last.substring(0, last.length()-1);
+        // remaining ingredients in middle
+        System.arraycopy(stationData, startIndex+1, ingredientStrings, startIndex+1, numOfIngredients-2);
+        return ingredientStrings;
+    }
+
+    public static String[] getParamSplit(String param) {
+        String[] paramSplit = param.split("=", 2);
+        paramSplit[0] = paramSplit[0].replaceAll(" ", "");
+        return paramSplit;
     }
 }

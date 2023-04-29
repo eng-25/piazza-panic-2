@@ -14,6 +14,7 @@ import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -229,5 +230,18 @@ public class Station extends Actor implements Observer<Chef> {
 
     public boolean isInUse() {
         return inUse;
+    }
+
+    public void loadData(String[] param) {
+        switch (param[0]) {
+            case "locked":
+                locked = Boolean.parseBoolean(param[1]);
+                break;
+            case "in_use":
+                inUse = Boolean.parseBoolean(param[1]);
+                break;
+//            default:
+//                System.out.println(Arrays.toString(param));
+        }
     }
 }

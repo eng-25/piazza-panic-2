@@ -232,4 +232,15 @@ public class RecipeStation extends Station {
   public Map<String, Integer> getIngredientCountMap() {
     return ingredientCountMap;
   }
+
+  public String getIngredientSaveMap() {
+    return ingredientCountMap.toString().replace('{', '[').replace('}', ']');
+  }
+
+  public void loadHeldIngredients(String[] ingredientStringList) {
+    for (String ingString : ingredientStringList) {
+      String[] split = ingString.split("=");
+      ingredientCountMap.replace(split[0].replaceAll(" ", ""), Integer.valueOf(split[1]));
+    }
+  }
 }

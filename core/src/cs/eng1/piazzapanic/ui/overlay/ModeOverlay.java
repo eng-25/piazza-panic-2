@@ -16,7 +16,7 @@ public class ModeOverlay extends BaseOverlay {
         scenarioButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.loadGameScreen(true);
+                game.loadGameScreen(true, false);
             }
         });
 
@@ -25,7 +25,7 @@ public class ModeOverlay extends BaseOverlay {
         endlessButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.loadGameScreen(false);
+                game.loadGameScreen(false, false);
             }
         });
 

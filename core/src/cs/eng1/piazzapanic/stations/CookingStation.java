@@ -2,6 +2,7 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredients.CookedIngredient;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.screens.GameScreen;
@@ -274,5 +275,34 @@ public class CookingStation extends Station implements IFailable {
 
     public float getFailTimer() {
         return failTimer;
+    }
+
+    @Override
+    public void loadData(String[] param) {
+        switch (param[0]) {
+            case "current_ingredient":
+                currentIngredient = SimpleIngredient.fromString(param[1], new FoodTextureManager());
+                break;
+            case "time_cooked":
+                timeCooked = Float.parseFloat(param[1]);
+                break;
+            case "fail_should_tick":
+                shouldTickFailTimer = Boolean.parseBoolean(param[1]);
+                if (shouldTickFailTimer) {
+                    uiController.showFailBar(this);
+                }
+                break;
+            case "fail_timer":
+                failTimer = Float.parseFloat(param[1]);
+                break;
+            case "progress_visible":
+                progressVisible = Boolean.parseBoolean(param[1]);
+                if (progressVisible) {
+                    uiController.showProgressBar(this);
+                }
+                break;
+            default:
+                super.loadData(param);
+        }
     }
 }

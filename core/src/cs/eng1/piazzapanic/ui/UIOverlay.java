@@ -415,4 +415,8 @@ public class UIOverlay {
     public float getTimerTime() {
         return timer.getTime();
     }
+
+    public void setTimerTime(float newTime) {
+        timer.setTime(newTime);
+    }
 }

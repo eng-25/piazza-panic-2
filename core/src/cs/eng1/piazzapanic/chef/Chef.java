@@ -9,8 +9,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
+import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.stations.Station;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Chef class is an actor representing a chef in the kitchen. It can pick up and put down
@@ -331,5 +335,23 @@ public class Chef extends Actor implements Disposable {
   @Override
   public void dispose() {
     image.dispose();
+  }
+
+  public float getImageRotation() {
+    return imageRotation;
+  }
+
+  public void setImageRotation(float imageRotation) {
+    this.imageRotation = imageRotation;
+  }
+
+  public void loadStack(List<String> stackStrings) {
+    Collections.reverse(stackStrings); // stack is saved in reverse order
+    for (String stackString : stackStrings) {
+      SimpleIngredient toAdd = SimpleIngredient.fromString(stackString, new FoodTextureManager());
+      if (toAdd != null) {
+        ingredientStack.push(toAdd);
+      }
+    }
   }
 }

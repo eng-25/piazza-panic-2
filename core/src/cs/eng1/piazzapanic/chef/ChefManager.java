@@ -191,7 +191,7 @@ public class ChefManager implements Disposable {
         return currentChef;
     }
 
-    public int getCurrentChefIndex() { return currentChef == null ? 0 : chefs.indexOf(currentChef); }
+    public int getCurrentChefIndex() { return currentChef == null ? -1 : chefs.indexOf(currentChef); }
 
     public Chef getLastChef() { return lastChef; }
 
@@ -218,6 +218,5 @@ public class ChefManager implements Disposable {
     public int getChefCount() {
         return chefCount;
     }
-
 
 }

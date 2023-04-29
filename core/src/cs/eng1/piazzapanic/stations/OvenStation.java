@@ -7,10 +7,7 @@ import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OvenStation extends CookingStation {
 
@@ -161,5 +158,16 @@ public class OvenStation extends CookingStation {
 
     public Map<String, Integer> getHeldIngredientMap() {
         return heldIngredientMap;
+    }
+
+    public String getIngredientSaveMap() {
+        return heldIngredientMap.toString().replace('{', '[').replace('}', ']');
+    }
+
+    public void loadHeldIngredients(String[] ingredientStringList) {
+        for (String ingString : ingredientStringList) {
+            String[] split = ingString.split("=");
+            heldIngredientMap.replace(split[0].replaceAll(" ", ""), Integer.valueOf(split[1]));
+        }
     }
 }

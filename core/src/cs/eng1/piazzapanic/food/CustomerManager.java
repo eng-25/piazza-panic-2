@@ -5,10 +5,7 @@ import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.stations.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
@@ -51,12 +48,13 @@ public class CustomerManager {
             maxCustomerCount = -1;
         }
         customerInterval = SCENARIO_CUSTOMER_INTERVAL;
+        customerInterval += isScenario ? 15 : 0; // start a little higher in scenario
         currentOrders.clear();
     }
 
     private Recipe[] getRecipeList(String[] recipeTypes, FoodTextureManager manager) {
         Recipe[] recipeList = new Recipe[recipeTypes.length];
-        for (int i=0; i<recipeTypes.length; i++) {
+        for (int i = 0; i < recipeTypes.length; i++) {
             recipeList[i] = new Recipe(recipeTypes[i], manager);
         }
         return recipeList;
@@ -69,7 +67,9 @@ public class CustomerManager {
      * @return a boolean signifying if the recipe is correct.
      */
     public Recipe checkRecipe(Recipe recipe) {
-        if (recipe == null) { return null; }
+        if (recipe == null) {
+            return null;
+        }
         for (Customer order : currentOrders) {
             Recipe r = order.hasRecipe(recipe);
             if (r != null) {
@@ -85,7 +85,6 @@ public class CustomerManager {
      */
     public void nextRecipe() {
         if ((completeOrders + currentOrders.size()) < maxCustomerCount || maxCustomerCount == -1) { // next recipe
-            //overlay.updateRecipeCounter(maxCustomerCount - completeOrders);
             currentOrders.add(getNewCustomer());
         }
         notifyRecipeStations();
@@ -152,7 +151,7 @@ public class CustomerManager {
     }
 
     public int tick(float delta) {
-        timeSinceCustomer+=delta;
+        timeSinceCustomer += delta;
         if (timeSinceCustomer > customerInterval) {
             timeSinceCustomer = 0;
             nextRecipe();
@@ -173,13 +172,13 @@ public class CustomerManager {
 
     private void updateCustomerInterval() {
         if (!isScenario) {
-            customerInterval = (float) Math.max(10, customerInterval*Math.pow(0.97 + ((2-difficulty)*0.01), getTotalCustomerCount()));
+            customerInterval = (float) Math.max(10, customerInterval * Math.pow(0.97 + ((2 - difficulty) * 0.01), getTotalCustomerCount()));
         }
     }
 
     private float getCurrentCustomerTimeMultiplier() { //TODO: check this calculation
         return isScenario ? 1 :
-                Math.max(1-(getTotalCustomerCount()/100f), 0.00001f);
+                Math.max(1 - (getTotalCustomerCount() / 100f), 0.00001f);
     }
 
     private int getTotalCustomerCount() {
@@ -192,5 +191,36 @@ public class CustomerManager {
 
     public float getCustomerInterval() {
         return customerInterval;
+    }
+
+    public void load(int servedCount, float intervalTime, Map<Integer, String[]> customersMap) {
+        this.completeOrders = servedCount;
+        this.customerInterval = intervalTime;
+        currentOrders.clear();
+        for (String[] customerParams : customersMap.values()) {
+            Customer customer = getNewCustomer();
+            List<String> orderStrings = new ArrayList<>();
+            for (String param : customerParams) {
+               String[] splitParam = GameScreen.getParamSplit(param);
+               switch (splitParam[0]) {
+                   case "money":
+                       customer.setMoney(Integer.parseInt(splitParam[1]));
+                       break;
+                   case "time_elapsed":
+                       customer.setTimeElapsed(Float.parseFloat(splitParam[1]));
+                       break;
+                   case "max_time":
+                       customer.setMaxTime(Float.parseFloat(splitParam[1]));
+                       break;
+                   case "order":
+                       orderStrings.add(splitParam[1].replace("[", ""));
+                       break;
+                   default:
+                       orderStrings.add(splitParam[0].replace("]", ""));
+               }
+            }
+            customer.loadOrder(orderStrings);
+            currentOrders.add(customer);
+        }
     }
 }

@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
+import static cs.eng1.piazzapanic.food.recipes.Recipe.fromString;
 
 public class Customer {
 
     private final List<Recipe> order;
     private float timeElapsed = 0f;
-    private final float maxTime;
+    private float maxTime;
     private int money;
 
     public static final int GLOBAL_MAX_ORDER_SIZE = 3;
@@ -22,15 +23,15 @@ public class Customer {
         generateOrder(possibleRecipes, maxOrderSize);
 
         // the max amount that an order can increase by: 1s in hard, 4s in med, 16s in easy
-        final int orderTimeVariationRange = (int) Math.pow(4, 2-difficulty);
+        final int orderTimeVariationRange = (int) Math.pow(4, 2 - difficulty);
         final float baseOrderTime = 25f;
-        maxTime = maxOrderSize * (RANDOM.nextInt(0, orderTimeVariationRange)+1 + baseOrderTime) * timeMultiplier;
+        maxTime = maxOrderSize * (RANDOM.nextInt(0, orderTimeVariationRange) + 1 + baseOrderTime) * timeMultiplier;
     }
 
     private void generateOrder(Recipe[] possibleRecipes, int maxOrderSize) {
         int orderSize = 1 + RANDOM.nextInt(
                 Math.max(Math.min(maxOrderSize, GLOBAL_MAX_ORDER_SIZE), GLOBAL_MIN_ORDER_SIZE));
-        for (int i=0; i<orderSize; i++) {
+        for (int i = 0; i < orderSize; i++) {
             Recipe recipe = possibleRecipes[RANDOM.nextInt(possibleRecipes.length)];
             order.add(recipe);
         }
@@ -38,7 +39,7 @@ public class Customer {
     }
 
     private int generateOrderMoney() {
-        int baseMoney = 75;
+        final int baseMoney = 75;
         return baseMoney + RANDOM.nextInt(50);
     }
 
@@ -56,11 +57,12 @@ public class Customer {
     }
 
     public float getTimeElapsedPercentage() {
-        return Math.min(timeElapsed/maxTime, 1); // return 100% in the case that timeElapsed > maxTime
+        return Math.min(timeElapsed / maxTime, 1); // return 100% in the case that timeElapsed > maxTime
     }
 
     /**
      * A method to update the customer's timer, its return value is used to check if reputation should be lost.
+     *
      * @param delta delta time passed since last call
      * @return true if the Customer's timer expired in this period of delta time, false otherwise.
      */
@@ -91,4 +93,28 @@ public class Customer {
     public float getMaxTime() {
         return maxTime;
     }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public void setTimeElapsed(float timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
+
+    public void setMaxTime(float maxTime) {
+        this.maxTime = maxTime;
+    }
+
+    public void loadOrder(List<String> newOrderString) {
+        FoodTextureManager manager = new FoodTextureManager();
+        List<Recipe> newOrder = new ArrayList<>();
+        for (String orderString : newOrderString) {
+            newOrder.add(fromString(orderString, manager));
+        }
+        order.clear();
+        order.addAll(newOrder);
+    }
+
+
 }

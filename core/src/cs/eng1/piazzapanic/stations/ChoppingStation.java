@@ -2,6 +2,7 @@ package cs.eng1.piazzapanic.stations;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
 import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
@@ -60,7 +61,9 @@ public class ChoppingStation extends Station {
         uiController.hideProgressBar(this);
         uiController.showActions(this, getActionTypes());
         progressVisible = false;
-        nearbyChef.setPaused(false);
+        if (nearbyChef != null) {
+          nearbyChef.setPaused(false);
+        }
       }
     }
     super.act(delta);
@@ -199,4 +202,25 @@ public class ChoppingStation extends Station {
   public boolean isProgressVisible() {
     return progressVisible;
   }
+
+  @Override
+  public void loadData(String[] param) {
+    switch (param[0]) {
+      case "current_ingredient":
+        currentIngredient = SimpleIngredient.fromString(param[1], new FoodTextureManager());
+        break;
+      case "time_chopped":
+        timeChopped = Float.parseFloat(param[1]);
+        break;
+      case "progress_visible":
+        progressVisible = Boolean.parseBoolean(param[1]);
+        if (progressVisible) {
+          uiController.showProgressBar(this);
+        }
+        break;
+      default:
+        super.loadData(param);
+    }
+  }
+
 }

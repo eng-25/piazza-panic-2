@@ -3,12 +3,16 @@ package cs.eng1.piazzapanic;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.sun.security.jgss.GSSUtil;
 import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.screens.HomeScreen;
 import cs.eng1.piazzapanic.ui.overlay.*;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.FontManager;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class PiazzaPanicGame extends Game {
@@ -62,15 +66,66 @@ public class PiazzaPanicGame extends Game {
     setScreen(homeScreen);
   }
 
-  public void loadGameScreen(boolean isScenarioMode) {
-    gameScreen = new GameScreen(this, isScenarioMode, difficulty);
+  public void loadGameScreen(boolean isScenarioMode, boolean load) {
+    gameScreen = new GameScreen(this, isScenarioMode, difficulty, load);
     setScreen(gameScreen);
     setupGameOverlays();
   }
 
   public void loadGameFromSave() {
     Preferences save = Gdx.app.getPreferences("Save");
-    System.out.println(save.getString("asd"));
+
+    // Station data
+    Map<Integer, String[]> stationData = parseSavedMap(save.getString("stations"));
+
+    // Chef data
+    Map<String, Object> chefData = new HashMap<>();
+    chefData.put("count", save.getInteger("chef_count"));
+    chefData.put("currentIndex", save.getInteger("current_chef_index"));
+    chefData.put("chefs", parseSavedMap(save.getString("chefs")));
+
+    // Customer data
+    Map<String, Object> customerData = new HashMap<>();
+    customerData.put("servedCount", save.getInteger("complete_order_count"));
+    customerData.put("intervalTime", save.getFloat("customer_interval_time"));
+    customerData.put("customers", parseSavedMap(save.getString("customers")));
+
+    // Powerups
+    Map<String, Object> powerupData = Map.of(
+            "invActive", save.getBoolean("inv_active"),
+            "invTimer", save.getFloat("inv_timer"),
+            "speedActive", save.getBoolean("speed_active"),
+            "speedTimer", save.getFloat("speed_timer")
+    );
+
+    // Difficulty
+    setDifficulty(save.getInteger("difficulty"));
+
+    // Other game data
+    Map<String, ?> gameData = Map.of(
+            "timer", save.getFloat("timer"),
+            "money", save.getInteger("money"),
+            "reputation", save.getInteger("reputation")
+            );
+
+    // Create game
+    loadGameScreen(save.getBoolean("is_scenario"), true);
+
+    // Load data
+    gameScreen.loadGame(gameData, stationData, chefData, customerData, powerupData);
+  }
+
+  private Map<Integer, String[]> parseSavedMap(String toParse) {
+    toParse = toParse.substring(1, toParse.length()-2); // remove outer { and }
+    String[] chefList = toParse.split("},");
+    Map<Integer, String[]> paramMap = new HashMap<>();
+    for (String chef : chefList) {
+      String[] indexSplit = chef.split("=", 2);
+      String[] params = indexSplit[1].substring(1).split(",");
+      int id = Integer.parseInt(indexSplit[0].replaceAll(" ", ""));
+      paramMap.put(id, params);
+    }
+    return paramMap;
   }
 
   private void setupGameOverlays() {
