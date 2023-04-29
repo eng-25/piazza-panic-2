@@ -5,13 +5,11 @@ import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.screens.GameScreen;
 
-import java.util.Map;
-
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
 public class PowerupManager {
 
-    private final InvulnerabilityPowerup invulnerabilityPowerup;
+    private final TimedPowerup invulnerabilityPowerup;
     private final SpeedPowerup speedPowerup;
     private final GamePowerup gamePowerup;
     private final CustomerPowerup customerPowerup;
@@ -24,14 +22,14 @@ public class PowerupManager {
 
     public PowerupManager(Stage gameStage, ChefManager chefManager, GameScreen game, CustomerManager customerManager) {
         this.stage = gameStage;
-        invulnerabilityPowerup = new InvulnerabilityPowerup();
+        invulnerabilityPowerup = new TimedPowerup();
         speedPowerup = new SpeedPowerup(chefManager);
         gamePowerup = new GamePowerup(game);
         customerPowerup = new CustomerPowerup(customerManager);
     }
 
     public void addPowerup() {
-        switch(RANDOM.nextInt(0, 5)) {
+        switch (RANDOM.nextInt(0, 5)) {
             case 0:
                 activateInvulnerability();
                 break;
@@ -55,7 +53,7 @@ public class PowerupManager {
         stage.addActor(speedPowerup);
     }
 
-    public InvulnerabilityPowerup getInvulnerabilityPowerup() {
+    public TimedPowerup getInvulnerabilityPowerup() {
         return invulnerabilityPowerup;
     }
 
@@ -72,11 +70,11 @@ public class PowerupManager {
     }
 
     private void activateMoney() {
-        gamePowerup.addMoney();
+        gamePowerup.activate(1);
     }
 
     private void activateLife() {
-        gamePowerup.addLife();
+        gamePowerup.activate(2);
     }
 
     private void activateCustomerReset() {

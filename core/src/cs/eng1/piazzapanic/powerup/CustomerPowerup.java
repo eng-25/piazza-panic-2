@@ -3,7 +3,7 @@ package cs.eng1.piazzapanic.powerup;
 import cs.eng1.piazzapanic.food.Customer;
 import cs.eng1.piazzapanic.food.CustomerManager;
 
-public class CustomerPowerup {
+public class CustomerPowerup implements ISingleUsePowerup {
 
     private final CustomerManager customerManager;
 

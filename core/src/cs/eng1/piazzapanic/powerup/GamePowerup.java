@@ -5,12 +5,14 @@ import cs.eng1.piazzapanic.screens.GameScreen;
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 import static cs.eng1.piazzapanic.screens.GameScreen.MAX_LIVES;
 
-public class GamePowerup {
+public class GamePowerup implements ISingleUsePowerup {
 
     private final GameScreen game;
+    private int type;
 
     public GamePowerup(GameScreen game) {
         this.game = game;
+        type = -1;
     }
 
     public void addMoney() {
@@ -24,4 +26,17 @@ public class GamePowerup {
         }
     }
 
+    public void activate(int type) {
+        this.type = type;
+        activate();
+    }
+
+    @Override
+    public void activate() {
+        if (type == 1) {
+            addMoney();
+        } else if (type == 2) {
+            addLife();
+        }
+    }
 }

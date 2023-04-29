@@ -2,13 +2,14 @@ package cs.eng1.piazzapanic.powerup;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class InvulnerabilityPowerup extends Actor {
+public class TimedPowerup extends Actor {
 
-    private float timer;
-    private boolean isActive;
+    protected float timer;
+    protected boolean isActive;
 
-    public InvulnerabilityPowerup() {
+    public TimedPowerup() {
         isActive = false;
+        timer = 0;
     }
 
     public void activate(float time) {
@@ -16,12 +17,17 @@ public class InvulnerabilityPowerup extends Actor {
         timer = time;
     }
 
+    public void deactivate() {
+        isActive = false;
+        timer = 0;
+    }
+
     @Override
     public void act(float delta) {
         if (isActive) {
             timer -= delta;
             if (timer <= 0) {
-                isActive = false;
+                deactivate();
             }
         }
     }
@@ -30,12 +36,12 @@ public class InvulnerabilityPowerup extends Actor {
         return isActive;
     }
 
-    public float getTimer() {
-        return timer;
-    }
-
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public float getTimer() {
+        return timer;
     }
 
     public void setTimer(float timer) {
