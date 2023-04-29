@@ -5,6 +5,8 @@ import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.screens.GameScreen;
 
+import java.util.Map;
+
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
 public class PowerupManager {
@@ -79,5 +81,13 @@ public class PowerupManager {
 
     private void activateCustomerReset() {
         customerPowerup.activate();
+    }
+
+    public void load(Object[] invData, Object[] speedData) throws ClassCastException {
+        invulnerabilityPowerup.setActive((boolean) invData[0]);
+        invulnerabilityPowerup.setTimer((float) invData[1]);
+
+        speedPowerup.setActive((boolean) speedData[0]);
+        speedPowerup.setTimer((float) speedData[1]);
     }
 }

@@ -491,6 +491,11 @@ public class GameScreen implements Screen {
         Map<Integer, String[]> customerDataMap = (Map<Integer, String[]>) customerData.get("customers");
         customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
                 customerDataMap);
+
+        // Powerups
+        Object[] invData = new Object[]{powerupData.get("invActive"), powerupData.get("invTimer")};
+        Object[] speedData = new Object[]{powerupData.get("speedActive"), powerupData.get("speedTimer")};
+        powerupManager.load(invData, speedData);
     }
 
     private void handleStationData(Station station, String[] stationData) {

@@ -43,4 +43,12 @@ public class SpeedPowerup extends Actor {
     public float getTimer() {
         return timer;
     }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public void setTimer(float timer) {
+        this.timer = timer;
+    }
 }
