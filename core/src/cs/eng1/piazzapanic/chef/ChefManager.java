@@ -12,11 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import com.badlogic.gdx.utils.Disposable;
+import cs.eng1.piazzapanic.screens.GameScreen;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The controller that handles switching control between chefs and tells them about the surrounding
@@ -219,4 +221,46 @@ public class ChefManager implements Disposable {
         return chefCount;
     }
 
+    public void load(int loadChefCount, int currentChefIndex, Map<Integer, String[]> chefMap) {
+        while (chefCount < loadChefCount) {
+            addNewChef();
+        }
+        if (chefMap.keySet().size() == loadChefCount) {
+            for (int chefIndex : chefMap.keySet()) {
+                String[] chefParams = chefMap.get(chefIndex);
+                Chef chef = getChefs().get(chefIndex);
+                List<String> stackStrings = new ArrayList<>();
+                for (String param : chefParams) {
+                    String[] splitParam = GameScreen.getParamSplit(param);
+                    String id = splitParam[0];
+                    switch (id) {
+                        case "paused":
+                            chef.setPaused(Boolean.parseBoolean(splitParam[1]));
+                            break;
+                        case "rotation":
+                            chef.setImageRotation(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "x":
+                            chef.setX(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "y":
+                            chef.setY(Float.parseFloat(splitParam[1]));
+                            break;
+                        case "stack":
+                            String ingString = splitParam[1]
+                                    .replace("[", "").replace("]", "");
+                            stackStrings.add(ingString);
+                            break;
+                        default:
+                            id = id.replace("]", "");
+                            stackStrings.add(id);
+                    }
+                }
+                chef.loadStack(stackStrings);
+                if (chefIndex == currentChefIndex) { // current chef
+                    setCurrentChef(chef);
+                }
+            }
+        }
+    }
 }

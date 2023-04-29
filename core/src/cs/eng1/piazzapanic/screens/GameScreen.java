@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
@@ -20,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
@@ -39,7 +36,6 @@ import cs.eng1.piazzapanic.ui.StationUIController;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.*;
-import java.util.logging.FileHandler;
 
 /**
  * The screen which can be used to load the tilemap and keep track of everything happening in the
@@ -485,75 +481,38 @@ public class GameScreen implements Screen {
         }
 
         // Chefs
-        int count = (int) chefData.get("count");
-        while (chefManager.getChefCount() < count) {
-            chefManager.addNewChef();
-        }
-        int currentChefIndex = (int) chefData.get("currentIndex");
-        Map<Integer, String[]> chefMap = (Map<Integer, String[]>) chefData.get("chefs");
-        if (chefMap.keySet().size() == count) { // check number of chefs in game is same as number to be updated
-            for (int chefIndex : chefMap.keySet()) {
-                String[] chefParams = chefMap.get(chefIndex);
-                Chef chef = chefManager.getChefs().get(chefIndex);
-                List<String> stackStrings = new ArrayList<>();
-                for (String param : chefParams) {
-                    String[] splitParam = getParamSplit(param);
-                    String id = splitParam[0];
-                    switch (id) {
-                        case "paused":
-                            chef.setPaused(Boolean.parseBoolean(splitParam[1]));
-                            break;
-                        case "rotation":
-                            chef.setImageRotation(Float.parseFloat(splitParam[1]));
-                            break;
-                        case "x":
-                            chef.setX(Float.parseFloat(splitParam[1]));
-                            break;
-                        case "y":
-                            chef.setY(Float.parseFloat(splitParam[1]));
-                            break;
-                        case "stack":
-                            String ingString = splitParam[1]
-                                    .replace("[", "").replace("]", "");
-                            stackStrings.add(ingString);
-                            break;
-                        default:
-                            id = id.replace("]", "");
-                            stackStrings.add(id);
-                    }
-                }
-                chef.loadStack(stackStrings);
-                if (chefIndex == currentChefIndex) { // current chef
-                    chefManager.setCurrentChef(chef);
-                }
-            }
-        }
+        @SuppressWarnings("unchecked") // we know this should be a safe case because of how we saved the data
+        Map<Integer, String[]> chefDataMap = (Map<Integer, String[]>) chefData.get("chefs");
+        chefManager.load((int) chefData.get("count"), (int) chefData.get("currentIndex"),
+                chefDataMap);
 
         // Customers
+        @SuppressWarnings("unchecked") // we know this should be a safe cast because of how we saved the data
+        Map<Integer, String[]> customerDataMap = (Map<Integer, String[]>) customerData.get("customers");
         customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
-                (Map<Integer, String[]>) customerData.get("customers"));
+                customerDataMap);
     }
 
     private void handleStationData(Station station, String[] stationData) {
         if (station instanceof OvenStation) {
-            ((OvenStation) station).loadHeldIngredients(getIngredientStrings(stationData, 5, 0));
+            ((OvenStation) station).loadHeldIngredients(getIngredientStrings(stationData, 5));
         } else if (station instanceof RecipeStation) {
-            ((RecipeStation) station).loadHeldIngredients(getIngredientStrings(stationData, 4, 0));
+            ((RecipeStation) station).loadHeldIngredients(getIngredientStrings(stationData, 4));
         }
         for (String param : stationData) {
             station.loadData(getParamSplit(param));
         }
     }
 
-    private String[] getIngredientStrings(String[] stationData, final int numOfIngredients, final int startIndex) {
+    private String[] getIngredientStrings(String[] stationData, final int numOfIngredients) {
         String[] ingredientStrings = new String[numOfIngredients];
         // remove "held_ingredients=[" from first
-        ingredientStrings[0] = stationData[0+startIndex].split("=", 2)[1].substring(1);
+        ingredientStrings[0] = stationData[0].split("=", 2)[1].substring(1);
         // remove "]" from end of last
-        String last = stationData[numOfIngredients-1+startIndex];
+        String last = stationData[numOfIngredients-1];
         ingredientStrings[numOfIngredients-1] = last.substring(0, last.length()-1);
         // remaining ingredients in middle
-        System.arraycopy(stationData, startIndex+1, ingredientStrings, startIndex+1, numOfIngredients-2);
+        System.arraycopy(stationData, 1, ingredientStrings, 1, numOfIngredients-2);
         return ingredientStrings;
     }
 
