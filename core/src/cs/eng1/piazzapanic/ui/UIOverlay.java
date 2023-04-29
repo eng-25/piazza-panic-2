@@ -3,6 +3,7 @@ package cs.eng1.piazzapanic.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -131,26 +132,6 @@ public class UIOverlay {
         fullLife = new TextureRegionDrawable(new Texture(LIFE_FULL));
         coin = new TextureRegionDrawable(new Texture(COIN));
 
-//        // Initialize the UI to display the currently requested recipe
-//        Stack recipeDisplay = new Stack();
-//        recipeImagesBG = new Image(new Texture(
-//                "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png"));
-//        recipeImagesBG.setVisible(false);
-//        recipeDisplay.add(recipeImagesBG);
-//        recipeImages = new VerticalGroup();
-//        recipeDisplay.add(recipeImages);
-
-//        // Initialize counter for showing remaining recipes
-//        LabelStyle counterStyle = new LabelStyle(game.getFontManager().getHeaderFont(), Color.BLACK);
-//        recipeCountLabel = new Label("0", counterStyle);
-
-        // Initialize winning label
-//        LabelStyle labelStyle = new Label.LabelStyle(game.getFontManager().getTitleFont(), null);
-//        resultLabel = new Label("Congratulations! Your final time was:", labelStyle);
-//        resultLabel.setVisible(false);
-//        resultTimer = new Timer(labelStyle);
-//        resultTimer.setVisible(false);
-
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
         Value timerWidth = Value.percentWidth(0.2f, topTable);
@@ -161,25 +142,17 @@ public class UIOverlay {
 
         midTable.add(recipeGroupsDisplay).left().top().expandX();
         midTable.add(ingredientStackDisplay).right().top().width(scale);
-//        topTable.add().expandX().width(timerWidth);
-//        topTable.row();
-//        topTable.add(resultLabel).colspan(3);
-//        topTable.row();
-//        topTable.add(resultTimer).colspan(3);
 
         livesGroup = new HorizontalGroup();
         livesGroup.left();
-        //updateLives(MAX_LIVES);
 
         coinGroup = new HorizontalGroup();
         coinGroup.left();
         coinGroup.addActor(new Image(coin));
-        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.WHITE)));
-
+        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.YELLOW)));
 
         chefBuyButton = game.getButtonManager().createTextButton("0",
                 ButtonManager.ButtonColour.BLUE);
-
 
         if (!isScenario) {
             bottomTable.add(coinGroup).top().left().pad(15f).height(scale)
@@ -200,8 +173,6 @@ public class UIOverlay {
     public void init(int chefCostInitial) {
         timer.reset();
         timer.start();
-//        resultLabel.setVisible(false);
-//        resultTimer.setVisible(false);
         updateChefUI(null, false, chefCostInitial);
         updateLives(MAX_LIVES);
     }
@@ -229,8 +200,6 @@ public class UIOverlay {
             Stack textureStack = new Stack();
             textureStack.add(new Image(new Texture(SQUARE_BG)));
             Image image = new Image(ingredient.getTexture());
-//            image.getDrawable().setMinHeight(chefDisplay.getHeight());
-//            image.getDrawable().setMinWidth(chefDisplay.getWidth());
             textureStack.add(image);
             ingredientImages.addActor(textureStack);
         }
@@ -255,9 +224,6 @@ public class UIOverlay {
      * Show the label displaying that the game has finished along with the time it took to complete.
      */
     public void finishGameUI(boolean won, int customerCount) {
-//        resultLabel.setVisible(true);
-//        resultTimer.setTime(timer.getTime());
-//        resultTimer.setVisible(true);
         timer.stop();
         game.getEndOverlay().show(won, timer, customerCount);
         game.getTutorialOverlay().toggleStage();
@@ -325,14 +291,6 @@ public class UIOverlay {
         group.space(chefDisplay.getWidth() / 20f);
     }
 
-    //    /**
-//     * Update the number of remaining recipes to be displayed.
-//     *
-//     * @param remainingRecipes The number of remaining recipes.
-//     */
-//    public void updateRecipeCounter(int remainingRecipes) {
-//
-//    }
     public void resizeUI(int width, java.util.List<Customer> orders) {
         topTable.pack();
         float topTablePadding = topTable.getRows() > 0 ? topTable.getRowHeight(0) + 15f : 45f;
@@ -344,7 +302,7 @@ public class UIOverlay {
         resizeLives();
         resizeCoins();
 
-        chefBuyButton.getLabel().setFontScale(width*0.001f);
+        chefBuyButton.getLabel().setFontScale(Math.min(width * 0.001f, 1));
     }
 
     private void resizeStack() {
@@ -361,10 +319,6 @@ public class UIOverlay {
                 imageStack.setWidth(chefDisplay.getWidth());
                 imageStack.setHeight(chefDisplay.getHeight());
             }
-//            else {
-//                child.setWidth(chefDisplay.getWidth());
-//                child.setHeight(chefDisplay.getHeight());
-//            }
         });
     }
 
@@ -386,8 +340,8 @@ public class UIOverlay {
     private void resizeLives() {
         livesGroup.getChildren().forEach(c -> {
             if (c instanceof Image) {
-                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
-                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
             }
         });
     }
@@ -395,13 +349,13 @@ public class UIOverlay {
     private void resizeCoins() {
         coinGroup.getChildren().forEach(c -> {
             if (c instanceof Image) {
-                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
-                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
             } else if (c instanceof Label) {
-                ((Label) c).setFontScale(chefDisplay.getWidth()/35f);
+                ((Label) c).setFontScale(Math.round(chefDisplay.getWidth()/40f));
             }
         });
-        coinGroup.space(8f*(chefDisplay.getWidth()/35f));
+        coinGroup.space(8f * (chefDisplay.getWidth() / 35f));
     }
 
     public void updateMoney(int amount) {

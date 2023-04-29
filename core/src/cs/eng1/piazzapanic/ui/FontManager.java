@@ -1,6 +1,7 @@
 package cs.eng1.piazzapanic.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -22,6 +23,8 @@ public class FontManager implements Disposable {
 
     FreeTypeFontParameter titleFontParameters = new FreeTypeFontParameter();
     titleFontParameters.size = 32;
+    titleFontParameters.borderColor = Color.BLACK;
+    titleFontParameters.borderWidth = 2.5f;
     titleFont = fontGenerator.generateFont(titleFontParameters);
 
     FreeTypeFontParameter headerFontParameters = new FreeTypeFontParameter();

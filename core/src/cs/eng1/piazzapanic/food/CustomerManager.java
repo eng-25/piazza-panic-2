@@ -216,7 +216,8 @@ public class CustomerManager {
                        customer.setMaxTime(Float.parseFloat(splitParam[1]));
                        break;
                    case "order":
-                       orderStrings.add(splitParam[1].replace("[", ""));
+                       orderStrings.add(splitParam[1]
+                               .replace("[", "").replace("]", ""));
                        break;
                    default:
                        orderStrings.add(splitParam[0].replace("]", ""));
