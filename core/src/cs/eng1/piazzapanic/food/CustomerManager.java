@@ -22,15 +22,18 @@ public class CustomerManager {
     private float timeSinceCustomer;
     private float customerInterval;
     private final GameScreen gameScreen;
+    private final int scenarioCustomerCount;
 
     public static final float SCENARIO_CUSTOMER_INTERVAL = 30f;
 
-    public CustomerManager(UIOverlay overlay, boolean isScenario, int difficulty, GameScreen game) {
+    public CustomerManager(UIOverlay overlay, boolean isScenario, int difficulty, GameScreen game,
+                           int scenarioCustomerCount) {
         this.isScenario = isScenario;
         this.difficulty = difficulty;
         this.overlay = overlay;
         this.recipeStations = new LinkedList<>();
         gameScreen = game;
+        this.scenarioCustomerCount = scenarioCustomerCount;
     }
 
     /**
@@ -41,7 +44,7 @@ public class CustomerManager {
     public void init(FoodTextureManager textureManager) {
         if (isScenario) {
             possibleRecipes = getRecipeList(new String[]{"burger", "salad"}, textureManager);
-            maxCustomerCount = 5;
+            maxCustomerCount = scenarioCustomerCount;
         } else {
             possibleRecipes = getRecipeList(new String[]{"burger", "salad", "pizza_cooked", "jacket_potato_cooked"},
                     textureManager);

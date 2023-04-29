@@ -3,11 +3,8 @@ package cs.eng1.piazzapanic.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
@@ -20,13 +17,14 @@ import java.util.HashMap;
  */
 public class ButtonManager implements Disposable {
 
-  public enum ButtonColour {
+    public enum ButtonColour {
     BLUE, GREEN, GREY, RED, YELLOW
   }
 
   private final HashMap<ButtonColour, TextButton.TextButtonStyle> textButtonStyles;
   private final HashMap<ButtonColour, Button.ButtonStyle> imageButtonBaseStyles;
   private final HashMap<ButtonColour, CheckBox.CheckBoxStyle> checkBoxStyles;
+  private final SelectBox.SelectBoxStyle selectBoxStyle;
 
   private final Texture checkboxUnchecked;
 
@@ -76,6 +74,19 @@ public class ButtonManager implements Disposable {
       );
       checkBoxStyles.put(buttonColour, checkBoxStyle);
     }
+    String scrollTexPath = basePath + "grey_sliderVertical.png";
+    String selectedTexPath = "new/dropdown_select.png";
+    String dropdownBackground = "new/dropdown_background.png";
+    selectBoxStyle = new SelectBox.SelectBoxStyle(fontManager.getHeaderFont(),
+            Color.BLACK, getDrawable(basePath + "grey_box.png"),
+            new ScrollPane.ScrollPaneStyle(
+                    getDrawable(dropdownBackground), null, null,
+                    getDrawable(scrollTexPath), getDrawable(scrollTexPath)),
+            new List.ListStyle(fontManager.getHeaderFont(), Color.DARK_GRAY, Color.BLACK, getDrawable(selectedTexPath)));
+  }
+
+  private TextureRegionDrawable getDrawable(String path) {
+    return new TextureRegionDrawable(new Texture(path));
   }
 
   /**
@@ -142,5 +153,9 @@ public class ButtonManager implements Disposable {
       return textButtonStyles.get(colour);
     }
     return textButtonStyles.get(ButtonColour.BLUE);
+  }
+
+  public SelectBox<Integer> createIntDropdown() {
+    return new SelectBox<>(selectBoxStyle);
   }
 }

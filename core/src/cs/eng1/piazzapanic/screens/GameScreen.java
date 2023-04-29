@@ -95,7 +95,8 @@ public class GameScreen implements Screen {
 
         foodTextureManager = new FoodTextureManager();
         chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage, 150);
-        customerManager = new CustomerManager(uiOverlay, isScenario, difficulty, this);
+        customerManager = new CustomerManager(uiOverlay, isScenario, difficulty, this,
+                game.getSettingsOverlay().getScenarioCustomerCount());
         powerupManager = new PowerupManager(stage, chefManager, this, customerManager);
 
         // Add tile objects
