@@ -1,5 +1,4 @@
 package main.tests;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,12 +12,16 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.chef.ChefManager;
+import cs.eng1.piazzapanic.chef.FixedStack;
+import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
-import cs.eng1.piazzapanic.food.ingredients.Bun;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
-import cs.eng1.piazzapanic.food.ingredients.Lettuce;
-import cs.eng1.piazzapanic.food.ingredients.Tomato;
+import cs.eng1.piazzapanic.food.ingredients.*;
+import cs.eng1.piazzapanic.food.recipes.Burger;
+import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.food.recipes.Salad;
+import cs.eng1.piazzapanic.observable.Subject;
 import cs.eng1.piazzapanic.stations.ChoppingStation;
+import cs.eng1.piazzapanic.stations.Station;
 import cs.eng1.piazzapanic.stations.StationAction;
 import cs.eng1.piazzapanic.ui.*;
 import org.junit.Before;
@@ -28,14 +31,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(GdxTestRunner.class)
-public class ExperimentTests {
-    //private BitmapFont bmfMock;
+@RunWith(main.tests.GdxTestRunner.class)
+public class CustomerManagerTests {
     private TiledMapTileLayer tmtlMock;
     private FontManager fmMock;
     private ButtonManager bmMock;
@@ -43,16 +47,20 @@ public class ExperimentTests {
     private SettingsOverlay soMock;
     private PiazzaPanicGame pMock;
     private UIOverlay  uioMock;
+    private StationUIController suicMock;
+    private StationActionUI sauiMock;
 
     @Before
     public void setup(){
-        //bmfMock = Mockito.mock(BitmapFont.class);
         tmtlMock = Mockito.mock(TiledMapTileLayer.class);
 
         fmMock = Mockito.mock(FontManager.class);
         bmMock = Mockito.mock(ButtonManager.class);
         toMock = Mockito.mock(TutorialOverlay.class);
         soMock = Mockito.mock(SettingsOverlay.class);
+        suicMock = Mockito.mock(StationUIController.class);
+        sauiMock = Mockito.mock(StationActionUI.class);
+
 
         pMock = Mockito.mock(PiazzaPanicGame.class);
         uioMock = Mockito.mock(UIOverlay.class);
@@ -61,20 +69,15 @@ public class ExperimentTests {
         when(pMock.getTutorialOverlay()).thenReturn(toMock);
         when(pMock.getButtonManager()).thenReturn(bmMock);
         when(pMock.getSettingsOverlay()).thenReturn(soMock);
-
-        //when(pMock.getFontManager().getTitleFont()).thenReturn(bmfMock);
-
-
     }
 
     @Test
-    public void test1(){
-        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
-        Chef c = new Chef(new Texture("Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Man Brown/manBrown_hold.png"),
-                new Vector2(), cm);
-        Lettuce l = new Lettuce(new FoodTextureManager());
-        c.grabIngredient(l);
-        assertTrue("This test will only work if the Chef has an ingredient (in this case a lettuce) in their stack", c.hasIngredient());
-
+    public void testXY(){
+        CustomerManager cm = new CustomerManager(uioMock);
+        //Burger br = new Burger(new FoodTextureManager());
+        Recipe rc = new Recipe("burger", new FoodTextureManager());
+        cm.init(new FoodTextureManager());
+        cm.nextRecipe();
+        assertTrue(cm.checkRecipe(rc));
     }
 }
