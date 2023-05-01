@@ -12,9 +12,8 @@ import cs.eng1.piazzapanic.stations.StationAction.ActionType;
 import cs.eng1.piazzapanic.ui.StationActionUI.ActionAlignment;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The RecipeStation class is a station representing the place in the kitchen
@@ -24,11 +23,12 @@ import java.util.Objects;
 public class RecipeStation extends Station {
   private final FoodTextureManager textureManager;
   private final CustomerManager customerManager;
-  protected int bunCount = 0;
-  protected int pattyCount = 0;
-  protected int lettuceCount = 0;
-  protected int tomatoCount = 0;
+//  protected int bunCount = 0;
+//  protected int pattyCount = 0;
+//  protected int lettuceCount = 0;
+//  protected int tomatoCount = 0;
   private Recipe completedRecipe = null;
+  private Map<String, Integer> ingredientCountMap;
 
   /**
    * The constructor method for the class
@@ -49,16 +49,34 @@ public class RecipeStation extends Station {
     super(id, textureRegion, stationUIController, alignment);
     this.textureManager = textureManager;
     this.customerManager = customerManager;
+    ingredientCountMap = new HashMap<>(Map.of(
+            "bun", 0,
+            "patty", 0,
+            "lettuce", 0,
+            "tomato", 0
+    ));
+
   }
 
   @Override
   public void reset() {
-    bunCount = 0;
-    pattyCount = 0;
-    lettuceCount = 0;
-    tomatoCount = 0;
+//    bunCount = 0;
+//    pattyCount = 0;
+//    lettuceCount = 0;
+//    tomatoCount = 0;
+    resetIngredients();
     completedRecipe = null;
     super.reset();
+  }
+
+  private void resetIngredients() {
+    ingredientCountMap.replaceAll((k, v) -> 0);
+  }
+
+  private int getTotalIngredientCount() { //TODO: replace atomic with for loop/iterator?
+    AtomicInteger total = new AtomicInteger();
+    ingredientCountMap.values().forEach(total::addAndGet);
+    return total.get();
   }
 
   /**
@@ -81,14 +99,19 @@ public class RecipeStation extends Station {
         }
       }
       if (completedRecipe == null) {
-        if (pattyCount >= 1 && bunCount >= 1 && nearbyChef.getStack().hasSpace()) {
+        if (ingredientCountMap.get("patty") >= 1 && ingredientCountMap.get("bun") >= 1 && nearbyChef.getStack().hasSpace()) {
           actionTypes.add(ActionType.MAKE_BURGER);
         }
-        if (tomatoCount >= 1 && lettuceCount >= 1 && nearbyChef.getStack().hasSpace()) {
+        if (ingredientCountMap.get("tomato") >= 1 && ingredientCountMap.get("lettuce") >= 1 && nearbyChef.getStack().hasSpace()) {
           actionTypes.add(ActionType.MAKE_SALAD);
         }
-      } else if (customerManager.checkRecipe(completedRecipe)) {
+      } else if (customerManager.checkRecipe(completedRecipe) != null) {
         actionTypes.add(ActionType.SUBMIT_ORDER);
+      }
+
+      if (getTotalIngredientCount() > 0 ||
+              customerManager.checkRecipe(completedRecipe) != null) {
+        addClearAction(actionTypes);
       }
     }
     return actionTypes;
@@ -102,51 +125,59 @@ public class RecipeStation extends Station {
    */
   @Override
   public void doStationAction(ActionType action) {
+    super.doStationAction(action);
     switch (action) {
       case PLACE_INGREDIENT:
         Ingredient topItem = nearbyChef.getStack().peek();
         switch (topItem.getType()) {
           case "patty":
             nearbyChef.placeIngredient();
-            pattyCount += 1;
+            incrementMapValue("patty");
             break;
           case "tomato":
             nearbyChef.placeIngredient();
-            tomatoCount += 1;
+            incrementMapValue("tomato");
             break;
           case "lettuce":
             nearbyChef.placeIngredient();
-            lettuceCount += 1;
+            incrementMapValue("lettuce");
             break;
           case "bun":
             nearbyChef.placeIngredient();
-            bunCount += 1;
+            incrementMapValue("bun");
             break;
         }
 
         break;
       case MAKE_BURGER:
         completedRecipe = new Burger(textureManager);
-        pattyCount -= 1;
-        bunCount -= 1;
+        decrementMapValue("patty");
+        decrementMapValue("bun");
         break;
 
       case MAKE_SALAD:
         completedRecipe = new Salad(textureManager);
-        tomatoCount -= 1;
-        lettuceCount -= 1;
+        decrementMapValue("tomato");
+        decrementMapValue("lettuce");
         break;
 
       case SUBMIT_ORDER:
         if (completedRecipe != null) {
-          if (customerManager.checkRecipe(completedRecipe)) {
-            customerManager.nextRecipe();
+          Recipe orderToComplete = customerManager.checkRecipe(completedRecipe);
+          if (orderToComplete != null) {
+            customerManager.completeOrder(orderToComplete);
             completedRecipe = null;
           }
         }
         break;
     }
     uiController.showActions(this, getActionTypes());
+  }
+
+  @Override
+  protected void clearStation() {
+    resetIngredients();
+    super.clearStation();
   }
 
   /**
@@ -159,16 +190,16 @@ public class RecipeStation extends Station {
   @Override
   public void draw(Batch batch, float parentAlpha) {
     super.draw(batch, parentAlpha);
-    if (bunCount > 0) {
+    if (ingredientCountMap.get("bun") > 0) {
       drawFoodTexture(batch, textureManager.getTexture("bun"));
     }
-    if (pattyCount > 0) {
+    if (ingredientCountMap.get("patty") > 0) {
       drawFoodTexture(batch, textureManager.getTexture("patty_cooked"));
     }
-    if (lettuceCount > 0) {
+    if (ingredientCountMap.get("lettuce") > 0) {
       drawFoodTexture(batch, textureManager.getTexture("lettuce_chopped"));
     }
-    if (tomatoCount > 0) {
+    if (ingredientCountMap.get("tomato") > 0) {
       drawFoodTexture(batch, textureManager.getTexture("tomato_chopped"));
     }
     if (completedRecipe != null) {
@@ -181,5 +212,17 @@ public class RecipeStation extends Station {
    */
   public void updateOrderActions() {
     uiController.showActions(this, getActionTypes());
+  }
+
+  private void changeMapValue(String key, int change) {
+    ingredientCountMap.replace(key, ingredientCountMap.get(key)+change);
+  }
+
+  private void incrementMapValue(String key) {
+    changeMapValue(key, 1);
+  }
+
+  private void decrementMapValue(String key) {
+    changeMapValue(key, -1);
   }
 }
