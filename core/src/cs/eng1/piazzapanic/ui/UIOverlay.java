@@ -299,7 +299,7 @@ public class UIOverlay {
         resizeLives();
         resizeCoins();
 
-        chefBuyButton.getLabel().setFontScale(Math.min(width * 0.001f, 1));
+        chefBuyButton.getLabel().setFontScale(Math.max(width * 0.001f, 1));
     }
 
     private void resizeStack() {
