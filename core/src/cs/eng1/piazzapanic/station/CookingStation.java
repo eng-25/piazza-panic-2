@@ -72,7 +72,7 @@ public class CookingStation extends Station implements IFailable {
         if (inUse) {
             timeCooked += delta;
             uiController.updateProgressValue(this, (timeCooked / totalTimeToCook) * 100f);
-            uiController.updateFailValue(this, getFailPct()*100f);
+            uiController.updateFailValue(this, getFailPct() * 100f);
             if (timeCooked >= totalTimeToCook && progressVisible) {
                 if (!isScenario) { // only allow failing steps if in endless mode
                     if (!shouldTickFailTimer) {
@@ -258,7 +258,7 @@ public class CookingStation extends Station implements IFailable {
 
     @Override
     public float getFailPct() {
-        return Math.min(failTimer/failTime, 1); // at most 1
+        return Math.min(failTimer / failTime, 1); // at most 1
     }
 
     public float getTimeCooked() {

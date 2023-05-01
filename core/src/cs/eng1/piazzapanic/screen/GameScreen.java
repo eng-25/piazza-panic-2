@@ -273,7 +273,7 @@ public class GameScreen implements Screen {
             uiOverlay.finishGameUI(false, customerManager.getCustomersServed());
         }
         uiOverlay.updateLives(reputation);
-        if (!isScenario && (Math.floor(gameTime+delta) - Math.floor(gameTime) > 0)) {
+        if (!isScenario && (Math.floor(gameTime + delta) - Math.floor(gameTime) > 0)) {
             money++;
             uiOverlay.updateMoney(money);
         }
@@ -354,7 +354,7 @@ public class GameScreen implements Screen {
 
         // Stations
         Map<String, Map<String, String>> stationMap = new HashMap<>();
-        for (Station station: stationList) {
+        for (Station station : stationList) {
             Map<String, String> stationParams = new HashMap<>();
             String stationType = ""; // so we know which data to parse when loading back
             boolean shouldAdd = true; // IngredientStations are not saved as they have no changing game parameters
@@ -421,7 +421,7 @@ public class GameScreen implements Screen {
         save.putInteger("current_chef_index", chefManager.getCurrentChefIndex());
         Map<String, Map<String, Object>> chefsMap = new HashMap<>();
         int chefIndex = 0;
-        for (Chef chef: chefManager.getChefs()) {
+        for (Chef chef : chefManager.getChefs()) {
             Map<String, Object> chefMap = new HashMap<>();
             chefMap.put("paused", chef.isPaused());
             chefMap.put("x", chef.getX());
@@ -467,7 +467,7 @@ public class GameScreen implements Screen {
         System.out.println("Game Saved.");
     }
 
-    public void loadGame(Map<String,?> gameData, Map<Integer, String[]> stationData, Map<String, Object> chefData,
+    public void loadGame(Map<String, ?> gameData, Map<Integer, String[]> stationData, Map<String, Object> chefData,
                          Map<String, Object> customerData, Map<String, Object> powerupData) {
         // Game data
         uiOverlay.setTimerTime((float) gameData.get("timer"));
@@ -515,10 +515,10 @@ public class GameScreen implements Screen {
         // remove "held_ingredients=[" from first
         ingredientStrings[0] = stationData[0].split("=", 2)[1].substring(1);
         // remove "]" from end of last
-        String last = stationData[numOfIngredients-1];
-        ingredientStrings[numOfIngredients-1] = last.substring(0, last.length()-1);
+        String last = stationData[numOfIngredients - 1];
+        ingredientStrings[numOfIngredients - 1] = last.substring(0, last.length() - 1);
         // remaining ingredients in middle
-        System.arraycopy(stationData, 1, ingredientStrings, 1, numOfIngredients-2);
+        System.arraycopy(stationData, 1, ingredientStrings, 1, numOfIngredients - 2);
         return ingredientStrings;
     }
 

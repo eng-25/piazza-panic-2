@@ -209,24 +209,24 @@ public class CustomerManager {
             Customer customer = getNewCustomer();
             List<String> orderStrings = new ArrayList<>();
             for (String param : customerParams) {
-               String[] splitParam = GameScreen.getParamSplit(param);
-               switch (splitParam[0]) {
-                   case "money":
-                       customer.setMoney(Integer.parseInt(splitParam[1]));
-                       break;
-                   case "time_elapsed":
-                       customer.setTimeElapsed(Float.parseFloat(splitParam[1]));
-                       break;
-                   case "max_time":
-                       customer.setMaxTime(Float.parseFloat(splitParam[1]));
-                       break;
-                   case "order":
-                       orderStrings.add(splitParam[1]
-                               .replace("[", "").replace("]", ""));
-                       break;
-                   default:
-                       orderStrings.add(splitParam[0].replace("]", ""));
-               }
+                String[] splitParam = GameScreen.getParamSplit(param);
+                switch (splitParam[0]) {
+                    case "money":
+                        customer.setMoney(Integer.parseInt(splitParam[1]));
+                        break;
+                    case "time_elapsed":
+                        customer.setTimeElapsed(Float.parseFloat(splitParam[1]));
+                        break;
+                    case "max_time":
+                        customer.setMaxTime(Float.parseFloat(splitParam[1]));
+                        break;
+                    case "order":
+                        orderStrings.add(splitParam[1]
+                                .replace("[", "").replace("]", ""));
+                        break;
+                    default:
+                        orderStrings.add(splitParam[0].replace("]", ""));
+                }
             }
             customer.loadOrder(orderStrings);
             currentOrders.add(customer);

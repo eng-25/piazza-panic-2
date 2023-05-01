@@ -35,14 +35,18 @@ public abstract class BaseOverlay {
         table.setBackground(new TextureRegionDrawable(new Texture(bgPixmap)));
     }
 
-    public void addToStage(Stage uiStage) { uiStage.addActor(table); }
+    public void addToStage(Stage uiStage) {
+        uiStage.addActor(table);
+    }
 
     public void show() {
         table.toFront();
         table.setVisible(true);
     }
 
-    public void hide() { table.setVisible(false); }
+    public void hide() {
+        table.setVisible(false);
+    }
 
     public TextButton addBackButton() {
         TextButton backButton = game.getButtonManager()

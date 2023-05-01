@@ -7,7 +7,10 @@ import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class OvenStation extends CookingStation {
 
@@ -22,7 +25,7 @@ public class OvenStation extends CookingStation {
      * @param uiController The controller from which we can get show and hide the action buttons
      *                     belonging to the station
      * @param alignment    Dictates where the action buttons are shown
-     * @param dishes  An array of final dishes to define what should be formed when the right ingredients are added
+     * @param dishes       An array of final dishes to define what should be formed when the right ingredients are added
      * @param failTime
      * @param isScenario
      */
@@ -75,7 +78,7 @@ public class OvenStation extends CookingStation {
                 return actionTypes;
             }
             if (currentIngredient instanceof CookedIngredient && ((CookedIngredient) currentIngredient).isHalfCooked()
-            && !currentIngredient.getIsCooked() && !progressVisible) {
+                    && !currentIngredient.getIsCooked() && !progressVisible) {
                 actionTypes.add(StationAction.ActionType.FLIP_ACTION);
             } else if (currentIngredient.getIsCooked()) {
                 actionTypes.add(StationAction.ActionType.GRAB_INGREDIENT);
@@ -138,7 +141,7 @@ public class OvenStation extends CookingStation {
 
     private void addIngredient(SimpleIngredient toAdd) {
         String type = toAdd.getType();
-        heldIngredientMap.replace(type, heldIngredientMap.get(type)+1);
+        heldIngredientMap.replace(type, heldIngredientMap.get(type) + 1);
         checkForRecipe();
     }
 
@@ -148,7 +151,7 @@ public class OvenStation extends CookingStation {
             heldIngredientMap.replaceAll((k, v) -> 0);
             currentIngredient = validIngredients[0];
         } else if (heldIngredientMap.get("dough") > 0 && heldIngredientMap.get("tomato") > 0
-        && heldIngredientMap.get("cheese") > 0) { // pizza
+                && heldIngredientMap.get("cheese") > 0) { // pizza
             heldIngredientMap.replaceAll((k, v) -> 0);
             currentIngredient = validIngredients[1];
         } else {

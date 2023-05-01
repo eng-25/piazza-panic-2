@@ -349,7 +349,7 @@ public class UIOverlay {
                 ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
                 ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
             } else if (c instanceof Label) {
-                ((Label) c).setFontScale(Math.round(chefDisplay.getWidth()/40f));
+                ((Label) c).setFontScale(Math.round(chefDisplay.getWidth() / 40f));
             }
         });
         coinGroup.space(8f * (chefDisplay.getWidth() / 35f));

@@ -1,6 +1,5 @@
 package cs.eng1.piazzapanic.ui.overlay;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -10,6 +9,7 @@ import cs.eng1.piazzapanic.ui.ButtonManager;
 public class DifficultyOverlay extends BaseOverlay {
 
     private final TextButton[] buttons;
+
     public DifficultyOverlay(PiazzaPanicGame game) {
         super(game);
 
@@ -52,8 +52,8 @@ public class DifficultyOverlay extends BaseOverlay {
             ButtonManager manager = game.getButtonManager();
             TextButton.TextButtonStyle blueStyle = manager.getTextButtonStyle(ButtonManager.ButtonColour.BLUE);
             TextButton.TextButtonStyle greenStyle = manager.getTextButtonStyle(ButtonManager.ButtonColour.GREEN);
-            for (int i=0; i<3; i++) {
-                if (i==newDifficulty) {
+            for (int i = 0; i < 3; i++) {
+                if (i == newDifficulty) {
                     buttons[i].setStyle(greenStyle);
                 } else {
                     buttons[i].setStyle(blueStyle);

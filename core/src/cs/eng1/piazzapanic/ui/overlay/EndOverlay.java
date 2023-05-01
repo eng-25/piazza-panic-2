@@ -17,6 +17,7 @@ public class EndOverlay extends BaseOverlay {
     private final String winMessage = "Game won\nTime taken: ";
     private final String lossMessage = "Game lost\nTime played: ";
     private Label endMessage;
+
     public EndOverlay(PiazzaPanicGame game) {
         super(game);
 

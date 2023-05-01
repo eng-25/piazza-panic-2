@@ -22,7 +22,7 @@ public class GamePowerup implements ISingleUsePowerup {
     public void addLife() {
         int currentLives = game.getLives();
         if (currentLives < MAX_LIVES) {
-            game.setLives(currentLives+1);
+            game.setLives(currentLives + 1);
         }
     }
 

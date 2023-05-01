@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
 import com.badlogic.gdx.utils.Disposable;
 import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.UIOverlay;
@@ -115,7 +114,7 @@ public class ChefManager implements Disposable {
     public void addNewChef() {
         if (!atMaxChefs()) {
             chefCount++;
-            Chef newChef = createChef(chefCount-1);
+            Chef newChef = createChef(chefCount - 1);
             chefStage.addActor(newChef);
             chefCost *= 2;
             overlay.updateChefUI(currentChef, atMaxChefs(), chefCost);
@@ -193,11 +192,17 @@ public class ChefManager implements Disposable {
         return currentChef;
     }
 
-    public int getCurrentChefIndex() { return currentChef == null ? -1 : chefs.indexOf(currentChef); }
+    public int getCurrentChefIndex() {
+        return currentChef == null ? -1 : chefs.indexOf(currentChef);
+    }
 
-    public Chef getLastChef() { return lastChef; }
+    public Chef getLastChef() {
+        return lastChef;
+    }
 
-    public boolean atMaxChefs() { return chefCount >= maxChefCount; }
+    public boolean atMaxChefs() {
+        return chefCount >= maxChefCount;
+    }
 
     /**
      * Update the UI when the current chef's stack has been updated

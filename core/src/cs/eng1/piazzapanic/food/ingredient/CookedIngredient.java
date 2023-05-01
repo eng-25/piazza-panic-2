@@ -13,7 +13,9 @@ public class CookedIngredient extends SimpleIngredient {
         halfCooked = isBurnt = false;
     }
 
-    public void setHalfCooked() { halfCooked = true; }
+    public void setHalfCooked() {
+        halfCooked = true;
+    }
 
     public boolean isHalfCooked() {
         return halfCooked;
