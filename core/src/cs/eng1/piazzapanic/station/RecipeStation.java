@@ -1,13 +1,13 @@
-package cs.eng1.piazzapanic.stations;
+package cs.eng1.piazzapanic.station;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
-import cs.eng1.piazzapanic.food.recipes.Recipe;
-import cs.eng1.piazzapanic.screens.GameScreen;
-import cs.eng1.piazzapanic.stations.StationAction.ActionType;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
+import cs.eng1.piazzapanic.screen.GameScreen;
+import cs.eng1.piazzapanic.station.StationAction.ActionType;
 import cs.eng1.piazzapanic.ui.StationActionUI.ActionAlignment;
 import cs.eng1.piazzapanic.ui.StationUIController;
 

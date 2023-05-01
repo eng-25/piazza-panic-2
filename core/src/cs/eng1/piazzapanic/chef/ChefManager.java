@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import com.badlogic.gdx.utils.Disposable;
-import cs.eng1.piazzapanic.screens.GameScreen;
+import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.ArrayList;

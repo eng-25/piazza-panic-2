@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
-import cs.eng1.piazzapanic.stations.Station;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.station.Station;
 
 import java.util.Collections;
 import java.util.List;

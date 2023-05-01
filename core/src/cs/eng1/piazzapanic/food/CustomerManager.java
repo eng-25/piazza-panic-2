@@ -1,8 +1,8 @@
 package cs.eng1.piazzapanic.food;
 
-import cs.eng1.piazzapanic.food.recipes.Recipe;
-import cs.eng1.piazzapanic.screens.GameScreen;
-import cs.eng1.piazzapanic.stations.RecipeStation;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
+import cs.eng1.piazzapanic.screen.GameScreen;
+import cs.eng1.piazzapanic.station.RecipeStation;
 import cs.eng1.piazzapanic.ui.UIOverlay;
 
 import java.util.*;
@@ -117,7 +117,7 @@ public class CustomerManager {
 
     private void tryRandomPowerup() {
         if (RANDOM.nextFloat() < 0.1 && !isScenario) {
-            gameScreen.getPowerupManager().addPowerup();
+            gameScreen.getPowerupManager().activateRandomPowerup();
         }
     }
 

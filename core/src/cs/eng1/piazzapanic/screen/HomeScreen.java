@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.screens;
+package cs.eng1.piazzapanic.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

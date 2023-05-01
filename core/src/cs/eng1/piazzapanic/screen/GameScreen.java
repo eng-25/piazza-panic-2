@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.screens;
+package cs.eng1.piazzapanic.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -27,10 +27,10 @@ import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.Customer;
 import cs.eng1.piazzapanic.food.CustomerManager;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
-import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
 import cs.eng1.piazzapanic.powerup.PowerupManager;
-import cs.eng1.piazzapanic.stations.*;
+import cs.eng1.piazzapanic.station.*;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 import cs.eng1.piazzapanic.ui.UIOverlay;
@@ -506,7 +506,7 @@ public class GameScreen implements Screen {
             ((RecipeStation) station).loadHeldIngredients(getIngredientStrings(stationData, 4));
         }
         for (String param : stationData) {
-            station.loadData(getParamSplit(param));
+            station.load(getParamSplit(param));
         }
     }
 

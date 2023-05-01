@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
-import cs.eng1.piazzapanic.screens.GameScreen;
+import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
 public class PauseOverlay extends BaseOverlay {

@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.stations;
+package cs.eng1.piazzapanic.station;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,11 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.observable.Observer;
 import cs.eng1.piazzapanic.observable.Subject;
-import cs.eng1.piazzapanic.screens.GameScreen;
+import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -232,7 +231,7 @@ public class Station extends Actor implements Observer<Chef> {
         return inUse;
     }
 
-    public void loadData(String[] param) {
+    public void load(String[] param) {
         switch (param[0]) {
             case "locked":
                 locked = Boolean.parseBoolean(param[1]);

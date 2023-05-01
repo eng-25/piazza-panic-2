@@ -2,8 +2,8 @@ package cs.eng1.piazzapanic.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
-import cs.eng1.piazzapanic.stations.Station;
-import cs.eng1.piazzapanic.stations.StationAction;
+import cs.eng1.piazzapanic.station.Station;
+import cs.eng1.piazzapanic.station.StationAction;
 
 import java.util.HashMap;
 import java.util.List;

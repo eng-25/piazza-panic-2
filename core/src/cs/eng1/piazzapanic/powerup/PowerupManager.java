@@ -3,7 +3,7 @@ package cs.eng1.piazzapanic.powerup;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.CustomerManager;
-import cs.eng1.piazzapanic.screens.GameScreen;
+import cs.eng1.piazzapanic.screen.GameScreen;
 
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
@@ -28,7 +28,7 @@ public class PowerupManager {
         customerPowerup = new CustomerPowerup(customerManager);
     }
 
-    public void addPowerup() {
+    public void activateRandomPowerup() {
         switch (RANDOM.nextInt(0, 5)) {
             case 0:
                 activateInvulnerability();

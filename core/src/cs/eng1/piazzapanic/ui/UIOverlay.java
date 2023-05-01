@@ -1,9 +1,7 @@
 package cs.eng1.piazzapanic.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -14,13 +12,12 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
-import cs.eng1.piazzapanic.chef.ChefManager;
 import cs.eng1.piazzapanic.food.Customer;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
-import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
-import static cs.eng1.piazzapanic.screens.GameScreen.MAX_LIVES;
+import static cs.eng1.piazzapanic.screen.GameScreen.MAX_LIVES;
 
 public class UIOverlay {
 

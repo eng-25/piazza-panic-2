@@ -1,12 +1,12 @@
 package cs.eng1.piazzapanic.food;
 
-import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
-import static cs.eng1.piazzapanic.food.recipes.Recipe.fromString;
+import static cs.eng1.piazzapanic.food.recipe.Recipe.fromString;
 
 public class Customer {
 

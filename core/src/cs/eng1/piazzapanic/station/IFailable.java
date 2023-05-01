@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.stations;
+package cs.eng1.piazzapanic.station;
 
 public interface IFailable {
     void startFailTimer();

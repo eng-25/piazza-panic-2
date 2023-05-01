@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.stations;
+package cs.eng1.piazzapanic.station;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import cs.eng1.piazzapanic.chef.Chef;

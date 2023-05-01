@@ -3,14 +3,12 @@ package cs.eng1.piazzapanic;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.sun.security.jgss.GSSUtil;
-import cs.eng1.piazzapanic.screens.GameScreen;
-import cs.eng1.piazzapanic.screens.HomeScreen;
+import cs.eng1.piazzapanic.screen.GameScreen;
+import cs.eng1.piazzapanic.screen.HomeScreen;
 import cs.eng1.piazzapanic.ui.overlay.*;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.FontManager;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

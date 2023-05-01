@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
-import cs.eng1.piazzapanic.stations.Station;
-import cs.eng1.piazzapanic.stations.StationAction;
+import cs.eng1.piazzapanic.station.Station;
+import cs.eng1.piazzapanic.station.StationAction;
 
 import java.util.List;
 

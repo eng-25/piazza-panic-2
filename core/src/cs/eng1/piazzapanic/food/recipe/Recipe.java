@@ -1,4 +1,4 @@
-package cs.eng1.piazzapanic.food.recipes;
+package cs.eng1.piazzapanic.food.recipe;
 
 import com.badlogic.gdx.graphics.Texture;
 import cs.eng1.piazzapanic.food.FoodTextureManager;

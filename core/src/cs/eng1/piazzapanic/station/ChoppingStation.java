@@ -1,10 +1,10 @@
-package cs.eng1.piazzapanic.stations;
+package cs.eng1.piazzapanic.station;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
-import cs.eng1.piazzapanic.food.ingredients.SimpleIngredient;
-import cs.eng1.piazzapanic.screens.GameScreen;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.StationActionUI;
 import cs.eng1.piazzapanic.ui.StationUIController;
 
@@ -204,7 +204,7 @@ public class ChoppingStation extends Station {
   }
 
   @Override
-  public void loadData(String[] param) {
+  public void load(String[] param) {
     switch (param[0]) {
       case "current_ingredient":
         currentIngredient = SimpleIngredient.fromString(param[1], new FoodTextureManager());
@@ -219,7 +219,7 @@ public class ChoppingStation extends Station {
         }
         break;
       default:
-        super.loadData(param);
+        super.load(param);
     }
   }
 
