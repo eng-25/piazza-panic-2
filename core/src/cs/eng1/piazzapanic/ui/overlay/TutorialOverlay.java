@@ -28,7 +28,21 @@ public class TutorialOverlay extends BaseOverlay {
     // Initialize movement instructions label
     LabelStyle labelStyle = new LabelStyle(game.getFontManager().getHeaderFont(), Color.BLACK);
     Label chefMovement = new Label(
-            "Left click on a chef to select them. Then use WASD or the arrow keys to move around.",
+            "You can click on a chef to select them. You can then click on which chef you want or press E to swap between them. Then use WASD or the arrow keys to move around.\n" +
+                    "\n" +
+                    "Move towards a station to get possible actions to appear as buttons such as place ingredient, pick up ingredient, deal with ingredient and clear station.\n" +
+                    "\n" +
+                    "The recipe on the left shows you how to process the ingredients. Take the prepared ingredients to the counter (the table with the orange tablecloth) to build the recipe and complete the order\n" +
+                    "\n" +
+                    "In Scenario mode, you will have 5 customers to serve, each having a time limit, that will ask for a dish. If you do not serve them in this time limit, you will lose one reputation point. You will have to serve the following dishes: Salad and Burger.\n" +
+                    "\n" +
+                    "In Endless mode, there will be an infinite number of customers to serve. Their time limits will reduce over time, making it more difficult to handle. You will also be able to burn ingredients so watch out for that. You will get money and the chance of a powerup for each customer you serve. The amount will depend on how quick you serve them. You can use this money to unlock more stations or buy more chefs. Powerups could be things such as gaining a life, a speed boost or [give another one here, I'm not sure what are in the game] Customers will also be able to ask for more than one dish at a time. These dishes could be: Salad, Burger, Pizza and Jacket Potato\n" +
+                    "\n" +
+                    "The recipes are:\n" +
+                    "\tSalad: Chopped Lettuce + Chopped Tomato\n" +
+                    "\tBurger: Bun + Cooked Patty\n" +
+                    "\tPizza: Cooked (Dough + Chopped Tomato + Chopped Cheese)\n" +
+                    "\tJacket Potato: Cooked (Potato + Chopped Cheese + Cooked Beans)",
             labelStyle);
     chefMovement.setWrap(true);
 

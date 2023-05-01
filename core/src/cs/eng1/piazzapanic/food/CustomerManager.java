@@ -163,12 +163,17 @@ public class CustomerManager {
 
         int reputationLost = 0;
         Iterator<Customer> iter = currentOrders.iterator();
+        List<Customer> toRemove = new ArrayList<>(); // customers to remove with expired timers in endless mode
         while (iter.hasNext()) {
             Customer customer = iter.next();
             if (customer.tickTimer(delta)) {
                 reputationLost++;
+                if (!isScenario) {
+                    toRemove.add(customer);
+                }
             }
         }
+        toRemove.forEach(currentOrders::remove);
         overlay.updateRecipeUI(currentOrders);
         return reputationLost;
     }

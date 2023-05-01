@@ -72,6 +72,7 @@ public class PiazzaPanicGame extends Game {
 
   public void loadGameFromSave() {
     Preferences save = Gdx.app.getPreferences("Save");
+    if (save.get().size() == 0) { return; }
 
     // Station data
     Map<Integer, String[]> stationData = parseSavedMap(save.getString("stations"));
