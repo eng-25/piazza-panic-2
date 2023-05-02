@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The Recipe class is the parent class of the food classes that
+ * The Recipe class for food orders that
  * dictates what ingredients are needed to make them
  */
 public class Recipe {

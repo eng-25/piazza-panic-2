@@ -14,6 +14,9 @@ import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 import cs.eng1.piazzapanic.ui.overlay.*;
 
+/**
+ * The home screen of the application, containing navigation buttons
+ */
 public class HomeScreen implements Screen {
 
     private final Stage uiStage;
@@ -32,6 +35,7 @@ public class HomeScreen implements Screen {
         final SettingsOverlay settingsOverlay = game.getSettingsOverlay();
         settingsOverlay.addToStage(uiStage);
 
+        // Final overlay in sequence if 'New' is clicked after 'Play'
         final ModeOverlay modeOverlay = game.getModeOverlay();
         modeOverlay.addToStage(uiStage);
 
@@ -39,11 +43,12 @@ public class HomeScreen implements Screen {
         difficultyOverlay.addToStage(uiStage);
         difficultyOverlay.init();
 
+        // Next overlay in sequence if 'Play' is clicked
         final LoadOrNewOverlay loadOrNewOverlay = game.getLoadOrNewOverlay();
         loadOrNewOverlay.addToStage(uiStage);
 
         Label welcomeLabel = new Label("Welcome to Piazza Panic!",
-                new Label.LabelStyle(game.getFontManager().getTitleFont(), null));
+                new Label.LabelStyle(game.getFontManager().getTitleFont(), null)); //TODO: image?
 
         // Initialize buttons and callbacks
         TextButton startButton = game.getButtonManager()

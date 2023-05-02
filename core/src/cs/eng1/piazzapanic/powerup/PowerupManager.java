@@ -7,6 +7,9 @@ import cs.eng1.piazzapanic.screen.GameScreen;
 
 import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
+/**
+ * An intermediary class which manages all game power-ups.
+ */
 public class PowerupManager {
 
     private final TimedPowerup invulnerabilityPowerup;
@@ -15,11 +18,17 @@ public class PowerupManager {
     private final CustomerPowerup customerPowerup;
     private final Stage stage;
 
+    // Timed power-up timers
     public static final float INVULNERABLE_TIME = 15f;
-
     public static final float SPEED_TIME = 15f;
     public static final float SPEED_MULTIPLIER = 1.75f;
 
+    /**
+     * @param gameStage       the stage to add timed powerups to
+     * @param chefManager     the game's chef manager to handle chef powerups
+     * @param game            the current GameScreen instance to handle money and reputation powerups
+     * @param customerManager the game's customer manager to handle customer powerups
+     */
     public PowerupManager(Stage gameStage, ChefManager chefManager, GameScreen game, CustomerManager customerManager) {
         this.stage = gameStage;
         invulnerabilityPowerup = new TimedPowerup();
@@ -28,6 +37,9 @@ public class PowerupManager {
         customerPowerup = new CustomerPowerup(customerManager);
     }
 
+    /**
+     * Picks a random powerup and activates it
+     */
     public void activateRandomPowerup() {
         switch (RANDOM.nextInt(0, 5)) {
             case 0:
@@ -48,6 +60,9 @@ public class PowerupManager {
         }
     }
 
+    /**
+     * Adds timed powerups to the game stage
+     */
     public void init() {
         stage.addActor(invulnerabilityPowerup);
         stage.addActor(speedPowerup);
@@ -81,6 +96,13 @@ public class PowerupManager {
         customerPowerup.activate();
     }
 
+    /**
+     * Used to load timed powerup data from a save
+     *
+     * @param invData   invulnerability powerup data array
+     * @param speedData speed powerup data array
+     * @throws ClassCastException in the case that both data arrays are not of the form Object[2]{Boolean, Float}
+     */
     public void load(Object[] invData, Object[] speedData) throws ClassCastException {
         invulnerabilityPowerup.setActive((boolean) invData[0]);
         invulnerabilityPowerup.setTimer((float) invData[1]);

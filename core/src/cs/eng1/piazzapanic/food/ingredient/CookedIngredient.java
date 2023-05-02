@@ -3,6 +3,9 @@ package cs.eng1.piazzapanic.food.ingredient;
 import com.badlogic.gdx.graphics.Texture;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 
+/**
+ * An ingredient to be cooked which can be burnt, holding multiple textures based on its cook status
+ */
 public class CookedIngredient extends SimpleIngredient {
 
     protected boolean halfCooked;
@@ -26,7 +29,7 @@ public class CookedIngredient extends SimpleIngredient {
     }
 
     /**
-     * Get the texture based on whether the patty has been cooked.
+     * Get the texture based on whether the patty is raw, cooked or burnt.
      *
      * @return the texture to display.
      */

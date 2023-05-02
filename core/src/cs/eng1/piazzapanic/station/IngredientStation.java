@@ -10,10 +10,24 @@ import cs.eng1.piazzapanic.ui.StationUIController;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A station for fetching ingredients and giving them to the nearby chef.
+ * Holds infinite amounts of its specified ingredient.
+ */
 public class IngredientStation extends Station {
 
     protected final SimpleIngredient ingredientDispensed;
 
+    /**
+     * @param id           unique station identifier
+     * @param image        station texture
+     * @param uiController UI controller to get station actions from
+     * @param alignment    directional alignment of station actions
+     * @param ingredient   ingredient to be dispensed
+     * @param isScenario   whether the game is scenario mode or not
+     * @param locked       if the station is locked or not
+     * @param game         current GameScreen instance
+     */
     public IngredientStation(int id, TextureRegion image, StationUIController uiController,
                              StationActionUI.ActionAlignment alignment, SimpleIngredient ingredient,
                              boolean isScenario, boolean locked, GameScreen game) {

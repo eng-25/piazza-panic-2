@@ -29,13 +29,10 @@ public class Chef extends Actor implements Disposable {
     private final Texture image;
     private final Vector2 imageBounds;
     private float imageRotation = 0f;
-
     private final ChefManager chefManager;
     private final FixedStack<SimpleIngredient> ingredientStack = new FixedStack<>(5);
-
     private final Vector2 inputVector;
-    private final float speed = 3f;
-    private float speedMultiplier = 1f;
+    private float speedMultiplier = 1f; // used for adjustments to speed
 
     /**
      * a parameter which adds a small amount of distance between the chef's boundaries and any other
@@ -59,6 +56,12 @@ public class Chef extends Actor implements Disposable {
         inputVector = new Vector2();
     }
 
+    /**
+     * Used to initialise the chef, setting its position and clearing its stack.
+     *
+     * @param x starting x position
+     * @param y starting y position
+     */
     public void init(float x, float y) {
         setX(x);
         setY(y);
@@ -66,6 +69,11 @@ public class Chef extends Actor implements Disposable {
         imageRotation = 0;
     }
 
+    /**
+     * Used to set the speed multiplier of the chef.
+     *
+     * @param multiplier float to multiply this chef's speed by
+     */
     public void setSpeedMultiplier(float multiplier) {
         speedMultiplier = multiplier;
     }
@@ -129,6 +137,7 @@ public class Chef extends Actor implements Disposable {
      * @return the vector representing how far the chef should move
      */
     private Vector2 calculateMovement(float delta) {
+        float speed = 3f;
         Vector2 movement = new Vector2(inputVector.x * speed * delta * speedMultiplier,
                 inputVector.y * speed * delta * speedMultiplier);
 
@@ -259,21 +268,36 @@ public class Chef extends Actor implements Disposable {
         return yMovement;
     }
 
+    /**
+     * Used to check if the chef's stack is empty.
+     *
+     * @return true if the stack is empty.
+     */
     public boolean hasIngredient() {
         return !ingredientStack.empty();
     }
 
+    /**
+     * Used to check if the chef's stack is full.
+     *
+     * @return true if the stack is full.
+     */
     public boolean canGrabIngredient() {
         return ingredientStack.hasSpace();
     }
 
+    /**
+     * Pushes an ingredient onto the stack and notifies the chef manager.
+     *
+     * @param ingredient ingredient to push onto the stack.
+     */
     public void grabIngredient(SimpleIngredient ingredient) {
         ingredientStack.push(ingredient);
         notifyAboutUpdatedStack();
     }
 
     /**
-     * Pops the top ingredient from the stack to place on the station
+     * Pops the top ingredient from the stack to place on the station and notifies the chef manager.
      *
      * @return the ingredient that was popped from the stack.
      */
@@ -345,6 +369,11 @@ public class Chef extends Actor implements Disposable {
         this.imageRotation = imageRotation;
     }
 
+    /**
+     * Used to load a chef's stack from a list of SimpleIngredient types.
+     *
+     * @param stackStrings list of ingredient type Strings.
+     */
     public void loadStack(List<String> stackStrings) {
         Collections.reverse(stackStrings); // stack is saved in reverse order
         for (String stackString : stackStrings) {

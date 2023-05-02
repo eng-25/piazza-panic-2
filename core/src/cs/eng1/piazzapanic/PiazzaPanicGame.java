@@ -28,8 +28,11 @@ public class PiazzaPanicGame extends Game {
     private PauseOverlay pauseOverlay;
     private int difficulty;
 
-    public static final Random RANDOM = new Random();
+    public static final Random RANDOM = new Random(); // a global static random instance
 
+    /**
+     * Creates all overlays and loads the home screen.
+     */
     @Override
     public void create() {
         fontManager = new FontManager();
@@ -41,7 +44,7 @@ public class PiazzaPanicGame extends Game {
         loadOrNewOverlay = new LoadOrNewOverlay(this);
         endOverlay = new EndOverlay(this);
         pauseOverlay = new PauseOverlay(this);
-        difficulty = 0;
+        difficulty = 1; // medium default
         loadHomeScreen();
     }
 
@@ -64,15 +67,24 @@ public class PiazzaPanicGame extends Game {
         setScreen(homeScreen);
     }
 
+    /**
+     * Sets the game screen
+     *
+     * @param isScenarioMode whether the game is scenario mode or not
+     * @param load           if the game has been loaded from save or not
+     */
     public void loadGameScreen(boolean isScenarioMode, boolean load) {
         gameScreen = new GameScreen(this, isScenarioMode, difficulty, load);
         setScreen(gameScreen);
         setupGameOverlays();
     }
 
+    /**
+     * Called when loading from save
+     */
     public void loadGameFromSave() {
         Preferences save = Gdx.app.getPreferences("Save");
-        if (save.get().size() == 0) {
+        if (save.get().size() == 0) { // prevents crash on no save file being present
             return;
         }
 
@@ -116,12 +128,18 @@ public class PiazzaPanicGame extends Game {
         gameScreen.loadGame(gameData, stationData, chefData, customerData, powerupData);
     }
 
+    /**
+     * Parses a map string back the way it was loaded.
+     *
+     * @param toParse map string to parse
+     * @return Map of data from parsed strings
+     */
     private Map<Integer, String[]> parseSavedMap(String toParse) {
         toParse = toParse.substring(1, toParse.length() - 2); // remove outer { and }
-        String[] chefList = toParse.split("},");
+        String[] paramList = toParse.split("},");
         Map<Integer, String[]> paramMap = new HashMap<>();
-        for (String chef : chefList) {
-            String[] indexSplit = chef.split("=", 2);
+        for (String param : paramList) {
+            String[] indexSplit = param.split("=", 2);
             String[] params = indexSplit[1].substring(1).split(",");
             int id = Integer.parseInt(indexSplit[0].replaceAll(" ", ""));
             paramMap.put(id, params);
@@ -137,11 +155,14 @@ public class PiazzaPanicGame extends Game {
         difficultyOverlay.hide();
         loadOrNewOverlay.hide();
         endOverlay.hide();
-        //pauseOverlay.show();
     }
 
+    /**
+     * Updates the game's difficulty
+     *
+     * @param newDifficulty updated difficulty - must be 0-2 inclusive
+     */
     public void setDifficulty(int newDifficulty) {
-        // should never be <0 or >2
         if (newDifficulty <= 0) {
             difficulty = 0;
         } else if (newDifficulty >= 2) {

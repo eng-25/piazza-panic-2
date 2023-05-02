@@ -10,6 +10,10 @@ public class SimpleIngredient {
     protected boolean isCooked = false;
     protected boolean isChopped = false;
 
+    /**
+     * @param type           ingredient type String
+     * @param textureManager a FoodTextureManager instance
+     */
     public SimpleIngredient(String type, FoodTextureManager textureManager) {
         this.type = type;
         this.textureManager = textureManager;

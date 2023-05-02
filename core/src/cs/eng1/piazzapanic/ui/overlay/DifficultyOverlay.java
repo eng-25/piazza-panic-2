@@ -6,6 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
+/**
+ * An overlay to update the game's difficulty
+ */
 public class DifficultyOverlay extends BaseOverlay {
 
     private final TextButton[] buttons;
@@ -24,7 +27,6 @@ public class DifficultyOverlay extends BaseOverlay {
                 updateDifficulty(0);
             }
         });
-
         medButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -47,6 +49,11 @@ public class DifficultyOverlay extends BaseOverlay {
         addBackButton();
     }
 
+    /**
+     * Updates the game's difficulty and according button colours for visual feedback
+     *
+     * @param newDifficulty new difficulty int, must be 0-2 inclusive
+     */
     private void updateDifficulty(int newDifficulty) {
         if (newDifficulty >= 0 && newDifficulty < 3) {
             ButtonManager manager = game.getButtonManager();
@@ -63,6 +70,9 @@ public class DifficultyOverlay extends BaseOverlay {
         }
     }
 
+    /**
+     * Initialise with game's base difficulty.
+     */
     public void init() {
         updateDifficulty(game.getDifficulty());
     }

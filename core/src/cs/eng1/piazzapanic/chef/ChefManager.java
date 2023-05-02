@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class ChefManager implements Disposable {
 
-    private final ArrayList<Chef> chefs;
+    private final ArrayList<Chef> chefs; // list of current chefs
     private Chef currentChef = null;
     private Chef lastChef = null;
     private final TiledMapTileLayer collisionLayer;
@@ -36,10 +36,13 @@ public class ChefManager implements Disposable {
     private final float chefScale;
     private final Stage chefStage;
 
+    // CHEF_SPRITES - chef sprite file path locations
     public static final String[] CHEF_SPRITES = new String[]{
             "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Man Brown/manBrown_hold.png",
             "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Woman Green/womanGreen_hold.png"
     };
+
+    // CHEF_X and CHEF_Y - starting chef positions
     public static final float[] CHEF_X = new float[]{
             3.5f, 11.5f, 3.5f
     };
@@ -49,11 +52,14 @@ public class ChefManager implements Disposable {
 
 
     /**
-     * @param chefScale      the amount to scale the texture by so that each chef is an accurate
-     *                       size.
-     * @param collisionLayer the tile map layer which the chefs can collide with.
-     * @param overlay        the user interface overlay to display information about the current chef
-     *                       and time, and to provide more controls.
+     * @param chefScale       the amount to scale the texture by so that each chef is an accurate
+     *                        size.
+     * @param collisionLayer  the tile map layer which the chefs can collide with.
+     * @param overlay         the user interface overlay to display information about the current chef
+     *                        and time, and to provide more controls.
+     * @param isScenarioMode  whether the game is scenario mode or not.
+     * @param chefStage       game stage to add chefs too
+     * @param initialChefCost the initial cost to buy a new chef
      */
     public ChefManager(float chefScale, TiledMapTileLayer collisionLayer, UIOverlay overlay, boolean isScenarioMode,
                        Stage chefStage, int initialChefCost) {
@@ -63,6 +69,7 @@ public class ChefManager implements Disposable {
         this.chefStage = chefStage;
         this.chefCost = initialChefCost;
 
+        // set max chef count based on game-mode
         if (isScenarioMode) {
             chefCount = maxChefCount = 2;
         } else {
@@ -99,6 +106,12 @@ public class ChefManager implements Disposable {
         return collisionLayer.getCell(x, y);
     }
 
+    /**
+     * Creates a new chef and adds it to the chefs list.
+     *
+     * @param chefIndex index for starting position - must range from 0 to 2
+     * @return new Chef created
+     */
     private Chef createChef(int chefIndex) {
         String sprite = Arrays.stream(CHEF_SPRITES).findAny().get(); //TODO: change to random?
         Texture chefTex = new Texture(Gdx.files.internal(sprite));
@@ -111,6 +124,10 @@ public class ChefManager implements Disposable {
         return chef;
     }
 
+    /**
+     * Creates a new chef and adds it to the chefStage, as well as doubling the cost to buy the next chef and
+     * updating the UI in order to remove the buy button if max chefs is hit.
+     */
     public void addNewChef() {
         if (!atMaxChefs()) {
             chefCount++;
@@ -126,9 +143,9 @@ public class ChefManager implements Disposable {
     }
 
     /**
-     * Add the created Chefs to the game world
+     * Add the created initial Chefs to the game stage, also creating input listeners for selecting chefs.
      *
-     * @param stage The game world to which the chefs should be added.
+     * @param stage The game stage to which the chefs should be added.
      */
     public void addChefsToStage(final Stage stage) {
         for (Chef chef : chefs) {
@@ -192,6 +209,9 @@ public class ChefManager implements Disposable {
         return currentChef;
     }
 
+    /**
+     * @return the index of the current chef in the chefs list.
+     */
     public int getCurrentChefIndex() {
         return currentChef == null ? -1 : chefs.indexOf(currentChef);
     }
@@ -226,6 +246,13 @@ public class ChefManager implements Disposable {
         return chefCount;
     }
 
+    /**
+     * Used to load chefs and manager
+     *
+     * @param loadChefCount    the chef count loaded
+     * @param currentChefIndex the current chef's index loaded, to set the current chef
+     * @param chefMap          a map containing chef indexes and parameters including paused, rotation, x, y and stack info
+     */
     public void load(int loadChefCount, int currentChefIndex, Map<Integer, String[]> chefMap) {
         while (chefCount < loadChefCount) {
             addNewChef();

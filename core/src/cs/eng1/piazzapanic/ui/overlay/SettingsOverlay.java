@@ -14,6 +14,10 @@ import com.badlogic.gdx.utils.Align;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
+/**
+ * A settings overlay, used to change into fullscreen as well as configure the number of customers in scenario mode
+ * to be served.
+ */
 public class SettingsOverlay extends BaseOverlay {
 
     public SettingsOverlay(final PiazzaPanicGame game) {

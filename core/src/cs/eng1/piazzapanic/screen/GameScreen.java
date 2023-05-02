@@ -57,17 +57,24 @@ public class GameScreen implements Screen {
     private final int difficulty;
     private final List<Station> stationList;
 
-    private boolean isFirstFrame = true;
-    private int reputation;
-    private int money;
+    private boolean isFirstFrame;
+    private int reputation; // current reputation
+    private int money; // current money
     private float gameTime;
 
     public static final int MAX_LIVES = 3;
 
+    /**
+     * @param game       the Game class, used to callback to the homescreen and set up pause screens
+     * @param isScenario whether the game is scenario mode or not
+     * @param difficulty the game's difficulty
+     * @param load       whether the game is being loaded from save or not
+     */
     public GameScreen(final PiazzaPanicGame game, boolean isScenario, int difficulty, boolean load) {
         this.isScenario = isScenario;
         this.difficulty = difficulty;
 
+        // Select tilemap based on gamemode
         TiledMap map;
         if (isScenario) {
             map = new TmxMapLoader().load("main-game-map.tmx");
@@ -78,7 +85,7 @@ public class GameScreen implements Screen {
         int sizeY = map.getProperties().get("height", Integer.class);
         float tileUnitSize = 1 / (float) map.getProperties().get("tilewidth", Integer.class);
 
-        // Initialize stage and camera
+        // Initialize stages and camera
         OrthographicCamera camera = new OrthographicCamera();
         ExtendViewport viewport = new ExtendViewport(sizeX, sizeY, camera); // Number of tiles
         this.stage = new Stage(viewport);
@@ -93,6 +100,7 @@ public class GameScreen implements Screen {
         MapLayer objectLayer = map.getLayers().get("Stations");
         TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
 
+        // Create managers
         foodTextureManager = new FoodTextureManager();
         chefManager = new ChefManager(tileUnitSize * 2.5f, collisionLayer, uiOverlay, isScenario, stage, 150);
         customerManager = new CustomerManager(uiOverlay, isScenario, difficulty, this,
@@ -100,17 +108,19 @@ public class GameScreen implements Screen {
         powerupManager = new PowerupManager(stage, chefManager, this, customerManager);
 
         // Add tile objects
-        stationList = initialiseStations(tileUnitSize, objectLayer, 10f);
+        stationList = initialiseStations(tileUnitSize, objectLayer, 12f);
         chefManager.addChefsToStage(stage);
 
         game.getPauseOverlay().addToStage(uiStage);
         game.getTutorialOverlay().addToStage(uiStage);
         game.getEndOverlay().addToStage(uiStage);
 
-        isFirstFrame = !load;
+        isFirstFrame = !load; // stops a new customer being added in the first frame of a loaded game
     }
 
     /**
+     * Sets up all stations from a current tilemap's object layer
+     *
      * @param tileUnitSize The ratio of world units over the pixel width of a single tile/station
      * @param objectLayer  The layer on the TMX tilemap which contains all the information about the
      *                     stations and station colliders including position, bounds and station
@@ -222,8 +232,14 @@ public class GameScreen implements Screen {
         multiplexer.addProcessor(uiStage);
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
+
+        // Manager and UI init
         uiOverlay.init(chefManager.getChefCost());
         chefManager.init();
+        customerManager.init(foodTextureManager);
+        powerupManager.init();
+
+        // Callback for chef buy button
         ClickListener callbackToBuy = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -236,15 +252,14 @@ public class GameScreen implements Screen {
         };
         uiOverlay.addBuyChefButton(callbackToBuy);
 
-        customerManager.init(foodTextureManager);
-        powerupManager.init();
-
+        // Reset stations
         for (Actor actor : stage.getActors().items) {
             if (actor instanceof Station) {
                 ((Station) actor).reset();
             }
         }
 
+        // initial game values
         reputation = 3;
         money = 0;
         gameTime = 0;
@@ -267,23 +282,26 @@ public class GameScreen implements Screen {
         stage.act(delta);
         uiStage.act(delta);
 
+        // tick customers and update reputation
         int reputationToLose = powerupManager.getInvulnerabilityPowerup().isActive() ? 0 : customerManager.tick(delta);
         reputation = Math.max(reputation - reputationToLose, 0);
-        if (reputation == 0) {
+        if (reputation == 0) { // game lost
             uiOverlay.finishGameUI(false, customerManager.getCustomersServed());
         }
         uiOverlay.updateLives(reputation);
+
+        // adds money every second
         if (!isScenario && (Math.floor(gameTime + delta) - Math.floor(gameTime) > 0)) {
             money++;
             uiOverlay.updateMoney(money);
         }
-        gameTime += delta;
+        gameTime += delta; // update game timer
 
         // Render stage
         stage.draw();
         uiStage.draw();
 
-        if (isFirstFrame) {
+        if (isFirstFrame) { // initial customer
             customerManager.nextRecipe();
             isFirstFrame = false;
         }
@@ -298,17 +316,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
@@ -320,6 +335,11 @@ public class GameScreen implements Screen {
         chefManager.dispose();
     }
 
+    /**
+     * Used to change money amount
+     *
+     * @param amount amount to change money by
+     */
     public void addMoney(int amount) {
         money += amount;
         uiOverlay.updateMoney(money);
@@ -341,9 +361,12 @@ public class GameScreen implements Screen {
         return powerupManager;
     }
 
+    /**
+     * Called to save all needed game parameters and write to a libgdx Preferences file
+     */
     public void save() {
         Preferences save = Gdx.app.getPreferences("Save");
-        save.clear();
+        save.clear(); // clear old save
 
         // Global vars
         save.putBoolean("is_scenario", isScenario);
@@ -464,9 +487,17 @@ public class GameScreen implements Screen {
         save.putFloat("speed_timer", powerupManager.getSpeedPowerup().getTimer());
 
         save.flush();
-        System.out.println("Game Saved.");
     }
 
+    /**
+     * Called when a game is to be loaded.
+     *
+     * @param gameData     a map of global game data
+     * @param stationData  a map of all string data
+     * @param chefData     a map of all chef data
+     * @param customerData a map of all customer data
+     * @param powerupData  a map of all powerup data
+     */
     public void loadGame(Map<String, ?> gameData, Map<Integer, String[]> stationData, Map<String, Object> chefData,
                          Map<String, Object> customerData, Map<String, Object> powerupData) {
         // Game data
@@ -499,6 +530,12 @@ public class GameScreen implements Screen {
         powerupManager.load(invData, speedData);
     }
 
+    /**
+     * Loads relevant data on a given station
+     *
+     * @param station     station to load data of
+     * @param stationData station data array to load
+     */
     private void handleStationData(Station station, String[] stationData) {
         if (station instanceof OvenStation) {
             ((OvenStation) station).loadHeldIngredients(getIngredientStrings(stationData, 5));
@@ -510,6 +547,18 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Used to parse a list of strings into just their ingredient strings
+     * For example, due to how data must be saved and loaded back,
+     * an unparsed stationData String[] will look something like this:
+     * ["held_ingredients=[tomato,", "potato", "cheese]"]
+     * and the resulting String[] will become:
+     * ["tomato", "potato", "cheese"]
+     *
+     * @param stationData      station data to parse
+     * @param numOfIngredients number of ingredients expected - is also the number of elements in station data list
+     * @return a String array of SimpleIngredient type strings e.g. ["tomato", "potato", "cheese"]
+     */
     private String[] getIngredientStrings(String[] stationData, final int numOfIngredients) {
         String[] ingredientStrings = new String[numOfIngredients];
         // remove "held_ingredients=[" from first
@@ -522,6 +571,12 @@ public class GameScreen implements Screen {
         return ingredientStrings;
     }
 
+    /**
+     * Used in loading to split an "x=y" string into String[]{x, y}
+     *
+     * @param param the string to split
+     * @return the array of split strings
+     */
     public static String[] getParamSplit(String param) {
         String[] paramSplit = param.split("=", 2);
         paramSplit[0] = paramSplit[0].replaceAll(" ", "");

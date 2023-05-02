@@ -3,6 +3,9 @@ package cs.eng1.piazzapanic.food.ingredient;
 import com.badlogic.gdx.graphics.Texture;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 
+/**
+ * An ingredient to be chopped, holding multiple textures based on its chopped boolean.
+ */
 public class ChoppedIngredient extends SimpleIngredient {
 
     public ChoppedIngredient(String type, FoodTextureManager manager) {

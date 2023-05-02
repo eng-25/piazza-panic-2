@@ -2,6 +2,10 @@ package cs.eng1.piazzapanic.powerup;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * A base timed powerup, with a timer and an active boolean.
+ * Also responsible for the invulnerability powerup.
+ */
 public class TimedPowerup extends Actor {
 
     protected float timer;

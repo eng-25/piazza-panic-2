@@ -17,6 +17,9 @@ import cs.eng1.piazzapanic.ui.StationUIController;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * A base Station class
+ */
 public class Station extends Actor implements Observer<Chef> {
 
     protected final int id;
@@ -24,19 +27,25 @@ public class Station extends Actor implements Observer<Chef> {
     protected final StationActionUI.ActionAlignment actionAlignment;
     protected final TextureRegion stationImage;
     protected final GameScreen gameScreen;
-
+    protected final boolean isScenario;
     protected boolean inUse = false;
     protected boolean locked;
-
+    private float imageRotation = 0.0f;
     protected final List<Subject<Chef>> chefSubjects = new LinkedList<>();
     protected Chef nearbyChef = null;
-    private float imageRotation = 0.0f;
-
-    protected final boolean isScenario;
 
     public static final int LOCKED_PRICE = 250;
     public static final TextureRegion LOCKED_IMAGE = new TextureRegion(new Texture("new/locked_station.png"));
 
+    /**
+     * @param id           unique station identifier
+     * @param image        station texture
+     * @param uiController UI controller to get the action buttons from
+     * @param alignment    station actions' directional alignment
+     * @param isScenario   if the game is scenario mode or not
+     * @param locked       whether the station is locked or not
+     * @param game         the current GameScreen instance
+     */
     public Station(int id, TextureRegion image, StationUIController uiController,
                    StationActionUI.ActionAlignment alignment, boolean isScenario, boolean locked, GameScreen game) {
         this.id = id;
@@ -66,9 +75,15 @@ public class Station extends Actor implements Observer<Chef> {
                 imageRotation);
     }
 
+    /**
+     * Returns this station's texture if it is not locked; default locked texture otherwise
+     *
+     * @return texture to be rendered for this station
+     */
     protected TextureRegion getStationImage() {
         return locked ? LOCKED_IMAGE : stationImage;
     }
+
 
     /**
      * Take a food texture and render it on top of the station at a smaller size than the station.
@@ -178,6 +193,11 @@ public class Station extends Actor implements Observer<Chef> {
         return new LinkedList<>();
     }
 
+    /**
+     * Convenience method to add a clear action in any station class when required
+     *
+     * @param actionList the action list to add the clear action to, preferably this station's list
+     */
     protected void addClearAction(List<StationAction.ActionType> actionList) {
         actionList.add(StationAction.ActionType.CLEAR_STATION);
     }
@@ -198,6 +218,9 @@ public class Station extends Actor implements Observer<Chef> {
         }
     }
 
+    /**
+     * Defines logic for clear station action
+     */
     protected void clearStation() {
     }
 
@@ -212,6 +235,9 @@ public class Station extends Actor implements Observer<Chef> {
         return id;
     }
 
+    /**
+     * Used to unlock the station and update the game's money based on its price
+     */
     public void buyStation() {
         if (locked && canBuy()) {
             locked = false;
@@ -231,6 +257,11 @@ public class Station extends Actor implements Observer<Chef> {
         return inUse;
     }
 
+    /**
+     * Used to load a single station parameter
+     *
+     * @param param String array of [parameter to be loaded, parameter]
+     */
     public void load(String[] param) {
         switch (param[0]) {
             case "locked":
@@ -239,8 +270,6 @@ public class Station extends Actor implements Observer<Chef> {
             case "in_use":
                 inUse = Boolean.parseBoolean(param[1]);
                 break;
-//            default:
-//                System.out.println(Arrays.toString(param));
         }
     }
 }

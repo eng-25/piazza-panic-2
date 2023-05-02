@@ -6,6 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 
+/**
+ * A tutorial overlay, containing instructions and guidance on how to play
+ */
 public class TutorialOverlay extends BaseOverlay {
 
     private Stage currentStage;

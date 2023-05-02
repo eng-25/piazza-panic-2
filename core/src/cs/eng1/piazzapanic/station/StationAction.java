@@ -1,5 +1,8 @@
 package cs.eng1.piazzapanic.station;
 
+/**
+ * A class to store station actions, and get their String message equivalents to be rendered
+ */
 public class StationAction {
 
     public enum ActionType {

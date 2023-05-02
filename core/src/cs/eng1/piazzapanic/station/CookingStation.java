@@ -16,7 +16,7 @@ import java.util.Objects;
 
 /**
  * The CookingStation class is a station representing the place in the kitchen where you cook
- * patties to be used in making burgers.
+ * CookedIngredient types, which can also burn
  */
 public class CookingStation extends Station implements IFailable {
 
@@ -39,6 +39,10 @@ public class CookingStation extends Station implements IFailable {
      *                     belonging to the station
      * @param alignment    Dictates where the action buttons are shown
      * @param ingredients  An array of ingredients used to define what ingredients can be cooked
+     * @param failTime     the time in seconds before a finished step will cause the current ingredient to fail
+     * @param isScenario   if the game is scenario mode or not
+     * @param locked       if the station is locked or not
+     * @param game         the current instance of GameScreen
      */
     public CookingStation(int id, TextureRegion image, StationUIController uiController,
                           StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients, float failTime,
@@ -61,10 +65,10 @@ public class CookingStation extends Station implements IFailable {
     }
 
     /**
-     * Called every frame. Used to update the progress bar and check if enough time has passed for the
+     * Called every frame. Used to update the progress bar, fail bar and check if enough time has passed for the
      * ingredient to be changed to its half cooked or cooked variant
      *
-     * @param delta Time in seconds since the last frame.
+     * @param delta time in seconds since the last call.
      */
     @Override
     public void act(float delta) {

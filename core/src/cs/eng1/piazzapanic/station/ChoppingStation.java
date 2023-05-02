@@ -14,8 +14,7 @@ import java.util.Objects;
 
 /**
  * The ChoppingStation class is a station representing the place in
- * the kitchen where you chop lettuce and tomatoes to be used in making
- * a salad
+ * the kitchen where you chop ChoppedIngredient types to prepare them
  */
 public class ChoppingStation extends Station {
 
@@ -26,21 +25,22 @@ public class ChoppingStation extends Station {
     private boolean progressVisible = false;
 
     /**
-     * The constructor method for the class
-     *
      * @param id           The unique identifier of the station
      * @param image        The rectangular area of the texture
      * @param uiController The controller from which we can get show and hide the action
      *                     buttons belonging to the station
      * @param alignment    Dictates where the action buttons are shown
-     * @param ingredients  An array of ingredients used to define what ingredients can be
+     * @param ingredients  An array of ingredients used to define what specific SimpleIngredients can be
      *                     chopped
+     * @param isScenario   if the current game is scenario mode or not
+     * @param locked       if the station is locked or not
+     * @param game         a GameScreen instance
      */
     public ChoppingStation(int id, TextureRegion image, StationUIController uiController,
                            StationActionUI.ActionAlignment alignment, SimpleIngredient[] ingredients,
                            boolean isScenario, boolean locked, GameScreen game) {
         super(id, image, uiController, alignment, isScenario, locked, game);
-        validIngredients = ingredients; //A list of the ingredients that can be used by this station.
+        validIngredients = ingredients;
     }
 
     /**
@@ -48,20 +48,21 @@ public class ChoppingStation extends Station {
      * check if enough time has passed for the ingredient to be
      * changed to its chopped variant
      *
-     * @param delta Time in seconds since the last frame.
+     * @param delta time in seconds since the last call.
      */
     @Override
     public void act(float delta) {
         if (inUse) {
+            // update progress
             timeChopped += delta;
             uiController.updateProgressValue(this, (timeChopped / totalTimeToChop) * 100f);
-            //uiController.updateFailValue(this, getF)
+
             if (timeChopped >= totalTimeToChop && progressVisible) {
                 currentIngredient.setIsChopped(true);
                 uiController.hideProgressBar(this);
                 uiController.showActions(this, getActionTypes());
                 progressVisible = false;
-                if (nearbyChef != null) {
+                if (nearbyChef != null) { // unpause chef once chopping complete
                     nearbyChef.setPaused(false);
                 }
             }

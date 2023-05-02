@@ -23,20 +23,22 @@ public class RecipeStation extends Station {
     private final FoodTextureManager textureManager;
     private final CustomerManager customerManager;
     private Recipe completedRecipe = null;
-    private Map<String, Integer> ingredientCountMap;
+    private final Map<String, Integer> ingredientCountMap;
 
     /**
      * The constructor method for the class
      *
-     * @param id                  The unique identifier of the station
-     * @param textureRegion       The rectangular area of the texture
+     * @param id                  The unique identifier of the station.
+     * @param textureRegion       The rectangular area of the texture.
      * @param stationUIController The controller from which we can get show and hide the action
-     *                            buttons belonging to the station
-     * @param alignment           Dictates where the action buttons are shown
+     *                            buttons belonging to the station.
+     * @param alignment           Dictates where the action buttons are shown.
      * @param textureManager      The controller from which we can get information on what texture
-     *                            each ingredient should have
+     *                            each ingredient should have.
      * @param customerManager     The controller from which we can get information on what food
-     *                            needs to be served
+     *                            needs to be served.
+     * @param isScenario          whether the game is scenario mode or not.
+     * @param game                the current GameScreen instance.
      */
     public RecipeStation(int id, TextureRegion textureRegion, StationUIController stationUIController,
                          ActionAlignment alignment, FoodTextureManager textureManager,
@@ -60,10 +62,18 @@ public class RecipeStation extends Station {
         super.reset();
     }
 
+    /**
+     * Resets all held ingredient counts to 0
+     */
     private void resetIngredients() {
         ingredientCountMap.replaceAll((k, v) -> 0);
     }
 
+    /**
+     * Atomically iterates through the held ingredient map and totals the number of ingredients
+     *
+     * @return total number of ingredients held
+     */
     private int getTotalIngredientCount() {
         AtomicInteger total = new AtomicInteger();
         ingredientCountMap.values().forEach(total::addAndGet);
@@ -213,14 +223,30 @@ public class RecipeStation extends Station {
         uiController.showActions(this, getActionTypes());
     }
 
+    /**
+     * Convenience method to change a map value by a given amount
+     *
+     * @param key    key of map value to change
+     * @param change amount to change value by
+     */
     private void changeMapValue(String key, int change) {
         ingredientCountMap.replace(key, ingredientCountMap.get(key) + change);
     }
 
+    /**
+     * Convenience to increment a map value by 1
+     *
+     * @param key key of map value to change
+     */
     private void incrementMapValue(String key) {
         changeMapValue(key, 1);
     }
 
+    /**
+     * Convenience to decrement a map value by 1
+     *
+     * @param key key of map value to change
+     */
     private void decrementMapValue(String key) {
         changeMapValue(key, -1);
     }
@@ -237,6 +263,11 @@ public class RecipeStation extends Station {
         return ingredientCountMap.toString().replace('{', '[').replace('}', ']');
     }
 
+    /**
+     * Loads held ingredients from a given String array
+     *
+     * @param ingredientStringList array of ingredient Strings of the form "ingredientTypeString=countInteger"
+     */
     public void loadHeldIngredients(String[] ingredientStringList) {
         for (String ingString : ingredientStringList) {
             String[] split = ingString.split("=");
