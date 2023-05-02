@@ -8,6 +8,9 @@ import cs.eng1.piazzapanic.ui.ButtonManager;
 
 /**
  * Overlay to prompt a user if they want a new game to be scenario or endless mode and then begin the game
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class ModeOverlay extends BaseOverlay {
 

@@ -10,6 +10,9 @@ import cs.eng1.piazzapanic.ui.ButtonManager;
 /**
  * A pause overlay in the game, implements a save and exit button as well as a tutorial overlay in case they want a
  * reminder.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class PauseOverlay extends BaseOverlay {
     public PauseOverlay(PiazzaPanicGame game) {

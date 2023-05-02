@@ -3,6 +3,10 @@ package cs.eng1.piazzapanic.food.ingredient;
 import com.badlogic.gdx.graphics.Texture;
 import cs.eng1.piazzapanic.food.FoodTextureManager;
 
+/**
+ * @author Faran Lane, Alistair Foggin, jamesfwild, Matt Fitzpatrick
+ * @since 12-22
+ */
 public class SimpleIngredient {
 
     private final String type;

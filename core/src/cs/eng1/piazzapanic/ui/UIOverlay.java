@@ -21,6 +21,9 @@ import static cs.eng1.piazzapanic.screen.GameScreen.MAX_LIVES;
 
 /**
  * The main game UI class, responsible for rendering all UI elements aside from station actions.
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class UIOverlay {
 

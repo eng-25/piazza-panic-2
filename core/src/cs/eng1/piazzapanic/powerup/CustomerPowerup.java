@@ -5,6 +5,8 @@ import cs.eng1.piazzapanic.food.CustomerManager;
 
 /**
  * A simple single-use powerup to reset all customer timers
+ * @author Faran Lane
+ * @since 04-23
  */
 public class CustomerPowerup implements ISingleUsePowerup {
 

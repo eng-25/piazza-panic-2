@@ -22,6 +22,9 @@ import java.util.Map;
 /**
  * The controller that handles switching control between chefs and tells them about the surrounding
  * environment.
+ *
+ * @author Faran Lane, Alistair Foggin, jamesfwild
+ * @since 12-22
  */
 public class ChefManager implements Disposable {
 

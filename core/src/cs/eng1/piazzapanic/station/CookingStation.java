@@ -17,6 +17,9 @@ import java.util.Objects;
 /**
  * The CookingStation class is a station representing the place in the kitchen where you cook
  * CookedIngredient types, which can also burn
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class CookingStation extends Station implements IFailable {
 

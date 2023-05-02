@@ -5,6 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+/**
+ * @author Jamesfwild, Alistair Foggin
+ * @since 12-22
+ */
 public class Timer extends Label {
 
     private float totalTime = 0;

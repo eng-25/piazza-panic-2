@@ -41,6 +41,9 @@ import java.util.*;
  * The screen which can be used to load the tilemap and keep track of everything happening in the
  * game. It does all the initialization and then lets each actor do its actions based on the current
  * frame.
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class GameScreen implements Screen {
 

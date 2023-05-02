@@ -19,6 +19,9 @@ import java.util.List;
 /**
  * The Chef class is an actor representing a chef in the kitchen. It can pick up and put down
  * ingredients and interact with stations.
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class Chef extends Actor implements Disposable {
 

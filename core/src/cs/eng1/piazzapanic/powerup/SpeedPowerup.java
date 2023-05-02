@@ -4,6 +4,9 @@ import cs.eng1.piazzapanic.chef.ChefManager;
 
 /**
  * A timed powerup, increasing all chef speeds
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class SpeedPowerup extends TimedPowerup {
 

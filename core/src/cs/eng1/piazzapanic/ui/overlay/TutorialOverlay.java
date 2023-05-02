@@ -8,6 +8,9 @@ import cs.eng1.piazzapanic.PiazzaPanicGame;
 
 /**
  * A tutorial overlay, containing instructions and guidance on how to play
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class TutorialOverlay extends BaseOverlay {
 

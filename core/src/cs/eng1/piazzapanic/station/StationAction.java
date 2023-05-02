@@ -2,6 +2,9 @@ package cs.eng1.piazzapanic.station;
 
 /**
  * A class to store station actions, and get their String message equivalents to be rendered
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class StationAction {
 

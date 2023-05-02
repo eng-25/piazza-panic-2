@@ -11,6 +11,9 @@ import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
 /**
  * An intermediary class to manage all current customers in the game
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class CustomerManager {
 

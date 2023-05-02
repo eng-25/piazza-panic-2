@@ -10,6 +10,9 @@ import static cs.eng1.piazzapanic.food.recipe.Recipe.fromString;
 
 /**
  * A customer class, used to hold an order, timer and money given on completion.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class Customer {
 

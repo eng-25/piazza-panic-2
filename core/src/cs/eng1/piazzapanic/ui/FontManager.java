@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.Disposable;
 /**
  * It takes a TrueTypeFont (ttf) and converts it to all the necessary BitmapFonts that are required
  * for the UI elements.
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class FontManager implements Disposable {
 

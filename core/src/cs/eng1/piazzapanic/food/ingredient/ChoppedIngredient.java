@@ -5,6 +5,9 @@ import cs.eng1.piazzapanic.food.FoodTextureManager;
 
 /**
  * An ingredient to be chopped, holding multiple textures based on its chopped boolean.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class ChoppedIngredient extends SimpleIngredient {
 

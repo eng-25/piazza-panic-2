@@ -13,6 +13,9 @@ import java.util.List;
 /**
  * A station for fetching ingredients and giving them to the nearby chef.
  * Holds infinite amounts of its specified ingredient.
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class IngredientStation extends Station {
 

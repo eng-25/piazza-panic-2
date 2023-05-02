@@ -15,6 +15,9 @@ import java.util.Objects;
 /**
  * The ChoppingStation class is a station representing the place in
  * the kitchen where you chop ChoppedIngredient types to prepare them
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class ChoppingStation extends Station {
 

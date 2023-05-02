@@ -11,6 +11,9 @@ import java.util.List;
 /**
  * The controller of all UI relating to all stations. It enables showing and hiding action buttons
  * and displaying progress bars (WIP).
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class StationUIController {
 

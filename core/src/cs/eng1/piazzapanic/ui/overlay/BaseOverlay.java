@@ -14,6 +14,9 @@ import cs.eng1.piazzapanic.ui.ButtonManager;
 
 /**
  * A base overlay class, holding a single table with a solid background
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public abstract class BaseOverlay {
 

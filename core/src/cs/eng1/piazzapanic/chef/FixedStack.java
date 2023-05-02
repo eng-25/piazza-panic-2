@@ -6,6 +6,8 @@ import java.util.Stack;
  * A wrapper over java's builtin Stack for type T
  *
  * @param <T> The class that should be used for all the stack elements
+ * @author Alistair Foggin, jamesfwild
+ * @since 12-22
  */
 public class FixedStack<T> extends Stack<T> {
 

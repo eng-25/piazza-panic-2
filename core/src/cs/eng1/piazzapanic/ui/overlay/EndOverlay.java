@@ -13,6 +13,9 @@ import cs.eng1.piazzapanic.ui.Timer;
 
 /**
  * The end screen overlay, shown when the game has finished
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class EndOverlay extends BaseOverlay {
 

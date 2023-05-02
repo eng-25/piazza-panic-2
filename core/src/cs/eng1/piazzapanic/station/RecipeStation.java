@@ -18,6 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * The RecipeStation class is a station representing the place in the kitchen
  * where you combine ingredients to create food. The food can then be served to
  * the customer via the station.
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class RecipeStation extends Station {
     private final FoodTextureManager textureManager;

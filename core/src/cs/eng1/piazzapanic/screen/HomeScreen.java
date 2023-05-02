@@ -16,6 +16,9 @@ import cs.eng1.piazzapanic.ui.overlay.*;
 
 /**
  * The home screen of the application, containing navigation buttons
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class HomeScreen implements Screen {
 

@@ -19,6 +19,9 @@ import java.util.List;
 
 /**
  * A base Station class
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class Station extends Actor implements Observer<Chef> {
 

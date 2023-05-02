@@ -9,6 +9,9 @@ import java.util.List;
 /**
  * The Recipe class for food orders that
  * dictates what ingredients are needed to make them
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class Recipe {
 

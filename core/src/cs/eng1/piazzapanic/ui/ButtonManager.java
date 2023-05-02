@@ -14,6 +14,9 @@ import java.util.HashMap;
 /**
  * A utility which generates UI buttons with the correct background images given specific text,
  * images and colours.
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
  */
 public class ButtonManager implements Disposable {
 

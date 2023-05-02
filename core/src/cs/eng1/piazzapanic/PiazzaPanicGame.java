@@ -13,6 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
+ */
 public class PiazzaPanicGame extends Game {
 
     private FontManager fontManager;

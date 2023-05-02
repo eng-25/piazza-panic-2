@@ -5,6 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 /**
  * A base timed powerup, with a timer and an active boolean.
  * Also responsible for the invulnerability powerup.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class TimedPowerup extends Actor {
 

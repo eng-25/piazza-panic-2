@@ -7,6 +7,9 @@ import static cs.eng1.piazzapanic.screen.GameScreen.MAX_LIVES;
 
 /**
  * A single user powerup class to handle adding money and reputation
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class GamePowerup implements ISingleUsePowerup {
 

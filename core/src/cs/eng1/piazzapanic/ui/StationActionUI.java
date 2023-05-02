@@ -17,7 +17,10 @@ import cs.eng1.piazzapanic.station.StationAction;
 
 import java.util.List;
 
-
+/**
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
+ */
 public class StationActionUI extends Table {
 
     private ActionAlignment actionAlignment = ActionAlignment.TOP;

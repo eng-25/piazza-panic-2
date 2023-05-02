@@ -6,6 +6,10 @@ import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
 
+/**
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
+ */
 public class FoodTextureManager implements Disposable {
 
     private final HashMap<String, Texture> foodTextures;

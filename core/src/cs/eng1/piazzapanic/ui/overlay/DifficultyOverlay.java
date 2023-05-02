@@ -8,6 +8,9 @@ import cs.eng1.piazzapanic.ui.ButtonManager;
 
 /**
  * An overlay to update the game's difficulty
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class DifficultyOverlay extends BaseOverlay {
 

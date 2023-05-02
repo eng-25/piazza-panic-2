@@ -9,6 +9,9 @@ import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 
 /**
  * An intermediary class which manages all game power-ups.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class PowerupManager {
 

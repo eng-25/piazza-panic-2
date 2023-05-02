@@ -16,6 +16,9 @@ import java.util.Map;
  * An extended cooking station for more complex recipes.
  * Used to combine various prepared and unprepared ingredients and cook them.
  * Preparation steps can fail in endless mode.
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 public class OvenStation extends CookingStation {
 

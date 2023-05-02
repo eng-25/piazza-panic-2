@@ -1,4 +1,9 @@
 package cs.eng1.piazzapanic.observable;
+/**
+ *
+ * @author Alistair Foggin
+ * @since 12-22
+ */
 
 import java.util.List;
 

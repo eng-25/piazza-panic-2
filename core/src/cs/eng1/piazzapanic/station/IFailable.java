@@ -2,6 +2,9 @@ package cs.eng1.piazzapanic.station;
 
 /**
  * An interface for stations which should have failable preparation steps
+ *
+ * @author Faran Lane
+ * @since 04-23
  */
 interface IFailable {
     /**
