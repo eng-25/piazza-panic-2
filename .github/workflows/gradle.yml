@@ -45,12 +45,12 @@ jobs:
       uses: actions/upload-artifact@v3.1.1
       with:
         name: jacoco-report-${{ matrix.os }}
-        path: desktop/build/reports/jacoco/testCoverage/testCoverage.xml
+        path: ./build/reports/jacoco/test/html
     - name: Upload library JAR 
       uses: actions/upload-artifact@v3.1.1
       with: 
         name: lib-${{ matrix.os }}.jar
-        path: dekstop/build/libs/lib.jar
+        path: desktop/build/libs/lib.jar
         
   release: 
     runs-on: ubuntu-22.04
