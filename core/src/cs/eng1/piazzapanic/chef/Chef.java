@@ -9,321 +9,381 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
-import cs.eng1.piazzapanic.stations.Station;
+import cs.eng1.piazzapanic.food.FoodTextureManager;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.station.Station;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Chef class is an actor representing a chef in the kitchen. It can pick up and put down
  * ingredients and interact with stations.
+ *
+ * @author Faran Lane, Alistair Foggin, Matt Fitzpatrick
+ * @since 12-22
  */
 public class Chef extends Actor implements Disposable {
 
-  /**
-   * image, imageBounds and imageRotation are all used to display the chef to the user and show the
-   * user where the chef is and what direction it is moving without changing any collision details.
-   */
-  private final Texture image;
-  private final Vector2 imageBounds;
-  private float imageRotation = 0f;
+    /**
+     * image, imageBounds and imageRotation are all used to display the chef to the user and show the
+     * user where the chef is and what direction it is moving without changing any collision details.
+     */
+    private final Texture image;
+    private final Vector2 imageBounds;
+    private float imageRotation = 0f;
+    private final ChefManager chefManager;
+    private final FixedStack<SimpleIngredient> ingredientStack = new FixedStack<>(5);
+    private final Vector2 inputVector;
+    private float speedMultiplier = 1f; // used for adjustments to speed
 
-  private final ChefManager chefManager;
-  private final FixedStack<Ingredient> ingredientStack = new FixedStack<>(5);
+    /**
+     * a parameter which adds a small amount of distance between the chef's boundaries and any other
+     * objects it can collide with. This helps avoid boundary errors in collision calculations
+     */
+    private final float collisionSkin = 0.01f;
+    private boolean inputEnabled = true;
+    private boolean paused = false;
 
-  private final Vector2 inputVector;
-  private final float speed = 3f;
-
-  /**
-   * a parameter which adds a small amount of distance between the chef's boundaries and any other
-   * objects it can collide with. This helps avoid boundary errors in collision calculations
-   */
-  private final float collisionSkin = 0.01f;
-  private boolean inputEnabled = true;
-  private boolean paused = false;
-
-  /**
-   * @param image       the texture to display to the user
-   * @param imageBounds the bounds of the texture independent of the chef's own bounds to use for
-   *                    drawing the image to scale.
-   * @param chefManager the controller from which we can get information about all the chefs and
-   *                    their surrounding environment
-   */
-  public Chef(Texture image, Vector2 imageBounds, ChefManager chefManager) {
-    this.image = image;
-    this.imageBounds = imageBounds;
-    this.chefManager = chefManager;
-    inputVector = new Vector2();
-  }
-
-  public void init(float x, float y) {
-    setX(x);
-    setY(y);
-    getStack().clear();
-    imageRotation = 0;
-  }
-
-  @Override
-  public void draw(Batch batch, float parentAlpha) {
-    batch.draw(image, getX() + (1 - imageBounds.x) / 2f, getY() + (1 - imageBounds.y) / 2f,
-        imageBounds.x / 2f, imageBounds.y / 2f, imageBounds.x,
-        imageBounds.y, 1f, 1f, imageRotation, 0, 0, image.getWidth(), image.getHeight(), false,
-        false);
-    for (Ingredient ingredient : ingredientStack) {
-      Texture texture = ingredient.getTexture();
-      batch.draw(texture, getX() + 0.5f, getY() + 0.2f, 0f, 0.3f, 0.6f, 0.6f, 1f, 1f,
-          imageRotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+    /**
+     * @param image       the texture to display to the user
+     * @param imageBounds the bounds of the texture independent of the chef's own bounds to use for
+     *                    drawing the image to scale.
+     * @param chefManager the controller from which we can get information about all the chefs and
+     *                    their surrounding environment
+     */
+    public Chef(Texture image, Vector2 imageBounds, ChefManager chefManager) {
+        this.image = image;
+        this.imageBounds = imageBounds;
+        this.chefManager = chefManager;
+        inputVector = new Vector2();
     }
-  }
 
-  @Override
-  public void act(float delta) {
-    getInput();
-
-    Vector2 movement = calculateMovement(delta);
-    moveBy(movement.x, movement.y);
-
-    super.act(delta);
-  }
-
-  /**
-   * Set the input vector based on the input keys for movement
-   */
-  private void getInput() {
-    inputVector.x = 0;
-    inputVector.y = 0;
-    if (!isInputEnabled() || isPaused()) {
-      return;
+    /**
+     * Used to initialise the chef, setting its position and clearing its stack.
+     *
+     * @param x starting x position
+     * @param y starting y position
+     */
+    public void init(float x, float y) {
+        setX(x);
+        setY(y);
+        getStack().clear();
+        imageRotation = 0;
     }
-    float x = 0f;
-    float y = 0f;
-    if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-      y += 1f;
+
+    /**
+     * Used to set the speed multiplier of the chef.
+     *
+     * @param multiplier float to multiply this chef's speed by
+     */
+    public void setSpeedMultiplier(float multiplier) {
+        speedMultiplier = multiplier;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-      y -= 1f;
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(image, getX() + (1 - imageBounds.x) / 2f, getY() + (1 - imageBounds.y) / 2f,
+                imageBounds.x / 2f, imageBounds.y / 2f, imageBounds.x,
+                imageBounds.y, 1f, 1f, imageRotation, 0, 0, image.getWidth(), image.getHeight(), false,
+                false);
+        for (SimpleIngredient ingredient : ingredientStack) {
+            Texture texture = ingredient.getTexture();
+            batch.draw(texture, getX() + 0.5f, getY() + 0.2f, 0f, 0.3f, 0.6f, 0.6f, 1f, 1f,
+                    imageRotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+        }
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-      x += 1f;
+
+    @Override
+    public void act(float delta) {
+        getInput();
+
+        Vector2 movement = calculateMovement(delta);
+        moveBy(movement.x, movement.y);
+
+        super.act(delta);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-      x -= 1f;
+
+    /**
+     * Set the input vector based on the input keys for movement
+     */
+    private void getInput() {
+        inputVector.x = 0;
+        inputVector.y = 0;
+        if (!isInputEnabled() || isPaused()) {
+            return;
+        }
+        float x = 0f;
+        float y = 0f;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            y += 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            y -= 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            x += 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            x -= 1f;
+        }
+        setInputVector(x, y);
+        if (inputVector.len() > 0.01f) {
+            imageRotation = inputVector.angleDeg(Vector2.X);
+        }
     }
-    setInputVector(x, y);
-    if (inputVector.len() > 0.01f) {
-      imageRotation = inputVector.angleDeg(Vector2.X);
+
+    /**
+     * Calculate how far the chef should move based on the input vector while avoiding collisions
+     *
+     * @param delta the time that has passed since the last frame
+     * @return the vector representing how far the chef should move
+     */
+    private Vector2 calculateMovement(float delta) {
+        float speed = 3f;
+        Vector2 movement = new Vector2(inputVector.x * speed * delta * speedMultiplier,
+                inputVector.y * speed * delta * speedMultiplier);
+
+        // Adjust movement for collision
+        movement.x = adjustHorizontalMovementForCollision(movement.x);
+        movement.y = adjustVerticalMovementForCollision(movement.y);
+
+        return movement;
     }
-  }
 
-  /**
-   * Calculate how far the chef should move based on the input vector while avoiding collisions
-   *
-   * @param delta the time that has passed since the last frame
-   * @return the vector representing how far the chef should move
-   */
-  private Vector2 calculateMovement(float delta) {
-    Vector2 movement = new Vector2(inputVector.x * speed * delta, inputVector.y * speed * delta);
+    /**
+     * Check to see if a point lies within a tile in the collision layer, or if the point is in a chef
+     * or station
+     *
+     * @param x the x-coordinate to check for a collision
+     * @param y the y-coordinate to check for a collision
+     * @return the bounding box of the object that the point lies within. It will be null if the point
+     * does not lie in any object
+     */
+    private Rectangle getCollisionObjectBoundaries(float x, float y) {
+        Actor actorHit = getStage().hit(x, y, false);
+        Cell tileHit = chefManager.getCellAtPosition((int) Math.floor(x), (int) Math.floor(y));
 
-    // Adjust movement for collision
-    movement.x = adjustHorizontalMovementForCollision(movement.x);
-    movement.y = adjustVerticalMovementForCollision(movement.y);
-
-    return movement;
-  }
-
-  /**
-   * Check to see if a point lies within a tile in the collision layer, or if the point is in a chef
-   * or station
-   *
-   * @param x the x-coordinate to check for a collision
-   * @param y the y-coordinate to check for a collision
-   * @return the bounding box of the object that the point lies within. It will be null if the point
-   * does not lie in any object
-   */
-  private Rectangle getCollisionObjectBoundaries(float x, float y) {
-    Actor actorHit = getStage().hit(x, y, false);
-    Cell tileHit = chefManager.getCellAtPosition((int) Math.floor(x), (int) Math.floor(y));
-
-    if (tileHit != null) {
-      // Return the bounds of the foreground tile that the selected point overlaps
-      return new Rectangle((float) Math.floor(x), (float) Math.floor(y), 1, 1);
-    } else if (actorHit instanceof Station || actorHit instanceof Chef) {
-      // Return the bounds of the station or chef that the point lies within.
-      return new Rectangle(actorHit.getX(), actorHit.getY(), actorHit.getWidth(),
-          actorHit.getHeight());
-    } else {
-      return null;
+        if (tileHit != null) {
+            // Return the bounds of the foreground tile that the selected point overlaps
+            return new Rectangle((float) Math.floor(x), (float) Math.floor(y), 1, 1);
+        } else if (actorHit instanceof Station || actorHit instanceof Chef) {
+            // Return the bounds of the station or chef that the point lies within.
+            return new Rectangle(actorHit.getX(), actorHit.getY(), actorHit.getWidth(),
+                    actorHit.getHeight());
+        } else {
+            return null;
+        }
     }
-  }
 
-  /**
-   * @param xMovement the amount to move the chef along the x-axis before collision
-   * @return the new change in the x-axis that ensures that the chef does not collide with any
-   * objects
-   */
-  private float adjustHorizontalMovementForCollision(float xMovement) {
-    if (xMovement > 0.0001f) {
-      // Check right side of chef at top, middle and bottom
-      float rightBorder = getX() + getWidth() + xMovement;
-      Rectangle hitBoundsBottom = getCollisionObjectBoundaries(rightBorder, getY());
-      Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(rightBorder,
-          getY() + getHeight() / 2f);
-      Rectangle hitBoundsTop = getCollisionObjectBoundaries(rightBorder, getY() + getHeight());
+    /**
+     * @param xMovement the amount to move the chef along the x-axis before collision
+     * @return the new change in the x-axis that ensures that the chef does not collide with any
+     * objects
+     */
+    private float adjustHorizontalMovementForCollision(float xMovement) {
+        if (xMovement > 0.0001f) {
+            // Check right side of chef at top, middle and bottom
+            float rightBorder = getX() + getWidth() + xMovement;
+            Rectangle hitBoundsBottom = getCollisionObjectBoundaries(rightBorder, getY());
+            Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(rightBorder,
+                    getY() + getHeight() / 2f);
+            Rectangle hitBoundsTop = getCollisionObjectBoundaries(rightBorder, getY() + getHeight());
 
-      // Calculate new change in x relative to the collision object boundaries
-      float adjustment = -getWidth() - collisionSkin - getX();
-      if (hitBoundsBottom != null) {
-        xMovement = hitBoundsBottom.x + adjustment;
-      }
-      if (hitBoundsMiddle != null) {
-        xMovement = Math.min(xMovement, hitBoundsMiddle.x + adjustment);
-      }
-      if (hitBoundsTop != null) {
-        xMovement = Math.min(xMovement, hitBoundsTop.x + adjustment);
-      }
-    } else if (xMovement < -0.0001f) {
-      // Check left side of chef at top, middle and bottom
-      float leftBorder = getX() + xMovement;
-      Rectangle hitBoundsBottom = getCollisionObjectBoundaries(leftBorder, getY());
-      Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(leftBorder,
-          getY() + getHeight() / 2f);
-      Rectangle hitBoundsTop = getCollisionObjectBoundaries(leftBorder, getY() + getHeight());
+            // Calculate new change in x relative to the collision object boundaries
+            float adjustment = -getWidth() - collisionSkin - getX();
+            if (hitBoundsBottom != null) {
+                xMovement = hitBoundsBottom.x + adjustment;
+            }
+            if (hitBoundsMiddle != null) {
+                xMovement = Math.min(xMovement, hitBoundsMiddle.x + adjustment);
+            }
+            if (hitBoundsTop != null) {
+                xMovement = Math.min(xMovement, hitBoundsTop.x + adjustment);
+            }
+        } else if (xMovement < -0.0001f) {
+            // Check left side of chef at top, middle and bottom
+            float leftBorder = getX() + xMovement;
+            Rectangle hitBoundsBottom = getCollisionObjectBoundaries(leftBorder, getY());
+            Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(leftBorder,
+                    getY() + getHeight() / 2f);
+            Rectangle hitBoundsTop = getCollisionObjectBoundaries(leftBorder, getY() + getHeight());
 
-      // Calculate new change in x relative to the collision object boundaries
-      float adjustment = collisionSkin - getX();
-      if (hitBoundsBottom != null) {
-        xMovement = hitBoundsBottom.x + hitBoundsBottom.width + adjustment;
-      }
-      if (hitBoundsMiddle != null) {
-        xMovement = Math.max(xMovement, hitBoundsMiddle.x + hitBoundsMiddle.width + adjustment);
-      }
-      if (hitBoundsTop != null) {
-        xMovement = Math.max(xMovement, hitBoundsTop.x + hitBoundsTop.width + adjustment);
-      }
+            // Calculate new change in x relative to the collision object boundaries
+            float adjustment = collisionSkin - getX();
+            if (hitBoundsBottom != null) {
+                xMovement = hitBoundsBottom.x + hitBoundsBottom.width + adjustment;
+            }
+            if (hitBoundsMiddle != null) {
+                xMovement = Math.max(xMovement, hitBoundsMiddle.x + hitBoundsMiddle.width + adjustment);
+            }
+            if (hitBoundsTop != null) {
+                xMovement = Math.max(xMovement, hitBoundsTop.x + hitBoundsTop.width + adjustment);
+            }
+        }
+        return xMovement;
     }
-    return xMovement;
-  }
 
-  /**
-   * @param yMovement the amount to move the chef along the y-axis before collision
-   * @return the new change in the y-axis that ensures that the chef does not collide with any
-   * objects
-   */
-  private float adjustVerticalMovementForCollision(float yMovement) {
-    if (yMovement > 0.0001f) {
-      // Check top side of chef at left, middle and right
-      float topBorder = getY() + getHeight() + yMovement;
-      Rectangle hitBoundsLeft = getCollisionObjectBoundaries(getX(), topBorder);
-      Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(getX() + getWidth() / 2f, topBorder);
-      Rectangle hitBoundsRight = getCollisionObjectBoundaries(getX() + getWidth(), topBorder);
+    /**
+     * @param yMovement the amount to move the chef along the y-axis before collision
+     * @return the new change in the y-axis that ensures that the chef does not collide with any
+     * objects
+     */
+    private float adjustVerticalMovementForCollision(float yMovement) {
+        if (yMovement > 0.0001f) {
+            // Check top side of chef at left, middle and right
+            float topBorder = getY() + getHeight() + yMovement;
+            Rectangle hitBoundsLeft = getCollisionObjectBoundaries(getX(), topBorder);
+            Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(getX() + getWidth() / 2f, topBorder);
+            Rectangle hitBoundsRight = getCollisionObjectBoundaries(getX() + getWidth(), topBorder);
 
-      // Calculate new change in y relative to the collision object boundaries
-      float adjustment = -getHeight() - collisionSkin - getY();
-      if (hitBoundsLeft != null) {
-        yMovement = Math.min(yMovement, hitBoundsLeft.y + adjustment);
-      }
-      if (hitBoundsMiddle != null) {
-        yMovement = Math.min(yMovement, hitBoundsMiddle.y + adjustment);
-      }
-      if (hitBoundsRight != null) {
-        yMovement = Math.min(yMovement, hitBoundsRight.y + adjustment);
-      }
-    } else if (yMovement < -0.0001f) {
-      // Check bottom side of chef at left, middle and right
-      float bottomBorder = getY() + yMovement;
-      Rectangle hitBoundsLeft = getCollisionObjectBoundaries(getX(), bottomBorder);
-      Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(getX() + getWidth() / 2f,
-          bottomBorder);
-      Rectangle hitBoundsRight = getCollisionObjectBoundaries(getX() + getWidth(), bottomBorder);
+            // Calculate new change in y relative to the collision object boundaries
+            float adjustment = -getHeight() - collisionSkin - getY();
+            if (hitBoundsLeft != null) {
+                yMovement = Math.min(yMovement, hitBoundsLeft.y + adjustment);
+            }
+            if (hitBoundsMiddle != null) {
+                yMovement = Math.min(yMovement, hitBoundsMiddle.y + adjustment);
+            }
+            if (hitBoundsRight != null) {
+                yMovement = Math.min(yMovement, hitBoundsRight.y + adjustment);
+            }
+        } else if (yMovement < -0.0001f) {
+            // Check bottom side of chef at left, middle and right
+            float bottomBorder = getY() + yMovement;
+            Rectangle hitBoundsLeft = getCollisionObjectBoundaries(getX(), bottomBorder);
+            Rectangle hitBoundsMiddle = getCollisionObjectBoundaries(getX() + getWidth() / 2f,
+                    bottomBorder);
+            Rectangle hitBoundsRight = getCollisionObjectBoundaries(getX() + getWidth(), bottomBorder);
 
-      // Calculate new change in y relative to the collision object boundaries
-      float adjustment = collisionSkin - getY();
-      if (hitBoundsLeft != null) {
-        yMovement = Math.max(yMovement, hitBoundsLeft.y + hitBoundsLeft.height + adjustment);
-      }
-      if (hitBoundsMiddle != null) {
-        yMovement = Math.max(yMovement, hitBoundsMiddle.y + hitBoundsMiddle.height + adjustment);
-      }
-      if (hitBoundsRight != null) {
-        yMovement = Math.max(yMovement, hitBoundsRight.y + hitBoundsRight.height + adjustment);
-      }
+            // Calculate new change in y relative to the collision object boundaries
+            float adjustment = collisionSkin - getY();
+            if (hitBoundsLeft != null) {
+                yMovement = Math.max(yMovement, hitBoundsLeft.y + hitBoundsLeft.height + adjustment);
+            }
+            if (hitBoundsMiddle != null) {
+                yMovement = Math.max(yMovement, hitBoundsMiddle.y + hitBoundsMiddle.height + adjustment);
+            }
+            if (hitBoundsRight != null) {
+                yMovement = Math.max(yMovement, hitBoundsRight.y + hitBoundsRight.height + adjustment);
+            }
+        }
+        return yMovement;
     }
-    return yMovement;
-  }
 
-  public boolean hasIngredient() {
-    return !ingredientStack.empty();
-  }
-
-  public boolean canGrabIngredient() {
-    return ingredientStack.hasSpace();
-  }
-
-  public void grabIngredient(Ingredient ingredient) {
-    ingredientStack.push(ingredient);
-    notifyAboutUpdatedStack();
-  }
-
-  /**
-   * Pops the top ingredient from the stack to place on the station
-   *
-   * @return the ingredient that was popped from the stack.
-   */
-  public Ingredient placeIngredient() {
-    Ingredient ingredient = ingredientStack.pop();
-    notifyAboutUpdatedStack();
-    return ingredient;
-  }
-
-  public FixedStack<Ingredient> getStack() {
-    return ingredientStack;
-  }
-
-  /**
-   * Sets the input vector based on x and y, but ensuring that the vector is never greater than a
-   * length of 1
-   *
-   * @param x the x input value
-   * @param y the y input value
-   */
-  public void setInputVector(float x, float y) {
-    inputVector.x = x;
-    inputVector.y = y;
-    if (inputVector.len() > 1f) {
-      inputVector.nor();
+    /**
+     * Used to check if the chef's stack is empty.
+     *
+     * @return true if the stack is empty.
+     */
+    public boolean hasIngredient() {
+        return !ingredientStack.empty();
     }
-  }
 
-  public boolean isInputEnabled() {
-    return inputEnabled;
-  }
-
-  public void setInputEnabled(boolean inputEnabled) {
-    this.inputEnabled = inputEnabled;
-  }
-
-  public boolean isPaused() {
-    return paused;
-  }
-
-  public void setPaused(boolean pauseValue) {
-    this.paused = pauseValue;
-  }
-
-  public Texture getTexture() {
-    return image;
-  }
-
-  /**
-   * Whenever the stack has items added or removed from it, notify the chef manager about the new
-   * stack.
-   */
-  public void notifyAboutUpdatedStack() {
-    if (chefManager.getCurrentChef() == this) {
-      chefManager.currentChefStackUpdated();
+    /**
+     * Used to check if the chef's stack is full.
+     *
+     * @return true if the stack is full.
+     */
+    public boolean canGrabIngredient() {
+        return ingredientStack.hasSpace();
     }
-  }
 
-  @Override
-  public void dispose() {
-    image.dispose();
-  }
+    /**
+     * Pushes an ingredient onto the stack and notifies the chef manager.
+     *
+     * @param ingredient ingredient to push onto the stack.
+     */
+    public void grabIngredient(SimpleIngredient ingredient) {
+        ingredientStack.push(ingredient);
+        notifyAboutUpdatedStack();
+    }
+
+    /**
+     * Pops the top ingredient from the stack to place on the station and notifies the chef manager.
+     *
+     * @return the ingredient that was popped from the stack.
+     */
+    public SimpleIngredient placeIngredient() {
+        SimpleIngredient ingredient = ingredientStack.pop();
+        notifyAboutUpdatedStack();
+        return ingredient;
+    }
+
+    public FixedStack<SimpleIngredient> getStack() {
+        return ingredientStack;
+    }
+
+    /**
+     * Sets the input vector based on x and y, but ensuring that the vector is never greater than a
+     * length of 1
+     *
+     * @param x the x input value
+     * @param y the y input value
+     */
+    public void setInputVector(float x, float y) {
+        inputVector.x = x;
+        inputVector.y = y;
+        if (inputVector.len() > 1f) {
+            inputVector.nor();
+        }
+    }
+
+    public boolean isInputEnabled() {
+        return inputEnabled;
+    }
+
+    public void setInputEnabled(boolean inputEnabled) {
+        this.inputEnabled = inputEnabled;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean pauseValue) {
+        this.paused = pauseValue;
+    }
+
+    public Texture getTexture() {
+        return image;
+    }
+
+    /**
+     * Whenever the stack has items added or removed from it, notify the chef manager about the new
+     * stack.
+     */
+    public void notifyAboutUpdatedStack() {
+        if (chefManager.getCurrentChef() == this) {
+            chefManager.currentChefStackUpdated();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        image.dispose();
+    }
+
+    public float getImageRotation() {
+        return imageRotation;
+    }
+
+    public void setImageRotation(float imageRotation) {
+        this.imageRotation = imageRotation;
+    }
+
+    /**
+     * Used to load a chef's stack from a list of SimpleIngredient types.
+     *
+     * @param stackStrings list of ingredient type Strings.
+     */
+    public void loadStack(List<String> stackStrings) {
+        Collections.reverse(stackStrings); // stack is saved in reverse order
+        for (String stackString : stackStrings) {
+            SimpleIngredient toAdd = SimpleIngredient.fromString(stackString, new FoodTextureManager());
+            if (toAdd != null) {
+                ingredientStack.push(toAdd);
+            }
+        }
+    }
 }

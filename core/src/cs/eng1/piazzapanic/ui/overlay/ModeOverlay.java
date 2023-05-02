@@ -6,6 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
+/**
+ * Overlay to prompt a user if they want a new game to be scenario or endless mode and then begin the game
+ *
+ * @author Faran Lane
+ * @since 04-23
+ */
 public class ModeOverlay extends BaseOverlay {
 
     public ModeOverlay(final PiazzaPanicGame game) {
@@ -16,7 +22,7 @@ public class ModeOverlay extends BaseOverlay {
         scenarioButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.loadGameScreen(true);
+                game.loadGameScreen(true, false);
             }
         });
 
@@ -25,7 +31,7 @@ public class ModeOverlay extends BaseOverlay {
         endlessButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.loadGameScreen(false);
+                game.loadGameScreen(false, false);
             }
         });
 

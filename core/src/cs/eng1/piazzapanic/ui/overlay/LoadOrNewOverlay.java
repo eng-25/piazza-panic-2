@@ -6,6 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
+/**
+ * Overlay to prompt the user to load a saved game or start a new one
+ *
+ * @author Faran Lane
+ * @since 04-23
+ */
 public class LoadOrNewOverlay extends BaseOverlay {
     public LoadOrNewOverlay(PiazzaPanicGame game) {
         super(game);
@@ -24,7 +30,7 @@ public class LoadOrNewOverlay extends BaseOverlay {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.loadGameFromSave();
             }
         });
 

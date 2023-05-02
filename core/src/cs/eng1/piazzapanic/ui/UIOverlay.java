@@ -1,9 +1,7 @@
 package cs.eng1.piazzapanic.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,10 +13,18 @@ import com.badlogic.gdx.utils.Scaling;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.chef.Chef;
 import cs.eng1.piazzapanic.food.Customer;
-import cs.eng1.piazzapanic.food.ingredients.Ingredient;
-import cs.eng1.piazzapanic.food.recipes.Recipe;
+import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
+import cs.eng1.piazzapanic.food.recipe.Recipe;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
+import static cs.eng1.piazzapanic.screen.GameScreen.MAX_LIVES;
+
+/**
+ * The main game UI class, responsible for rendering all UI elements aside from station actions.
+ *
+ * @author Faran Lane, Alistair Foggin
+ * @since 12-22
+ */
 public class UIOverlay {
 
     private final Stack chefDisplay;
@@ -29,24 +35,16 @@ public class UIOverlay {
     private final Table recipeGroupsDisplay;
     private final TextureRegionDrawable emptyLife;
     private final TextureRegionDrawable fullLife;
-    private final TextureRegionDrawable coin;
-    //private final VerticalGroup recipeImages;
     private final Timer timer;
-    //private final Label recipeCountLabel;
-    //private final Label resultLabel;
-    //private final Timer resultTimer;
     private final PiazzaPanicGame game;
-    private int maxLivesIndex;
     private final Table topTable;
     private final Table midTable;
     private final Table bottomTable;
     private final HorizontalGroup livesGroup;
     private final HorizontalGroup coinGroup;
-    private final ImageButton chefBuyButton;
-    private final boolean isScenario;
+    private final TextButton chefBuyButton;
 
-    public static final int MAX_LIVES = 3;
-
+    // commonly used asset paths
     public static final String SQUARE_BG =
             "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png";
     public static final String TIMER_BG =
@@ -61,19 +59,28 @@ public class UIOverlay {
             "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotBlue.png";
     public static final String COIN =
             "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotYellow.png";
+    public static final String CUSTOMER_TIMER =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/green_button_flat_down.png";
+    public static final String CUSTOMER_TIMER_EXPIRED =
+            "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/red_button_flat_down.png";
 
-
+    /**
+     * @param uiStage    the game's UI stage
+     * @param game       the main game class itself, to set up pause overlays and exiting properly
+     * @param isScenario whether the game is scenario mode or not
+     */
     public UIOverlay(Stage uiStage, final PiazzaPanicGame game, boolean isScenario) {
         this.game = game;
-        this.isScenario = isScenario;
 
         // Initialize tables
+        // Top table for current chef, timer and pause button
         topTable = new Table();
         topTable.setFillParent(true);
         topTable.center().top().pad(15f);
         uiStage.addActor(topTable);
-        topTable.pack(); //TODO: needed?
+        topTable.pack();
 
+        // Mid table for orders and chef stack
         midTable = new Table();
         midTable.setFillParent(true);
         float midTablePadding = topTable.getRows() > 0 ? topTable.getRowHeight(0) : 45f;
@@ -81,6 +88,7 @@ public class UIOverlay {
         uiStage.addActor(midTable);
         midTable.pack();
 
+        // Bottom table for reputation, money and buy button
         bottomTable = new Table();
         bottomTable.setFillParent(true);
         bottomTable.right().bottom().pad(15f);
@@ -100,8 +108,6 @@ public class UIOverlay {
         // Initialize UI for showing current chef's ingredient stack
         Stack ingredientStackDisplay = new Stack();
         ingredientImagesBG = new Image(new Texture(SQUARE_BG));
-        //ingredientImagesBG.setVisible(false);
-        //ingredientStackDisplay.add(ingredientImagesBG);
         ingredientImages = new VerticalGroup();
         ingredientImages.padBottom(10f);
         ingredientStackDisplay.add(ingredientImages);
@@ -112,7 +118,7 @@ public class UIOverlay {
         timer = new Timer(timerStyle);
         timer.setAlignment(Align.center);
 
-        // Initialize the home button
+        // Initialize the pause button
         ImageButton pauseButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
                         new Texture(PAUSE_BUTTON)),
                 ButtonManager.ButtonColour.BLUE, -1.5f);
@@ -124,83 +130,50 @@ public class UIOverlay {
         });
         removeBtnDrawable = new TextureRegionDrawable(new Texture(REMOVE_BUTTON));
 
+        // Reputation and coin setup
         emptyLife = new TextureRegionDrawable(new Texture(LIFE_EMPTY));
         fullLife = new TextureRegionDrawable(new Texture(LIFE_FULL));
-        coin = new TextureRegionDrawable(new Texture(COIN));
+        TextureRegionDrawable coin = new TextureRegionDrawable(new Texture(COIN));
+        livesGroup = new HorizontalGroup();
+        livesGroup.left();
+        coinGroup = new HorizontalGroup();
+        coinGroup.left();
+        coinGroup.addActor(new Image(coin));
+        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.YELLOW)));
 
-//        // Initialize the UI to display the currently requested recipe
-//        Stack recipeDisplay = new Stack();
-//        recipeImagesBG = new Image(new Texture(
-//                "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png"));
-//        recipeImagesBG.setVisible(false);
-//        recipeDisplay.add(recipeImagesBG);
-//        recipeImages = new VerticalGroup();
-//        recipeDisplay.add(recipeImages);
-
-//        // Initialize counter for showing remaining recipes
-//        LabelStyle counterStyle = new LabelStyle(game.getFontManager().getHeaderFont(), Color.BLACK);
-//        recipeCountLabel = new Label("0", counterStyle);
-
-        // Initialize winning label
-//        LabelStyle labelStyle = new Label.LabelStyle(game.getFontManager().getTitleFont(), null);
-//        resultLabel = new Label("Congratulations! Your final time was:", labelStyle);
-//        resultLabel.setVisible(false);
-//        resultTimer = new Timer(labelStyle);
-//        resultTimer.setVisible(false);
+        // Chef purchase button
+        chefBuyButton = game.getButtonManager().createTextButton("0",
+                ButtonManager.ButtonColour.BLUE);
 
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
         Value timerWidth = Value.percentWidth(0.2f, topTable);
-        topTable.add(pauseButton).left().width(scale).height(scale);
-        topTable.add(timer).expandX().width(timerWidth).height(scale);
-        topTable.add(chefDisplay).right().width(scale).height(scale);
-        //topTable.row().padTop(10f);
+        topTable.add(pauseButton).left().width(scale).height(scale); // pause button
+        topTable.add(timer).expandX().width(timerWidth).height(scale); // timer
+        topTable.add(chefDisplay).right().width(scale).height(scale); // chef selection
 
-        midTable.add(recipeGroupsDisplay).left().top().expandX();
-        midTable.add(ingredientStackDisplay).right().top().width(scale);
-//        topTable.add().expandX().width(timerWidth);
-//        topTable.row();
-//        topTable.add(resultLabel).colspan(3);
-//        topTable.row();
-//        topTable.add(resultTimer).colspan(3);
+        midTable.add(recipeGroupsDisplay).left().top().expandX(); // current orders
+        midTable.add(ingredientStackDisplay).right().top().width(scale); // chef stack
 
-        livesGroup = new HorizontalGroup();
-        livesGroup.left();
-        //updateLives(MAX_LIVES);
-
-        coinGroup = new HorizontalGroup();
-        coinGroup.left();
-        coinGroup.addActor(new Image(coin));
-        coinGroup.addActor(new Label("0", new LabelStyle(game.getFontManager().getTitleFont(), Color.WHITE)));
-
-
-        chefBuyButton = game.getButtonManager().createImageButton(new TextureRegionDrawable(
-                        new Texture(
-                                Gdx.files.internal("Kenney-Game-Assets-1/2D assets/Game Icons/PNG/White/1x/pause.png"))),
-                ButtonManager.ButtonColour.BLUE, -1.5f);
-
-
-        if (!isScenario) {
+        if (!isScenario) { // only endless contains chef buying and coins
             bottomTable.add(coinGroup).top().left().pad(15f).height(scale)
                     .width(Value.percentWidth(0.12f, topTable));
-            bottomTable.add(chefBuyButton).top().left().pad(15f).width(scale).height(scale);
+            Value chefButtonScale = Value.percentWidth(0.06f, topTable);
+            bottomTable.add(chefBuyButton).top().left().pad(15f).width(chefButtonScale).height(chefButtonScale);
             bottomTable.row();
         }
-        bottomTable.add(livesGroup).bottom().left().pad(15f).height(scale)
+        bottomTable.add(livesGroup).bottom().left().pad(15f).height(scale) // lives
                 .width(Value.percentWidth(0.12f, topTable));
 
-        maxLivesIndex = MAX_LIVES;
     }
 
     /**
      * Reset values and UI to be in their default state.
      */
-    public void init() {
+    public void init(int chefCostInitial) {
         timer.reset();
         timer.start();
-//        resultLabel.setVisible(false);
-//        resultTimer.setVisible(false);
-        updateChefUI(null, false);
+        updateChefUI(null, false, chefCostInitial);
         updateLives(MAX_LIVES);
     }
 
@@ -208,31 +181,38 @@ public class UIOverlay {
      * Show the image of the currently selected chef as well as have the stack of ingredients
      * currently held by the chef.
      *
-     * @param chef The chef that is currently selected for which to show the UI.
+     * @param chef       The chef that is currently selected for which to show the UI.
+     * @param atMaxChefs whether the current chef count is maxed out, determining if the chef buy button should still
+     *                   be rendered or not
+     * @param newCost    the updated chef cost, to render the amount on screen
      */
-    public void updateChefUI(final Chef chef, boolean atMaxChefs) {
+    public void updateChefUI(final Chef chef, boolean atMaxChefs, int newCost) {
+        // chef buy button
         chefBuyButton.setVisible(!atMaxChefs);
+        chefBuyButton.setText("Buy\nChef:\n" + newCost);
         if (chef == null) {
             chefImage.setDrawable(null);
             ingredientImages.clearChildren();
             ingredientImagesBG.setVisible(false);
             return;
         }
+
+        // chef selection
         Texture texture = chef.getTexture();
         chefImage.setDrawable(new TextureRegionDrawable(texture));
 
+        // chef stack
         ingredientImages.clearChildren();
-        for (Ingredient ingredient : chef.getStack()) {
+        for (SimpleIngredient ingredient : chef.getStack()) {
             Stack textureStack = new Stack();
             textureStack.add(new Image(new Texture(SQUARE_BG)));
             Image image = new Image(ingredient.getTexture());
-//            image.getDrawable().setMinHeight(chefDisplay.getHeight());
-//            image.getDrawable().setMinWidth(chefDisplay.getWidth());
             textureStack.add(image);
             ingredientImages.addActor(textureStack);
         }
         resizeStack();
 
+        // remove button on stack
         if (!chef.getStack().isEmpty()) {
             ImageButton btn = game.getButtonManager().createImageButton(removeBtnDrawable,
                     ButtonColour.RED, -1.5f);
@@ -248,23 +228,23 @@ public class UIOverlay {
 
     }
 
+
     /**
-     * Show the label displaying that the game has finished along with the time it took to complete.
+     * Called when the game has finished, transitions to the EndOverlay
+     *
+     * @param won           whether the game was won or not
+     * @param customerCount number of dishes served
      */
-    public void finishGameUI(boolean won) {
-//        resultLabel.setVisible(true);
-//        resultTimer.setTime(timer.getTime());
-//        resultTimer.setVisible(true);
+    public void finishGameUI(boolean won, int customerCount) {
         timer.stop();
-        game.getEndOverlay().show(won, timer);
+        game.getEndOverlay().show(won, timer, customerCount);
         game.getTutorialOverlay().toggleStage();
     }
 
     /**
-     * Show the current requested recipe that the player needs to make, the ingredients for that, and
-     * the number of remaining recipes.
+     * Show all current orders, grouped horizontally by customer
      *
-     * @param orders The orders to display the dishes for.
+     * @param orders The orders to display the grouped dishes for.
      */
     public void updateRecipeUI(java.util.List<Customer> orders) {
         recipeGroupsDisplay.clear();
@@ -275,73 +255,94 @@ public class UIOverlay {
         }
     }
 
+    /**
+     * Adds a HorizontalGroup to the RecipeGroups table, based on a given customer's order
+     *
+     * @param customer the customer to render the order of
+     */
     private void addRecipeGroup(Customer customer) {
         HorizontalGroup orderGroup = new HorizontalGroup();
-        orderGroup.clearChildren();
+        orderGroup.clearChildren(); // reset order render
 
+        // add each dish
         for (Recipe dish : customer.getOrder()) {
             if (dish != null) {
                 addDishToGroup(dish, orderGroup);
             }
         }
 
-        Image timerImage = new Image(emptyLife);
+        // add timer - default texture of expired
+        Image timerImage = new Image(new TextureRegionDrawable(new Texture(CUSTOMER_TIMER_EXPIRED)));
         float timerWidth = chefDisplay.getWidth() * 3;
         float timerHeight = chefDisplay.getHeight() / 4f;
         timerImage.setSize(timerWidth, timerHeight);
         float orderTimePercentage = customer.getTimeElapsedPercentage();
 
-        if (orderTimePercentage != 1) { // not out of time
-            timerImage.setDrawable(coin);
-            timerWidth *= (1 - customer.getTimeElapsedPercentage());
+        if (orderTimePercentage != 100) { // if not out of time, change texture to not expired
+            timerImage.setDrawable(new TextureRegionDrawable(new Texture(CUSTOMER_TIMER)));
+            timerWidth *= (1 - (customer.getTimeElapsedPercentage() / 100));
         }
 
         recipeGroupsDisplay.add(timerImage)
                 .width(timerWidth)
                 .height(timerHeight)
                 .left().row();
-        recipeGroupsDisplay.add(orderGroup).left();
+        recipeGroupsDisplay.add(orderGroup).left(); // add order group and pad for next
         recipeGroupsDisplay.row().padTop(chefDisplay.getWidth() / 20f);
     }
 
+    /**
+     * Used to add a single Recipe dish's textures to a given HorizontalGroup
+     *
+     * @param dish  dish to be added
+     * @param group HorizontalGroup to add to
+     */
     private void addDishToGroup(Recipe dish, HorizontalGroup group) {
         Stack dishStack = new Stack();
 
+        // background image
         Texture recipeImagesBGTex = new Texture(
                 "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_button_square_gradient_down.png");
         Image recipeImagesBG = new Image(recipeImagesBGTex);
         recipeImagesBG.setVisible(true);
         dishStack.add(recipeImagesBG);
 
+        // dish texture
         Image recipeImage = new Image(dish.getTexture());
         recipeImage.getDrawable().setMinHeight(chefDisplay.getHeight());
         recipeImage.getDrawable().setMinWidth(chefDisplay.getWidth());
         dishStack.addActor(recipeImage);
 
-        group.addActor(dishStack);
+        group.addActor(dishStack); // add to group and space for next
         group.space(chefDisplay.getWidth() / 20f);
     }
 
-    //    /**
-//     * Update the number of remaining recipes to be displayed.
-//     *
-//     * @param remainingRecipes The number of remaining recipes.
-//     */
-//    public void updateRecipeCounter(int remainingRecipes) {
-//
-//    }
+    /**
+     * Called to resize most UI elements
+     *
+     * @param width  new width to resize accordingly to
+     * @param orders current orders to update
+     */
     public void resizeUI(int width, java.util.List<Customer> orders) {
+        // top table
         topTable.pack();
-        float topTablePadding = topTable.getRows() > 0 ? topTable.getRowHeight(0) + 15f : 45f;
         topTable.padTop(width / 64f);
+
+        // mid table
+        float topTablePadding = topTable.getRows() > 0 ? topTable.getRowHeight(0) + 15f : 45f;
         midTable.padTop(topTablePadding + width / 64f);
         updateRecipeUI(orders);
-
         resizeStack();
+
+        // bottom table
         resizeLives();
         resizeCoins();
+        chefBuyButton.getLabel().setFontScale(Math.max(width * 0.001f, 1)); // scale buy button text
     }
 
+    /**
+     * Resizes the drawable images of the chef's stack
+     */
     private void resizeStack() {
         ingredientImages.getChildren().forEach(child -> {
             if (child instanceof Stack) {
@@ -356,13 +357,15 @@ public class UIOverlay {
                 imageStack.setWidth(chefDisplay.getWidth());
                 imageStack.setHeight(chefDisplay.getHeight());
             }
-//            else {
-//                child.setWidth(chefDisplay.getWidth());
-//                child.setHeight(chefDisplay.getHeight());
-//            }
         });
     }
 
+    /**
+     * Update the rendered lives by drawing background textures for all, and rendering the full life texture
+     * if lives still remain
+     *
+     * @param livesCount updated reputation amount
+     */
     public void updateLives(int livesCount) {
 
         livesGroup.clearChildren();
@@ -378,30 +381,56 @@ public class UIOverlay {
         resizeLives();
     }
 
+    /**
+     * Resizes the lives UI element
+     */
     private void resizeLives() {
         livesGroup.getChildren().forEach(c -> {
             if (c instanceof Image) {
-                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
-                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
             }
         });
     }
 
+    /**
+     * Resizes the coins UI element
+     */
     private void resizeCoins() {
         coinGroup.getChildren().forEach(c -> {
             if (c instanceof Image) {
-                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth()*0.7f);
-                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth()*0.7f);
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
             } else if (c instanceof Label) {
-                ((Label) c).setFontScale(chefDisplay.getWidth()/35f);
+                ((Label) c).setFontScale(Math.round(chefDisplay.getWidth() / 40f));
             }
         });
-        coinGroup.space(8f*(chefDisplay.getWidth()/35f));
+        coinGroup.space(8f * (chefDisplay.getWidth() / 35f));
     }
 
+    /**
+     * Update the money text shown
+     *
+     * @param amount updated amount of money
+     */
+    public void updateMoney(int amount) {
+        ((Label) coinGroup.getChild(1)).setText(amount);
+    }
+
+    /**
+     * Adds a ClickListener callback to the chef buy button, allowing it to function properly
+     *
+     * @param callback action to take place on click
+     */
     public void addBuyChefButton(ClickListener callback) {
         chefBuyButton.addListener(callback);
     }
 
+    public float getTimerTime() {
+        return timer.getTime();
+    }
 
+    public void setTimerTime(float newTime) {
+        timer.setTime(newTime);
+    }
 }

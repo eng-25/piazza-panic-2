@@ -1,36 +1,69 @@
 {
-    "activeFile": "main-game-map.tmx",
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "endless-map.tmx",
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
-        "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/Tilesheet/Topdown Shooter Full 2.xml": {
+        ":/automap-tiles.tsx": {
             "scaleInDock": 1
         },
+        "Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/Tilesheet/Topdown Shooter Full 2.xml": {
+            "scaleInDock": 0.25
+        },
         "big-map.tmx": {
-            "scale": 0.23255208333333333,
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 956.7749160134379,
-                "y": 640.7166853303472
+                "x": 1018.6666666666665,
+                "y": 641.3333333333333
             }
         },
-        "main-game-map.tmx": {
+        "endless-map.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 519,
-                "y": 794
+                "x": 473,
+                "y": 952
+            }
+        },
+        "main-game-map.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1024,
+                "y": 576
             }
         }
     },
+    "map.height": 18,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 128,
+    "map.tileWidth": 128,
+    "map.width": 32,
     "openFiles": [
-        "main-game-map.tmx",
-        "big-map.tmx"
+        "big-map.tmx",
+        "endless-map.tmx",
+        "main-game-map.tmx"
     ],
     "project": "piazza-panic.tiled-project",
+    "property.type": "ActionAlignment",
     "recentFiles": [
         "big-map.tmx",
-        "main-game-map.tmx"
-    ]
+        "main-game-map.tmx",
+        "endless-map.tmx"
+    ],
+    "resizeMap.removeObjects": false
 }

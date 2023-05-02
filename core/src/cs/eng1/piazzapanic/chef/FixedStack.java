@@ -6,25 +6,28 @@ import java.util.Stack;
  * A wrapper over java's builtin Stack for type T
  *
  * @param <T> The class that should be used for all the stack elements
+ * @author Alistair Foggin, jamesfwild
+ * @since 12-22
  */
 public class FixedStack<T> extends Stack<T> {
 
-  private final int maxSize;
+    private final int maxSize;
 
-  public FixedStack(int size) {
-    super();
-    this.maxSize = size;
-  }
-
-  @Override
-  public T push(T item) {
-    if (!hasSpace()) {
-      return null;
+    public FixedStack(int size) {
+        super();
+        this.maxSize = size;
     }
-    return super.push(item);
-  }
 
-  public boolean hasSpace() {
-    return this.size() != maxSize;
-  }
+    @Override
+    public T push(T item) {
+        if (!hasSpace()) {
+            return null;
+        }
+        return super.push(item);
+    }
+
+    public boolean hasSpace() {
+        return this.size() != maxSize;
+    }
+
 }

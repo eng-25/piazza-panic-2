@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="128" tileheight="128" infinite="0" nextlayerid="4" nextobjectid="125">
+ <tileset firstgid="1" source="Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/Tilesheet/Topdown Shooter Full 2.xml"/>
+ <layer id="1" name="Background" width="16" height="9">
+  <data encoding="csv">
+96,96,98,96,96,3758096483,2147483748,2147483748,2147483748,96,96,96,96,96,96,96,
+2147483746,96,96,96,96,96,96,96,96,96,2147483746,96,96,96,96,2147483746,
+96,96,100,2147483746,2147483748,2147483748,100,3758096483,96,96,96,96,96,96,96,96,
+96,96,96,96,2147483748,2147483748,1610612835,2147483748,2147483746,96,96,96,96,96,96,96,
+96,96,96,96,96,96,96,96,96,96,96,96,96,96,96,96,
+96,2147483748,96,96,96,100,2147483748,96,96,96,96,96,96,96,96,96,
+96,96,96,96,96,96,96,96,96,96,96,96,96,96,96,96,
+96,96,96,96,3758096483,96,96,96,96,96,96,96,96,96,96,96,
+98,96,96,96,96,96,96,96,98,96,96,96,96,96,96,96
+</data>
+ </layer>
+ <layer id="3" name="Foreground" width="16" height="9">
+  <data encoding="csv">
+0,3221225794,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,3221225793,1610613058,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,2684354881,0,0,0,0,0,0,0,0,0,0,0,0,1610613057,0,
+0,431,431,432,0,430,431,431,431,431,432,0,430,431,431,0
+</data>
+ </layer>
+ <objectgroup id="2" name="Stations">
+  <object id="36" class="Station" gid="511" x="1408" y="1152" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="LEFT"/>
+    <property name="collisionObjectIDs" value="59"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="recipeStation"/>
+   </properties>
+  </object>
+  <object id="38" class="Station" gid="511" x="512" y="1152" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="RIGHT"/>
+    <property name="collisionObjectIDs" value="58"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="recipeStation"/>
+   </properties>
+  </object>
+  <object id="44" name="Chopping Board 2" class="Station" gid="267" x="256" y="384" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="51"/>
+    <property name="ingredients" propertytype="Ingredient" value="lettuce,tomato,cheese"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="stationType" propertytype="StationType" value="choppingStation"/>
+   </properties>
+  </object>
+  <object id="45" name="Chopping Board 3" class="Station" gid="267" x="256" y="896" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="53"/>
+    <property name="ingredients" propertytype="Ingredient" value="lettuce,tomato,cheese"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="stationType" propertytype="StationType" value="choppingStation"/>
+   </properties>
+  </object>
+  <object id="46" name="Cooker 3" class="Station" gid="324" x="1920" y="896" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="56"/>
+    <property name="ingredients" propertytype="Ingredient" value="patty,beans"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="stationType" propertytype="StationType" value="cookingStation"/>
+   </properties>
+  </object>
+  <object id="47" name="Cooker 2" class="Station" gid="324" x="1920" y="384" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="54"/>
+    <property name="ingredients" propertytype="Ingredient" value="patty,beans"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="stationType" propertytype="StationType" value="cookingStation"/>
+   </properties>
+  </object>
+  <object id="48" name="Chopping Board 1" class="Station" gid="267" x="256" y="638" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="52"/>
+    <property name="ingredients" propertytype="Ingredient" value="lettuce,tomato,cheese"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="choppingStation"/>
+   </properties>
+  </object>
+  <object id="49" name="Cooker 1" class="Station" gid="324" x="1920" y="640" width="128" height="128" rotation="-90">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="55"/>
+    <property name="ingredients" propertytype="Ingredient" value="patty,beans"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="cookingStation"/>
+   </properties>
+  </object>
+  <object id="51" name="Chopping Board Collider 2" x="256" y="256" width="128" height="128"/>
+  <object id="52" name="Chopping Board Collider 1" x="256" y="512" width="128" height="128"/>
+  <object id="53" name="Chopping Board Collider 3" x="256" y="768" width="128" height="128"/>
+  <object id="54" name="Cooker Collider 2" x="1664" y="256" width="128" height="128"/>
+  <object id="55" name="Cooker Collider 1" x="1664" y="512" width="128" height="128"/>
+  <object id="56" name="Cooker Collider 3" x="1664" y="768" width="128" height="128"/>
+  <object id="58" x="512" y="896" width="128" height="128"/>
+  <object id="59" x="1408" y="896" width="128" height="128"/>
+  <object id="74" class="Station" gid="129" x="640" y="512" width="128" height="128">
+   <properties>
+    <property name="collisionObjectIDs" value="77,78"/>
+    <property name="ingredients" propertytype="Ingredient" value="lettuce"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="77" x="512" y="384" width="128" height="128"/>
+  <object id="78" x="640" y="256" width="128" height="128"/>
+  <object id="79" class="Station" gid="129" x="640" y="640.73" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="80,82"/>
+    <property name="ingredients" propertytype="Ingredient" value="tomato"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="80" x="640" y="640" width="128" height="128"/>
+  <object id="82" x="512" y="512" width="128" height="128"/>
+  <object id="84" class="Station" gid="129" x="1152" y="516.364" width="128" height="128">
+   <properties>
+    <property name="collisionObjectIDs" value="122,87"/>
+    <property name="ingredients" propertytype="Ingredient" value="dough"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="87" x="1024" y="384" width="128" height="128"/>
+  <object id="94" class="Station" gid="129" x="1152" y="640" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="95,97"/>
+    <property name="ingredients" propertytype="Ingredient" value="bun"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="95" x="1152" y="640" width="128" height="128"/>
+  <object id="97" x="1024" y="512" width="128" height="128"/>
+  <object id="99" class="Station" gid="129" x="768" y="512" width="128" height="128">
+   <properties>
+    <property name="collisionObjectIDs" value="101,103"/>
+    <property name="ingredients" propertytype="Ingredient" value="potato"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="101" x="896" y="384" width="128" height="128"/>
+  <object id="103" x="768" y="256" width="128" height="128"/>
+  <object id="104" class="Station" gid="129" x="768" y="640" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="105,106"/>
+    <property name="ingredients" propertytype="Ingredient" value="cheese"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="105" x="768" y="640" width="128" height="128"/>
+  <object id="106" x="896" y="512" width="128" height="128"/>
+  <object id="109" class="Station" gid="129" x="1280" y="512" width="128" height="128">
+   <properties>
+    <property name="collisionObjectIDs" value="111,113"/>
+    <property name="ingredients" propertytype="Ingredient" value="patty"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="111" x="1408" y="384" width="128" height="128"/>
+  <object id="113" x="1280" y="256" width="128" height="128"/>
+  <object id="114" class="Station" gid="129" x="1280" y="640" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="115,116"/>
+    <property name="ingredients" propertytype="Ingredient" value="beans"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ingredientStation"/>
+   </properties>
+  </object>
+  <object id="115" x="1280" y="640" width="128" height="128"/>
+  <object id="116" x="1408" y="512" width="128" height="128"/>
+  <object id="120" name="Oven 1" gid="1073742301" x="512" y="128" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="123"/>
+    <property name="ingredients" propertytype="Ingredient" value="jacket_potato,pizza"/>
+    <property name="locked" type="bool" value="false"/>
+    <property name="stationType" propertytype="StationType" value="ovenStation"/>
+   </properties>
+  </object>
+  <object id="121" name="Oven 2" gid="1073742301" x="1408" y="128" width="128" height="128">
+   <properties>
+    <property name="actionAlignment" propertytype="ActionAlignment" value="BOTTOM"/>
+    <property name="collisionObjectIDs" value="124"/>
+    <property name="ingredients" propertytype="Ingredient" value="jacket_potato,pizza"/>
+    <property name="locked" type="bool" value="true"/>
+    <property name="stationType" propertytype="StationType" value="ovenStation"/>
+   </properties>
+  </object>
+  <object id="122" x="1152" y="256" width="128" height="128"/>
+  <object id="123" name="Oven Collider 1" x="512" y="128" width="128" height="128"/>
+  <object id="124" name="Oven Collider 2" x="1408" y="128" width="128" height="128"/>
+ </objectgroup>
+</map>

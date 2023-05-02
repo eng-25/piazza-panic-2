@@ -12,6 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
 
+/**
+ * A base overlay class, holding a single table with a solid background
+ *
+ * @author Faran Lane
+ * @since 04-23
+ */
 public abstract class BaseOverlay {
 
     protected final PiazzaPanicGame game;
@@ -25,6 +31,9 @@ public abstract class BaseOverlay {
         setupTable();
     }
 
+    /**
+     * Sets up the overlay table, centering and filling the background color
+     */
     private void setupTable() {
         table.setFillParent(true);
         table.setVisible(false);
@@ -35,16 +44,24 @@ public abstract class BaseOverlay {
         table.setBackground(new TextureRegionDrawable(new Texture(bgPixmap)));
     }
 
-    public void addToStage(Stage uiStage) { uiStage.addActor(table); }
+    public void addToStage(Stage uiStage) {
+        uiStage.addActor(table);
+    }
 
     public void show() {
         table.toFront();
         table.setVisible(true);
     }
 
-    public void hide() { table.setVisible(false); }
+    public void hide() {
+        table.setVisible(false);
+    }
 
-    public TextButton addBackButton() {
+    /**
+     * Convenience method to add a back button to the overlay table
+     * which will hide this overlay, showing the one underneath
+     */
+    public void addBackButton() {
         TextButton backButton = game.getButtonManager()
                 .createTextButton("Back", ButtonManager.ButtonColour.GREY);
         backButton.addListener(new ClickListener() {
@@ -55,7 +72,6 @@ public abstract class BaseOverlay {
         });
 
         table.add(backButton).padTop(20f);
-        return backButton;
     }
 
 }
