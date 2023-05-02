@@ -92,6 +92,11 @@ public class OvenStation extends CookingStation {
     }
 
     @Override
+    public void act(float delta) {
+        super.act(delta);
+    }
+
+    @Override
     public void doStationAction(StationAction.ActionType action) {
         switch (action) {
             case COOK_ACTION:
@@ -148,11 +153,17 @@ public class OvenStation extends CookingStation {
     private void checkForRecipe() {
         if (heldIngredientMap.get("potato") > 0 && heldIngredientMap.get("beans") > 0
                 && heldIngredientMap.get("cheese") > 0) { // potato
-            heldIngredientMap.replaceAll((k, v) -> 0);
+            heldIngredientMap.replaceAll((k, v) -> {
+                    List<String> valid = List.of("potato", "cheese", "beans");
+                    return valid.contains(k) ? 0 : v;
+            });
             currentIngredient = validIngredients[0];
         } else if (heldIngredientMap.get("dough") > 0 && heldIngredientMap.get("tomato") > 0
                 && heldIngredientMap.get("cheese") > 0) { // pizza
-            heldIngredientMap.replaceAll((k, v) -> 0);
+            heldIngredientMap.replaceAll((k, v) -> {
+                List<String> valid = List.of("dough", "cheese", "tomato");
+                return valid.contains(k) ? 0 : v;
+            });
             currentIngredient = validIngredients[1];
         } else {
             currentIngredient = null;
