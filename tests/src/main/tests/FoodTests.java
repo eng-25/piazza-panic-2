@@ -172,7 +172,6 @@ public class FoodTests {
         Patty p = new Patty(new FoodTextureManager());
         assertFalse(p.getIsHalfCooked());
     }
-    //TODO weird
     @Test
     public void testIngredientNamePattyHalfCooked(){
         Patty p = new Patty(new FoodTextureManager());

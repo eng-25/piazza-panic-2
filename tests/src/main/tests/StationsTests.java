@@ -75,7 +75,6 @@ public class StationsTests {
 
 
     }
-    //TODO chopping station/cooking station/ingredient station/recipe station/station action + station action ui/station collider
     /*
     -----------------------------------------------------STATION + CHOPPING STATION TESTS
      */
@@ -153,7 +152,6 @@ public class StationsTests {
         assertNotEquals(actions, cs.getActionTypes());
     }
 
-    //TODO SHOULD YOU BE ABLE TO PICK UP/REMOVE AN INGREDIENT WHEN IT ISNT CHOPPED????????????????
     @Test
     public void testChoppingStationPlaceIngredient(){
         Lettuce l = new Lettuce(new FoodTextureManager());
@@ -171,9 +169,6 @@ public class StationsTests {
         //actions.add(StationAction.ActionType.GRAB_INGREDIENT);
         assertEquals(actions, cs.getActionTypes());
     }
-    //chop ingredient right time
-    //chop ingredient boundary
-    //chop ingredient wrong
     @Test
     public void testChoppingStationChopActionInvalidTime(){
         Lettuce l = new Lettuce(new FoodTextureManager());
@@ -232,7 +227,6 @@ public class StationsTests {
 
         assertEquals(actions, cs.getActionTypes());
     }
-    //TODO this one might not be needed
     @Test(expected = NullPointerException.class)
     public void testChoppingStationChoppedIngredient(){
         Lettuce l = new Lettuce(new FoodTextureManager());
@@ -365,7 +359,6 @@ public class StationsTests {
         actions.add(StationAction.ActionType.PLACE_INGREDIENT);
         assertNotEquals(actions, cs.getActionTypes());
     }
-    //TODO should be able to do both
     @Test
     public void testCookingStationPlaceIngredient(){
         Patty p = new Patty(new FoodTextureManager());
@@ -528,7 +521,6 @@ public class StationsTests {
         is.doStationAction(StationAction.ActionType.GRAB_INGREDIENT);
         assertFalse(c.canGrabIngredient());
     }
-    //TODO you should not be able to add ingredient
     @Test//(expected = StackOverflowError.class)
     public void testIngredientStationGrabIngredientInvalid(){
         Tomato t = new Tomato(new FoodTextureManager());
@@ -688,7 +680,6 @@ public class StationsTests {
         actions.add(StationAction.ActionType.SUBMIT_ORDER);
         assertEquals(actions, rs.getActionTypes());
     }
-    //TODO---------------------
     @Test
     public void testRecipeStationMakeSalad(){
         Lettuce l = new Lettuce(new FoodTextureManager());

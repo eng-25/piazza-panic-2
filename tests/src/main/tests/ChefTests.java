@@ -65,20 +65,6 @@ public class ChefTests {
 
 
     }
-    //TODO - draw?,act?,getinput?, calculatemovement, getcollisionboundaries, adjustHorizontal, adjustVertical, hasingredient, placeingredient,
-    //TODO 2 - get stack, setinputvector/is enabled, setpaused/ispaused, gettexture?, notifyaboutupdated stack
-
-    //TODO - movement AND collision tests would have to be done manually i think as the methods are private and the GdxTestRunner runner is needed so powerMock can't be used
-    @Test
-    public void test2(){
-        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
-        Chef c = new Chef(new Texture("Kenney-Game-Assets-2/2D assets/Topdown Shooter (620 assets)/PNG/Man Brown/manBrown_hold.png"),
-                new Vector2(), cm);
-        Chef cMock = Mockito.mock(Chef.class);
-
-        c.act(3f);
-    }
-
     //CHEF INGREDIENT STACK TESTS
     @Test //This tests checks if the chef can add an ingredient into their inventory, in this case a lettuce
     public void testCanChefPickUpIngredient(){

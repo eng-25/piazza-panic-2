@@ -66,12 +66,6 @@ public class AssetTests {
         assertTrue("This test will only pass when the salad.png asset exists.", Gdx.files
                 .internal("food/glitch/misc/salad.png").exists());
     }
-    //KITCHEN ASSETS-----------------------------------------------------------------------------------------------
-    //TODO - import pixmap to get assets from bitmap - Kenney Game Assets 1 - 2D assets - Roguelike Interior Pack
-
-    //UI ASSETS--------------------------------------------------------------------------------------------------------
-    //TODO - same as kitchen assets
-    //CHEF ASSETS----------------------------------------------------------------------------------------------------
 
     @Test
     public void testChef1AssetExists() {
