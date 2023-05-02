@@ -108,7 +108,7 @@ public class GameScreen implements Screen {
     HashMap<Integer, StationCollider> colliders = new HashMap<>();
 
     for (RectangleMapObject colliderObject : new Array.ArrayIterator<>(colliderObjects)) {
-      Integer id = colliderObject.getProperties().get("id", Integer.class);
+      Integer id = colliderObject.getProperties().get("id", Integer.class); // ?
       StationCollider collider = new StationCollider(chefManager);
       Rectangle bounds = colliderObject.getRectangle();
       collider.setBounds(bounds.getX() * tileUnitSize, bounds.getY() * tileUnitSize,

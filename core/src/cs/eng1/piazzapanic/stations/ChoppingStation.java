@@ -73,9 +73,9 @@ public class ChoppingStation extends Station {
    * @return true if the ingredient is in the validIngredients array; false otherwise
    */
   private boolean isCorrectIngredient(Ingredient ingredientToCheck) {
-    if (!ingredientToCheck.getIsChopped()) {
+    if (!ingredientToCheck.getIsChopped()) { // Checks if inputted ingredient is chopped, continues if not
       for (Ingredient item : this.validIngredients) {
-        if (Objects.equals(ingredientToCheck.getType(), item.getType())) {
+        if (Objects.equals(ingredientToCheck.getType(), item.getType())) { // Checks inputted ingredient is the same as what is allowed by the station
           return true;
         }
       }
