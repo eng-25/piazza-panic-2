@@ -80,7 +80,6 @@ public class Chef extends Actor implements Disposable {
 
     Vector2 movement = calculateMovement(delta);
     moveBy(movement.x, movement.y);
-
     super.act(delta);
   }
 

@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 
 import static org.junit.Assert.*;
@@ -183,4 +184,35 @@ public class ChefTests {
         //Bun b = new Bun(new FoodTextureManager());
         c.placeIngredient();
     }
+    //------------------------------------------------------CHEF MANAGER TESTS--------------------------------------------
+    @Test
+    public void testChefManagerLoad2Chefs(){
+        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
+        cm.init();
+        ArrayList<Chef> lc = new ArrayList<>(cm.getChefs());
+        assertEquals(2, lc.size());
+    }
+    @Test
+    public void testChefManagerSetCurrectChef(){
+        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
+        cm.init();
+        ArrayList<Chef> lc = new ArrayList<>(cm.getChefs());
+        cm.setCurrentChef(lc.get(0));
+        assertNotEquals(cm.getCurrentChef(), lc.get(1));
+    }
+    @Test
+    public void testChefManagerSwitchChefs(){
+        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
+        cm.init();
+        ArrayList<Chef> lc = new ArrayList<>(cm.getChefs());
+        cm.setCurrentChef(lc.get(0));
+        cm.setCurrentChef(lc.get(1));
+        assertEquals(cm.getCurrentChef(), lc.get(1));
+    }
+    @Test
+    public void testChefManagerSetNoChef(){
+        ChefManager cm = new ChefManager(1, tmtlMock, uioMock);
+        assertEquals(cm.getCurrentChef(), null);
+    }
+
 }
