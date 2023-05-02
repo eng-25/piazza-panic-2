@@ -12,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import cs.eng1.piazzapanic.PiazzaPanicGame;
 import cs.eng1.piazzapanic.ui.ButtonManager;
-import cs.eng1.piazzapanic.ui.overlay.*;
+import cs.eng1.piazzapanic.ui.SettingsOverlay;
+import cs.eng1.piazzapanic.ui.TutorialOverlay;
 
 public class HomeScreen implements Screen {
 
@@ -32,16 +33,6 @@ public class HomeScreen implements Screen {
     final SettingsOverlay settingsOverlay = game.getSettingsOverlay();
     settingsOverlay.addToStage(uiStage);
 
-    final ModeOverlay modeOverlay = game.getModeOverlay();
-    modeOverlay.addToStage(uiStage);
-
-    final DifficultyOverlay difficultyOverlay = game.getDifficultyOverlay();
-    difficultyOverlay.addToStage(uiStage);
-    difficultyOverlay.init();
-
-    final LoadOrNewOverlay loadOrNewOverlay = game.getLoadOrNewOverlay();
-    loadOrNewOverlay.addToStage(uiStage);
-
     Label welcomeLabel = new Label("Welcome to Piazza Panic!",
         new Label.LabelStyle(game.getFontManager().getTitleFont(), null));
 
@@ -52,15 +43,7 @@ public class HomeScreen implements Screen {
     startButton.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        loadOrNewOverlay.show();
-      }
-    });
-    TextButton difficultyButton = game.getButtonManager()
-            .createTextButton("Difficulty", ButtonManager.ButtonColour.BLUE);
-    difficultyButton.sizeBy(3f);
-    difficultyButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {difficultyOverlay.show();
+        game.loadGameScreen();
       }
     });
     TextButton tutorialButton = game.getButtonManager()
@@ -95,8 +78,6 @@ public class HomeScreen implements Screen {
     table.add(welcomeLabel).padBottom(100f);
     table.row();
     table.add(startButton).padBottom(20f);
-    table.row();
-    table.add(difficultyButton).padBottom(20f);
     table.row();
     table.add(tutorialButton).padBottom(20f);
     table.row();

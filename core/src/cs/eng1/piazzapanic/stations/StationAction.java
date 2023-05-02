@@ -11,7 +11,6 @@ public class StationAction {
     MAKE_BURGER,
     MAKE_SALAD,
     SUBMIT_ORDER,
-    CLEAR_STATION
   }
 
   public static String getActionDescription(ActionType actionType) {
@@ -32,8 +31,6 @@ public class StationAction {
         return "Make Salad";
       case SUBMIT_ORDER:
         return "Submit Order";
-      case CLEAR_STATION:
-        return "Clear Station";
       default:
         return "Unknown Action";
     }

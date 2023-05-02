@@ -136,11 +136,4 @@ public class ButtonManager implements Disposable {
       ((TextureRegionDrawable) style.checkboxOn).getRegion().getTexture().dispose();
     }
   }
-
-  public TextButton.TextButtonStyle getTextButtonStyle(ButtonColour colour) {
-    if (textButtonStyles.containsKey(colour)) {
-      return textButtonStyles.get(colour);
-    }
-    return textButtonStyles.get(ButtonColour.BLUE);
-  }
 }
