@@ -38,25 +38,25 @@ public class FoodTextureManager implements Disposable {
         this.foodTextures.put("salad",
                 new Texture("food/glitch/misc/salad.png"));
         this.foodTextures.put("cheese_raw",
-                new Texture("food/original/raw_cheese.png"));
+                new Texture("food/glitch/dairy/cheese_01.png"));
         this.foodTextures.put("cheese_chopped",
-                new Texture("food/original/chopped_cheese.png"));
+                new Texture("food/original/cheese_grated.png"));
         this.foodTextures.put("beans_raw",
-                new Texture("food/original/raw_beans.png"));
+                new Texture("food/glitch/vegetable/bean.png"));
         this.foodTextures.put("beans_cooked",
-                new Texture("food/original/cooked_beans.png"));
+                new Texture("food/original/beans_baked.png"));
         this.foodTextures.put("beans_burnt",
-                new Texture("food/original/burnt_beans.png"));
+                new Texture("food/original/beans_burnt.png"));
         this.foodTextures.put("dough",
-                new Texture("food/original/dough.png"));
+                new Texture("food/glitch/dessert/pie.png"));
         this.foodTextures.put("potato",
-                new Texture("food/original/potato.png"));
+                new Texture("food/glitch/vegetable/potato.png"));
         this.foodTextures.put("pizza_raw",
-                new Texture("food/original/raw_pizza.png"));
+                new Texture("food/original/pizza_raw.png"));
         this.foodTextures.put("pizza_cooked",
-                new Texture("food/original/cooked_pizza.png"));
+                new Texture("food/glitch/misc/pizza_01.png"));
         this.foodTextures.put("pizza_burnt",
-                new Texture("food/original/burnt_pizza.png"));
+                new Texture("food/original/pizza_burnt.png"));
         this.foodTextures.put("jacket_potato_raw",
                 new Texture("food/original/raw_jacket_potato.png"));
         this.foodTextures.put("jacket_potato_cooked",

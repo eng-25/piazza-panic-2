@@ -54,9 +54,9 @@ public class UIOverlay {
     public static final String REMOVE_BUTTON =
             "Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/grey_crossWhite.png";
     public static final String LIFE_EMPTY =
-            "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dot_shadow.png";
+            "Kenney-Game-Assets-3/2D assets/Emote Pack/PNG/Pixel/Style 8/emote_heartBroken.png";
     public static final String LIFE_FULL =
-            "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotBlue.png";
+            "Kenney-Game-Assets-3/2D assets/Emote Pack/PNG/Pixel/Style 8/emote_heart.png";
     public static final String COIN =
             "Kenney-Game-Assets-1/2D assets/UI Space Pack/PNG/dotYellow.png";
     public static final String CUSTOMER_TIMER =
@@ -144,6 +144,10 @@ public class UIOverlay {
         // Chef purchase button
         chefBuyButton = game.getButtonManager().createTextButton("0",
                 ButtonManager.ButtonColour.BLUE);
+        chefBuyButton.getStyle().up = new TextureRegionDrawable(
+                new Texture("Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_square_flat_down.png"));
+        chefBuyButton.getStyle().down = new TextureRegionDrawable(
+                new Texture("Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_square_flat_down2.png"));
 
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
@@ -156,7 +160,7 @@ public class UIOverlay {
         midTable.add(ingredientStackDisplay).right().top().width(scale); // chef stack
 
         if (!isScenario) { // only endless contains chef buying and coins
-            bottomTable.add(coinGroup).top().left().pad(15f).height(scale)
+            bottomTable.add(coinGroup).top().left().pad(25f).height(scale)
                     .width(Value.percentWidth(0.12f, topTable));
             Value chefButtonScale = Value.percentWidth(0.06f, topTable);
             bottomTable.add(chefBuyButton).top().left().pad(15f).width(chefButtonScale).height(chefButtonScale);
@@ -387,8 +391,8 @@ public class UIOverlay {
     private void resizeLives() {
         livesGroup.getChildren().forEach(c -> {
             if (c instanceof Image) {
-                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth() * 0.7f);
-                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth() * 0.7f);
+                ((Image) c).getDrawable().setMinHeight(chefDisplay.getWidth());
+                ((Image) c).getDrawable().setMinWidth(chefDisplay.getWidth());
             }
         });
     }
