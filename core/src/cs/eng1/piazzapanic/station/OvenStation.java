@@ -1,6 +1,9 @@
 package cs.eng1.piazzapanic.station;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import cs.eng1.piazzapanic.food.FoodTextureManager;
 import cs.eng1.piazzapanic.food.ingredient.CookedIngredient;
 import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
 import cs.eng1.piazzapanic.screen.GameScreen;
@@ -154,6 +157,29 @@ public class OvenStation extends CookingStation {
                 uiController.showActions(this, getActionTypes());
 
         }
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        heldIngredientMap.keySet().forEach(key -> {
+            if (heldIngredientMap.get(key) > 0) {
+                SimpleIngredient ing = SimpleIngredient.fromString(
+                        key, new FoodTextureManager()
+                );
+                if (ing != null) {
+                    if (key.equals("beans")) {
+                        ing.setIsCooked(true);
+                    } else if (key.equals("tomato") || key.equals("cheese")) {
+                        ing.setIsChopped(true);
+                    }
+                    Texture tex = ing.getTexture();
+                    if (tex != null) {
+                        drawFoodTexture(batch, tex);
+                    }
+                }
+            }
+        });
     }
 
     /**
