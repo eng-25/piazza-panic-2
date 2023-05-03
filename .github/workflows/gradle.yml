@@ -19,12 +19,9 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-2022, macos-12]
-    runs-on: ${{ matrix.os }}
-    
-  
+
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -35,7 +32,7 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
       with:
-        arguments: build jacocoTestReport
+        arguments: build
     - name: Upload game JAR
       uses: actions/upload-artifact@v3.1.2
       with:
@@ -82,4 +79,3 @@ jobs:
       uses: softprops/actions-gh-release@v1
       with: 
         files: lib.jar
-  

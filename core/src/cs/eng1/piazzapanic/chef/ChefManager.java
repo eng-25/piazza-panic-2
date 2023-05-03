@@ -1,7 +1,6 @@
 package cs.eng1.piazzapanic.chef;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -13,9 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import cs.eng1.piazzapanic.screen.GameScreen;
 import cs.eng1.piazzapanic.ui.UIOverlay;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +50,8 @@ public class ChefManager implements Disposable {
             2.5f, 2.5f, 6f
     };
 
+    // Load chef sprites
+    chefs = new ArrayList<>(chefSprites.length);
 
     /**
      * @param chefScale       the amount to scale the texture by so that each chef is an accurate
@@ -79,14 +78,19 @@ public class ChefManager implements Disposable {
             chefCount = 1;
             maxChefCount = 3;
         }
+      }
+    });
+  }
 
-        // Load chef sprites
-        chefs = new ArrayList<>(chefCount);
-
-        // Initialize chefs
-        for (int i = 0; i < chefCount; i++) {
-            createChef(i);
-        }
+  /**
+   * Given a chef, update the state of the chefs to make sure that only one has input enabled.
+   *
+   * @param chef the chef to be controlled by the user
+   */
+  public void setCurrentChef(Chef chef) {
+    if (chef == null && currentChef != null) {
+      currentChef.setInputEnabled(false);
+      currentChef = null;
     }
 
     /**
@@ -97,6 +101,8 @@ public class ChefManager implements Disposable {
             chefs.get(i).init(CHEF_X[i], CHEF_Y[i]);
         }
     }
+    overlay.updateChefUI(currentChef);
+  }
 
     /**
      * Get the tile in the foreground collision layer at the specified point
