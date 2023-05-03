@@ -144,10 +144,6 @@ public class UIOverlay {
         // Chef purchase button
         chefBuyButton = game.getButtonManager().createTextButton("0",
                 ButtonManager.ButtonColour.BLUE);
-        chefBuyButton.getStyle().up = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_square_flat_down.png"));
-        chefBuyButton.getStyle().down = new TextureRegionDrawable(
-                new Texture("Kenney-Game-Assets-1/2D assets/UI Base Pack/PNG/blue_button_square_flat_down2.png"));
 
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
