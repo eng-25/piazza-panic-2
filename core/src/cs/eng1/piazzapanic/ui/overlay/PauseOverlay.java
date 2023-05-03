@@ -26,6 +26,7 @@ public class PauseOverlay extends BaseOverlay {
                 if (game.getScreen() instanceof GameScreen) {
                     GameScreen gameScreen = (GameScreen) game.getScreen();
                     gameScreen.save();
+                    game.getTutorialOverlay().toggleStage();
                     game.loadHomeScreen();
                     hide();
                 }
