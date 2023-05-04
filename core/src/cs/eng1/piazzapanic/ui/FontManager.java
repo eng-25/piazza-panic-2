@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Disposable;
 
+import java.util.ArrayList;
+
 /**
  * It takes a TrueTypeFont (ttf) and converts it to all the necessary BitmapFonts that are required
  * for the UI elements.
@@ -20,6 +22,22 @@ public class FontManager implements Disposable {
     private final BitmapFont titleFont;
     private final BitmapFont headerFont;
     private final BitmapFont labelFont;
+
+    public static final ArrayList<Color> COLOUR_LIST = new ArrayList<>(java.util.List.of(
+            Color.WHITE,
+            Color.BLUE,
+            Color.RED,
+            Color.GREEN,
+            Color.YELLOW,
+            Color.CHARTREUSE,
+            Color.CYAN,
+            Color.GOLD,
+            Color.LIME,
+            Color.MAGENTA,
+            Color.ORANGE,
+            Color.PINK,
+            Color.ROYAL
+    ));
 
     public FontManager() {
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/MontserratMedium.ttf"));

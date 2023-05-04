@@ -2,6 +2,7 @@ package cs.eng1.piazzapanic.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -17,6 +18,9 @@ import cs.eng1.piazzapanic.food.ingredient.SimpleIngredient;
 import cs.eng1.piazzapanic.food.recipe.Recipe;
 import cs.eng1.piazzapanic.ui.ButtonManager.ButtonColour;
 
+import java.util.ArrayList;
+
+import static cs.eng1.piazzapanic.PiazzaPanicGame.RANDOM;
 import static cs.eng1.piazzapanic.screen.GameScreen.MAX_LIVES;
 
 /**
@@ -43,6 +47,8 @@ public class UIOverlay {
     private final HorizontalGroup livesGroup;
     private final HorizontalGroup coinGroup;
     private final TextButton chefBuyButton;
+    private final Label powerupNotif;
+    private float colorTime;
 
     // commonly used asset paths
     public static final String SQUARE_BG =
@@ -145,6 +151,15 @@ public class UIOverlay {
         chefBuyButton = game.getButtonManager().createTextButton("0",
                 ButtonManager.ButtonColour.BLUE);
 
+        // Powerup notification - uses title font for outline
+        FreeTypeFontGenerator.FreeTypeFontParameter powerupNotifFontParam =
+                new FreeTypeFontGenerator.FreeTypeFontParameter();
+        powerupNotifFontParam.size = 30;
+        powerupNotifFontParam.borderColor = Color.BLACK;
+        powerupNotifFontParam.borderWidth = 1;
+        powerupNotif = new Label("",
+                new LabelStyle(game.getFontManager().generateFont(powerupNotifFontParam), Color.WHITE));
+
         // Add everything
         Value scale = Value.percentWidth(0.04f, topTable);
         Value timerWidth = Value.percentWidth(0.2f, topTable);
@@ -156,6 +171,8 @@ public class UIOverlay {
         midTable.add(ingredientStackDisplay).right().top().width(scale); // chef stack
 
         if (!isScenario) { // only endless contains chef buying and coins
+            bottomTable.add(powerupNotif).top().center().expandX().row();
+
             bottomTable.add(coinGroup).top().left().pad(25f).height(scale)
                     .width(Value.percentWidth(0.12f, topTable));
             Value chefButtonScale = Value.percentWidth(0.06f, topTable);
@@ -432,5 +449,23 @@ public class UIOverlay {
 
     public void setTimerTime(float newTime) {
         timer.setTime(newTime);
+    }
+
+    public void showPowerupLabel(String message) {
+        powerupNotif.setText(message);
+        powerupNotif.setVisible(true);
+    }
+
+    public void tickPowerupLabelColor(float delta) {
+        colorTime += delta;
+        if (colorTime > 0.125f) {
+            powerupNotif.setColor(FontManager.COLOUR_LIST.get(
+                    RANDOM.nextInt(FontManager.COLOUR_LIST.size() - 1)));
+            colorTime = 0f;
+        }
+    }
+
+    public void hidePowerupLabel() {
+        powerupNotif.setVisible(false);
     }
 }

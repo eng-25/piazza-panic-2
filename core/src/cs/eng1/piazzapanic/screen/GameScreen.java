@@ -300,6 +300,14 @@ public class GameScreen implements Screen {
         }
         gameTime += delta; // update game timer
 
+        // powerup notification
+        if (powerupManager.isPowerupActive()) {
+            uiOverlay.tickPowerupLabelColor(delta);
+            powerupManager.oneTimeMessageShown(delta);
+        } else {
+            uiOverlay.hidePowerupLabel();
+        }
+
         // Render stage
         stage.draw();
         uiStage.draw();

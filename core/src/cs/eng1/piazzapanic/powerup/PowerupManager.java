@@ -20,6 +20,8 @@ public class PowerupManager {
     private final GamePowerup gamePowerup;
     private final CustomerPowerup customerPowerup;
     private final Stage stage;
+    private boolean oneTimeActiveMessage;
+    private float oneTimeTimeShown;
 
     // Timed power-up timers
     public static final float INVULNERABLE_TIME = 15f;
@@ -38,28 +40,46 @@ public class PowerupManager {
         speedPowerup = new SpeedPowerup(chefManager);
         gamePowerup = new GamePowerup(game);
         customerPowerup = new CustomerPowerup(customerManager);
+        oneTimeActiveMessage = false;
+        oneTimeTimeShown = 0f;
     }
 
     /**
      * Picks a random powerup and activates it
+     * @return the powerup message to be displayed
      */
-    public void activateRandomPowerup() {
+    public String activateRandomPowerup() {
         switch (RANDOM.nextInt(0, 5)) {
             case 0:
                 activateInvulnerability();
-                break;
+                return "Invulnerability powerup active!";
             case 1:
                 activateSpeed();
-                break;
+                return "Speed powerup active!";
             case 2:
                 activateLife();
-                break;
+                oneTimeActiveMessage = true;
+                return "Bonus life added!";
             case 3:
                 activateCustomerReset();
-                break;
+                oneTimeActiveMessage = true;
+                return "Customer Timers Reset!";
             default:
                 activateMoney();
-                break;
+                oneTimeActiveMessage = true;
+                return "Bonus Money added!";
+        }
+    }
+
+    public boolean isPowerupActive() {
+        return invulnerabilityPowerup.isActive() || speedPowerup.isActive() || oneTimeActiveMessage;
+    }
+
+    public void oneTimeMessageShown(float delta) {
+        oneTimeTimeShown += delta;
+        if (oneTimeTimeShown > 1f) {
+            oneTimeActiveMessage = false;
+            oneTimeTimeShown = 0f;
         }
     }
 
