@@ -31,7 +31,6 @@ To build into a JAR file to run on desktop, run this command:
 ```
 
 The resulting jar file will be in this folder: `desktop/build/libs/desktop-1.0.jar`.
-Here is the latest [desktop-1.0.jar](desktop/build/libs/desktop-1.0.jar) on the `main` branch.
 
 > Building and running the game can also be directly done through your IDE such as through IntelliJ
 > IDEA.
@@ -55,72 +54,6 @@ Here is the latest [desktop-1.0.jar](desktop/build/libs/desktop-1.0.jar) on the 
 - [Glitch Food Assets](https://opengameart.org/content/cc0-food-icons) - CC0
 - Original assets
 
-## Documentation
-
-### Classes
-
-![UML Diagram of main classes](screenshots/overall_uml.png)
-
-The classes that are core to development are explained below. Not all classes are documented here,
-but further documentation is available in the JavaDocs.
-
-- `PiazzaPanicGame` - the base class that manages all the screens and the asset managers.
-- `GameScreen` - this is the base logic for when the game is running. It deals with rendering and
-  instantiating the level. It reads the tilemap TMX file, displays the background, and instantiates
-  the Stations and StationColliders from the "Station" layer.
-
-#### UI
-
-- `ButtonManager` - deals with loading and disposing images for clickable buttons and creates them
-  when necessary.
-- `FontManager` - it loads TTF fonts and converts them to BitMap fonts as necessary at different
-  font
-  sizes that can be fetched when needed.
-- `UIOverlay` - the HUD while playing the game which shows details of the current game state
-  including
-  the currently requested order, the currently selected chef, and the stack of ingredients that the
-  chef has.
-- `StationUIController` - the intermediary class that lies between stations and their corresponding
-  UI
-  for interaction.
-
-#### Stations
-
-- `Station` - the basis upon which all the stations are based. It extends Actor from libGDX and
-  deals
-  with rendering and interaction with StationColliders. To create a new station, one should create
-  a new class extending this one and override the `act(float delta)`, `getActionTypes()`, and
-  `doStationAction(StationAction action)` methods and the constructor to define the specifics of the
-  new station.
-- `StationCollider` - this is also an actor which has bounds so that whenever the chef walks over
-  it,
-  it notifies the subscribed Stations through the Observer pattern which chef is nearby so that the
-  station can show its actions.
-- `RecipeStation` - this takes a bunch of ingredients, decides what recipe can be made, creates it
-  and
-  submits it to fulfill an order.
-
-#### Observable
-
-- `Observer` - the interface which can be notified of updates from a class which implements Subject.
-- `Subject` - the interface which has a data stream which notifies subscribed classes that implement
-  Observer whenever the data is updated.
-
-#### Food
-
-- `Ingredient` - the basis for an ingredient that can be held in the Chef's stack. It has a String
-  type and can be extended, and it contains the current state of cooking/chopping/etc.
-- `Recipe` - the basis for a final recipe that can be created. It has a type, and that type can be
-  used to identify which ingredients are necessary.
-- `CustomerManager` - it creates the scenario of what recipe orders are requested by customers. It
-  interacts with RecipeStations to know when recipes are completed.
-- `FoodTextureManager` - this shares textures between ingredients and recipes of the same type.
-
-#### Chef
-
-- `Chef` - this is the chef itself which deals with carrying ingredients around, taking user input,
-  and dealing with collision with the environment.
-- `ChefManager` - this creates all the chefs and allows changing which chef is selected.
 
 ### Game Map
 

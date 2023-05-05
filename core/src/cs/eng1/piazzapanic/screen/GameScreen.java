@@ -530,10 +530,15 @@ public class GameScreen implements Screen {
                 chefDataMap);
 
         // Customers
-        @SuppressWarnings("unchecked") // we know this should be a safe cast because of how we saved the data
-        Map<Integer, String[]> customerDataMap = (Map<Integer, String[]>) customerData.get("customers");
-        customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
-                customerDataMap);
+        if (customerData.get("customers") != "") {
+            @SuppressWarnings("unchecked") // we know this should be a safe cast because of how we saved the data
+            Map<Integer, String[]> customerDataMap = (Map<Integer, String[]>) customerData.get("customers");
+            customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
+                    customerDataMap);
+        } else {
+            customerManager.load((int) customerData.get("servedCount"), (float) customerData.get("intervalTime"),
+                    new HashMap<>());
+        }
 
         // Powerups
         Object[] invData = new Object[]{powerupData.get("invActive"), powerupData.get("invTimer")};

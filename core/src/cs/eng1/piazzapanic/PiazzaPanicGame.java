@@ -105,7 +105,8 @@ public class PiazzaPanicGame extends Game {
         Map<String, Object> customerData = new HashMap<>();
         customerData.put("servedCount", save.getInteger("complete_order_count"));
         customerData.put("intervalTime", save.getFloat("customer_interval_time"));
-        customerData.put("customers", parseSavedMap(save.getString("customers")));
+        String customerSaveString = save.getString("customers").equals("{}") ? "" : save.getString("customers");
+        customerData.put("customers", parseSavedMap(customerSaveString));
 
         // Powerups
         Map<String, Object> powerupData = Map.of(
