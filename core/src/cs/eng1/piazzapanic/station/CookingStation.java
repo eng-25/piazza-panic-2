@@ -26,7 +26,7 @@ public class CookingStation extends Station implements IFailable {
     protected final SimpleIngredient[] validIngredients;
     protected SimpleIngredient currentIngredient;
     protected float timeCooked;
-    protected final float totalTimeToCook = 10f;
+    protected float totalTimeToCook = 8f;
     protected boolean progressVisible = false;
 
     protected boolean shouldTickFailTimer;

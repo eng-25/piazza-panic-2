@@ -53,6 +53,7 @@ public class OvenStation extends CookingStation {
                 "potato", 0,
                 "dough", 0
         ));
+        totalTimeToCook = 6f;
     }
 
     /**

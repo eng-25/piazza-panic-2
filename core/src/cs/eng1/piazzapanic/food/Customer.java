@@ -39,7 +39,7 @@ public class Customer {
 
         // the max amount that an order can increase by: 1s in hard, 4s in med, 16s in easy
         final int orderTimeVariationRange = (int) Math.pow(4, 2 - difficulty);
-        final float baseOrderTime = 25f;
+        final float baseOrderTime = 35f;
         maxTime = maxOrderSize * (RANDOM.nextInt(0, orderTimeVariationRange) + 1 + baseOrderTime) * timeMultiplier;
     }
 

@@ -146,7 +146,7 @@ public class CustomerManager {
      * If it lands, tells the PowerupManager to activate a random powerup.
      */
     private void tryRandomPowerup() {
-        if (RANDOM.nextFloat() < 1 && !isScenario) {
+        if (RANDOM.nextFloat() < 0.1 && !isScenario) {
             String powerupString = gameScreen.getPowerupManager().activateRandomPowerup();
             overlay.showPowerupLabel(powerupString);
         }
